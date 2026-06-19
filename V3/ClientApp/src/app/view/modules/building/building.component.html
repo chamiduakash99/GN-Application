@@ -1,0 +1,297 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+<!--   Building Form Panel-->
+  <mat-grid-tile [colspan]="8" [rowspan]="5">
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>Building Detail</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content id="buildingform">
+
+        <form [formGroup]="form">
+
+          <!-- TWO COLUMN WRAPPER -->
+          <div style="display: flex; gap: 20px;">
+
+            <!-- LEFT COLUMN -->
+            <div style="flex: 1;">
+
+              <!-- Land Detail -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Land Detail</mat-label>
+                <mat-select formControlName="landDetail">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let land of lands" [value]="land">
+                    {{ land.street?.fullname }} | {{ land.size }} sq.m
+                  </mat-option>
+<!--                  <mat-option *ngFor="let land of lands" [value]="land">-->
+<!--                    {{land.street.fullname}} | {{land.size}} sq.m-->
+<!--                  </mat-option>-->
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Usage -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Usage</mat-label>
+                <mat-select formControlName="usage">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let u of usages" [value]="u">
+                    {{u.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Wall Type -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Wall Type</mat-label>
+                <mat-select formControlName="walltype">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let walltype of walltypes" [value]="walltype">
+                    {{walltype.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Roof Type -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Roof Type</mat-label>
+                <mat-select formControlName="roofType">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let rooftype of rooftypes" [value]="rooftype">
+                    {{rooftype.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div style="flex: 1;">
+
+              <!-- Ownership Type -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Ownership Type</mat-label>
+                <mat-select formControlName="ownershipType">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let ownershiptype of ownershiptypes" [value]="ownershiptype">
+                    {{ownershiptype.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Building Type -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Building Type</mat-label>
+                <mat-select formControlName="buildingType">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let buildingtype of buildingtypes" [value]="buildingtype">
+                    {{buildingtype.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Floor Type -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Floor Type</mat-label>
+                <mat-select formControlName="floorType">
+                  <mat-option [value]="null" selected>Not Selected</mat-option>
+                  <mat-option *ngFor="let floortype of floortypes" [value]="floortype">
+                    {{floortype.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Building No -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Building No</mat-label>
+                <input matInput formControlName="no">
+              </mat-form-field>
+
+            </div>
+
+          </div>
+
+          <!-- BUTTON PANEL (BOTTOM FIXED STYLE) -->
+          <div id="butpanel" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
+            <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
+            <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>
+          </div>
+
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+<!--  <mat-grid-tile [colspan]="8" [rowspan]="4">-->
+<!--    <mat-card>-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Building Detail</mat-card-title>-->
+<!--      </mat-card-header>-->
+
+<!--      <mat-card-content id="buildingform">-->
+<!--        <form [formGroup]="form">-->
+
+<!--          &lt;!&ndash; Select Land &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Land Detail</mat-label>-->
+<!--            <mat-select formControlName="landDetail">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let land of lands" [value]="land">{{land.street.fullname}} | {{land.size}} sq.m</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Ownership Type &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Ownership Type</mat-label>-->
+<!--            <mat-select formControlName="ownershipType">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let ownershiptype of ownershiptypes" [value]="ownershiptype">{{ownershiptype.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Usage &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Usage</mat-label>-->
+<!--            <mat-select formControlName="usage">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let u of usages" [value]="u">{{u.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Building Type &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Building Type</mat-label>-->
+<!--            <mat-select formControlName="buildingType">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let buildingtype of buildingtypes" [value]="buildingtype">{{buildingtype.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Wall Type &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Wall Type</mat-label>-->
+<!--            <mat-select formControlName="walltype">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let walltype of walltypes" [value]="walltype">{{walltype.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Floor Type &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Floor Type</mat-label>-->
+<!--            <mat-select formControlName="floorType">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let floortype of floortypes" [value]="floortype">{{floortype.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Roof Type &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Roof Type</mat-label>-->
+<!--            <mat-select formControlName="roofType">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let rooftype of rooftypes" [value]="rooftype">{{rooftype.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+<!--          &lt;!&ndash; Building Number &ndash;&gt;-->
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>Building No</mat-label>-->
+<!--            <input matInput formControlName="no">-->
+<!--          </mat-form-field>-->
+
+<!--          <div id="butpanel">-->
+<!--            <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>-->
+<!--            <button mat-raised-button (click)="clear()">Clear</button>-->
+<!--            <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>-->
+<!--            <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>-->
+<!--          </div>-->
+
+<!--        </form>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+  <!-- Building Search Panel -->
+  <mat-grid-tile [colspan]="4" [rowspan]="5">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Building Search</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="ssearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Building No</mat-label>
+            <input matInput formControlName="ssno">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Land</mat-label>
+            <mat-select formControlName="ssland">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let land of lands" [value]="land.id">{{land.street.fullname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Ownership Type</mat-label>
+            <mat-select formControlName="ssownershiptype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let ownershiptype of ownershiptypes" [value]="ownershiptype.id">{{ownershiptype.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Usage</mat-label>
+            <mat-select formControlName="ssusage">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let u of usages" [value]="u.id">{{u.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button color="primary" (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button color="primary" (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear Search
+            </button>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+<!--   Building Table Panel-->
+  <mat-grid-tile [colspan]="12" [rowspan]="8">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Building Table</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="data">
+
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ headers[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns;"
+                   (click)="fillForm(row)"
+                   [ngClass]="{'selected-row': row === selectedrow}">
+          </mat-row>
+        </mat-table>
+
+        <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

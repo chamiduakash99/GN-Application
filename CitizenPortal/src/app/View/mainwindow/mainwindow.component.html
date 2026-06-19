@@ -1,0 +1,100 @@
+<mat-toolbar class="top-navbar">
+
+  <!-- Logo Area -->
+  <div class="logo-section">
+    <mat-icon class="logo-icon">account_balance</mat-icon>
+    <span class="system-title">Citizen Portal</span>
+  </div>
+
+  <!-- Spacer -->
+  <span class="spacer"></span>
+
+  <!-- Navigation Buttons -->
+  <div class="nav-buttons">
+
+    <button mat-button routerLink="home" >
+      <mat-icon>home</mat-icon>
+      Home
+    </button>
+
+    <button mat-button routerLink="citizen">
+      <mat-icon>groups</mat-icon>
+      Citizens
+    </button>
+
+    <button mat-button routerLink="certificate">
+      <mat-icon>description</mat-icon>
+      Certificates
+    </button>
+
+    <button mat-button>
+      <mat-icon>bar_chart</mat-icon>
+      Reports
+    </button>
+
+    <button mat-icon-button  (click)="logout()">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+
+</mat-toolbar>
+
+<!-- Main Layout: Routed content + Announcement Board -->
+<div class="page-wrapper">
+
+  <!-- Routed Components Load Here -->
+  <div class="main-content">
+    <router-outlet></router-outlet>
+  </div>
+
+  <!-- Announcement Board Sidebar -->
+  <app-announcement-board></app-announcement-board>
+
+</div>
+
+
+<!--<mat-toolbar class="top-navbar">-->
+
+<!--  &lt;!&ndash; Logo Area &ndash;&gt;-->
+<!--  <div class="logo-section">-->
+<!--    <mat-icon class="logo-icon">account_balance</mat-icon>-->
+<!--    <span class="system-title">Citizen Portal</span>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; Spacer &ndash;&gt;-->
+<!--  <span class="spacer"></span>-->
+
+<!--  &lt;!&ndash; Navigation Buttons &ndash;&gt;-->
+<!--  <div class="nav-buttons">-->
+
+<!--    <button mat-button routerLink="home" >-->
+<!--      <mat-icon>home</mat-icon>-->
+<!--      Home-->
+<!--    </button>-->
+
+<!--    <button mat-button routerLink="citizen">-->
+<!--      <mat-icon>groups</mat-icon>-->
+<!--      Citizens-->
+<!--    </button>-->
+
+<!--    <button mat-button routerLink="certificate">-->
+<!--      <mat-icon>description</mat-icon>-->
+<!--      Certificates-->
+<!--    </button>-->
+
+<!--    <button mat-button>-->
+<!--      <mat-icon>bar_chart</mat-icon>-->
+<!--      Reports-->
+<!--    </button>-->
+
+<!--    <button mat-icon-button  (click)="logout()">-->
+<!--      <mat-icon>logout</mat-icon>-->
+<!--    </button>-->
+<!--  </div>-->
+
+<!--</mat-toolbar>-->
+
+<!--&lt;!&ndash; Routed Components Load Here &ndash;&gt;-->
+<!--<div class="main-content">-->
+<!--  <router-outlet></router-outlet>-->
+<!--</div>-->

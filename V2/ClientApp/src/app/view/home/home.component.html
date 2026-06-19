@@ -1,0 +1,108 @@
+<div class="main-dashboard">
+
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+
+    <!-- Toolbar -->
+    <mat-toolbar class="toolbar-middle" color="accent">
+      <span class="logo">GN Dashboard</span>
+      <span class="spacer"></span>
+
+    </mat-toolbar>
+
+    <!-- Summary Stats Section -->
+    <div class="summary-section">
+      <mat-card class="summary-card">
+        <mat-card-title>Population</mat-card-title>
+        <mat-card-content>1,265 Residents</mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card">
+        <mat-card-title>Households</mat-card-title>
+        <mat-card-content>310 Families</mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card">
+        <mat-card-title>Registered Services</mat-card-title>
+        <mat-card-content>12 Ongoing</mat-card-content>
+      </mat-card>
+
+      <mat-card class="summary-card">
+        <mat-card-title>Pending Requests</mat-card-title>
+        <mat-card-content>5 Applications</mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Main Content Grid -->
+    <mat-grid-list cols="4" rowHeight="350px" gutterSize="16px">
+
+      <!-- Recent Activities -->
+      <mat-grid-tile [colspan]="3">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Recent Activities</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="activity-list">
+              <li>✅ New resident registered - <b>John Perera</b></li>
+              <li>🏠 Household record updated - <b>Gamage Family</b></li>
+              <li>📄 Service request approved - <b>Land Certificate</b></li>
+              <li>📢 Public notice posted - <b>Water Supply Disruption</b></li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+
+      <!-- Upcoming Events -->
+      <mat-grid-tile [colspan]="1">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Upcoming Events</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="event-list">
+              <li>📅 Community Meeting - 20 Oct</li>
+              <li>🧹 Clean-up Program - 25 Oct</li>
+              <li>🧾 Tax Deadline - 30 Oct</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+
+      <!-- User Specific Messages -->
+      <mat-grid-tile [colspan]="2" [rowspan]="4">
+        <mat-card>
+          <mat-card-title class="message-header">User Specific Messages</mat-card-title>
+          <mat-card-content>
+            <mat-list>
+              <mat-list-item *ngFor="let message of userspecmessages">
+                <mat-icon matListItemIcon>email</mat-icon>
+                <div matListItemTitle>{{message.name}}</div>
+                <div matListItemLine>{{message.updated | date}}</div>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+
+      <!-- General Messages -->
+      <mat-grid-tile [colspan]="2" [rowspan]="4">
+        <mat-card>
+          <mat-card-title class="message-header">General Messages</mat-card-title>
+          <mat-card-content>
+            <mat-list>
+              <mat-list-item *ngFor="let message of generalmessages">
+                <mat-icon matListItemIcon>email</mat-icon>
+                <div matListItemTitle>{{message.name}}</div>
+                <div matListItemLine>{{message.updated | date}}</div>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+  </div>
+
+</div>

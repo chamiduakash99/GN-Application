@@ -1,0 +1,338 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ===================== FORM PANEL ===================== -->
+  <mat-grid-tile [colspan]="4" [rowspan]="10">
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>Citizen Detail</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="form">
+
+          <!-- Name -->
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+
+          <!-- Name with Initials -->
+          <mat-form-field appearance="outline">
+            <mat-label>Name with Initials</mat-label>
+            <input matInput formControlName="namewithinitials">
+          </mat-form-field>
+
+          <!-- NIC -->
+          <mat-form-field appearance="outline">
+            <mat-label>NIC</mat-label>
+            <input matInput formControlName="nic">
+          </mat-form-field>
+
+          <!-- Birth Certificate -->
+          <mat-form-field appearance="outline">
+            <mat-label>Birth Certificate No</mat-label>
+            <input matInput formControlName="birthcetificateno">
+          </mat-form-field>
+
+          <!-- Date of Birth -->
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput type="date" formControlName="dateofbirth">
+          </mat-form-field>
+
+          <!-- Mobile -->
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile No</mat-label>
+            <input matInput formControlName="mobileno">
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+          </mat-form-field>
+
+          <!-- Convicted -->
+          <mat-form-field appearance="outline">
+            <mat-label>Is Convicted</mat-label>
+            <mat-select formControlName="isconvicted">
+              <mat-option [value]="0">No</mat-option>
+              <mat-option [value]="1">Yes</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Medical Conditions -->
+          <mat-form-field appearance="outline">
+            <mat-label>Medical Conditions</mat-label>
+            <input matInput formControlName="medicalconditions">
+          </mat-form-field>
+
+          <!-- Remarks -->
+          <mat-form-field appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <input matInput formControlName="remarks">
+          </mat-form-field>
+
+          <!-- ================= LOOKUPS ================= -->
+
+          <!-- Religion -->
+          <mat-form-field appearance="outline">
+            <mat-label>Religion</mat-label>
+            <mat-select formControlName="religion">
+              <mat-option *ngFor="let r of religions" [value]="r">
+                {{ r.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Marital Status -->
+          <mat-form-field appearance="outline">
+            <mat-label>Marital Status</mat-label>
+            <mat-select formControlName="matiralstatus">
+              <mat-option *ngFor="let m of matiralstatuses" [value]="m">
+                {{ m.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Education Level -->
+          <mat-form-field appearance="outline">
+            <mat-label>Education Level</mat-label>
+            <mat-select formControlName="educationlevel">
+              <mat-option *ngFor="let e of educationlevels" [value]="e">
+                {{ e.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Ethnicity -->
+          <mat-form-field appearance="outline">
+            <mat-label>Ethnicity</mat-label>
+            <mat-select formControlName="ethnicity">
+              <mat-option *ngFor="let et of ethnicities" [value]="et">
+                {{ et.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Gender -->
+          <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="gender">
+              <mat-option *ngFor="let g of genders" [value]="g">
+                {{ g.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div id="listtrnasfer">
+
+            <div class="list">
+              <mat-selection-list  #availablelist>
+                <mat-list-option multiple *ngFor="let aidprogram of aidprograms" [value]="aidprogram" >{{aidprogram.name}}</mat-list-option>
+              </mat-selection-list>
+            </div>
+
+            <div id="pnlmiddle">
+              <button mat-raised-button (click)="rightSelected()">&gt;</button>
+              <button mat-raised-button (click)="leftSelected()">&lt;</button>
+              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>
+              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>
+            </div>
+
+            <div class="list">
+              <mat-selection-list  formControlName="citizenaidprograms" #selectedlist>
+                <mat-list-option *ngFor="let citizenaidprogram of citizenaidprograms" [value]="citizenaidprogram">{{citizenaidprogram.aidprogram.name}}</mat-list-option>
+              </mat-selection-list>
+            </div>
+
+          </div>
+
+          <mat-card class="card-flat">
+            <mat-card-header class="workflow-header">
+              Select the Guardian with Relationship Type
+            </mat-card-header>
+
+            <mat-card-content class="form-container" [formGroup]="innerform" id="innertable">
+              <br>
+
+              <!-- Row 1: Product + Description -->
+              <div class="form-row">
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Relationship Type</mat-label>
+                  <mat-select formControlName="relationshiptype" >
+                    <mat-option *ngFor="let p of relationshiptypes" [value]="p">{{ p.name }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Guardian</mat-label>
+                  <mat-select formControlName="citizenparent">
+                    <mat-option *ngFor="let p of citizens" [value]="p">{{ p.name }} | {{ p.nic }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+
+
+              <!-- Row 4: Line Total + Buttons -->
+              <div class="form-row">
+
+
+                <button mat-raised-button id="btnAdd" class="form-field" (click)="btnaddMc()" [disabled]="this.disabledadd">Add</button>
+                <button mat-raised-button id="btnEdit" class="form-field" (click)="updateRow()" [disabled]="this.disablededit">
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+
+              <mat-table [dataSource]="indata" class="table-flat">
+                <ng-container *ngFor="let column of incolumns;let i = index;" [matColumnDef]="column">
+                  <mat-header-cell *matHeaderCellDef> {{ inheaders[i] }}</mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <div *ngIf="i<inbinders.length-2 && column !== 'edit'" [innerHTML]="uiassist.getProperty(element, inbinders[i])"></div>
+                    <div *ngIf="column === 'remove'">
+                      <button mat-raised-button (click)="deleteRaw(element)"><mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                    <div *ngIf="column === 'edit'">
+                      <button mat-raised-button (click)="fillinnerform(element)"><mat-icon>edit</mat-icon>
+                      </button>
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="incolumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: incolumns"></mat-row>
+              </mat-table>
+            </mat-card-content>
+          </mat-card>
+          <br><br>
+          <!-- ================= BUTTONS ================= -->
+          <div id="butpanel">
+            <button mat-raised-button (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
+            <button mat-raised-button (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority)">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority)">Delete</button>
+          </div>
+        </form>
+      </mat-card-content>
+
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ===================== SEARCH ===================== -->
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>Citizen Search</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="ssearch">
+
+          <!-- Name Search -->
+          <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="ssname">
+          </mat-form-field>
+
+          <!-- NIC Search -->
+          <mat-form-field appearance="outline">
+            <mat-label>NIC</mat-label>
+            <input matInput formControlName="ssnic">
+          </mat-form-field>
+
+          <!-- Religion -->
+          <mat-form-field appearance="outline">
+            <mat-label>Religion</mat-label>
+            <mat-select formControlName="ssreligion">
+              <mat-option *ngFor="let r of religions" [value]="r.name">
+                {{ r.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Ethnicity -->
+          <mat-form-field appearance="outline">
+            <mat-label>Ethnicity</mat-label>
+            <mat-select formControlName="ssethnicity">
+              <mat-option *ngFor="let e of ethnicities" [value]="e.name">
+                {{ e.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Education -->
+          <mat-form-field appearance="outline">
+            <mat-label>Education Level</mat-label>
+            <mat-select formControlName="sseducationlevel">
+              <mat-option *ngFor="let e of educationlevels" [value]="e.name">
+                {{ e.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Buttons -->
+          <div>
+            <button mat-raised-button color="primary" (click)="btnSearchMc()">
+              Search
+            </button>
+
+            <button mat-raised-button (click)="btnSearchClearMc()">
+              Clear
+            </button>
+          </div>
+
+        </form>
+      </mat-card-content>
+
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ===================== TABLE ===================== -->
+  <mat-grid-tile [colspan]="8" [rowspan]="6">
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>Citizen Table</mat-card-title>
+        <div id="loading">
+          <img [src]="imageurl">
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <mat-table [dataSource]="data">
+
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>
+              {{ headers[i] }}
+            </mat-header-cell>
+
+              <mat-cell *matCellDef="let element">
+                {{ uiassist.getProperty(element, binders[i]) }}
+             </mat-cell>
+<!--            <mat-cell *matCellDef="let element">-->
+<!--              {{ uiassist.getProperty(element, binders[i]) }}-->
+<!--            </mat-cell>-->
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+
+          <mat-row
+            *matRowDef="let row; columns: columns;"
+            (click)="fillForm(row)"
+            [ngClass]="{'selected-row': row === selectedrow}">
+          </mat-row>
+
+        </mat-table>
+
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+
+      </mat-card-content>
+
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

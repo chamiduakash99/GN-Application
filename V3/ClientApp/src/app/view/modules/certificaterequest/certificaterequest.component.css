@@ -1,0 +1,293 @@
+
+
+/* ── Base card ───────────────────────────────────────────────────────────── */
+mat-card {
+  width: 100%;
+  height: 100%;
+  margin: 10px 10px -10px 10px;
+}
+
+mat-card-content {
+  overflow: auto;
+  height: 100%;
+}
+
+mat-card-header {
+  background: #c0c9d9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ── Loading image ────────────────────────────────────────────────────────── */
+#loading img {
+  width: 30px;
+  height: 25px;
+  margin-left: 200px;
+}
+
+/* ── Client-side search row ──────────────────────────────────────────────── */
+.csearch {
+  height: 40px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* ── Server-side search card ─────────────────────────────────────────────── */
+#ssearch mat-card-content {
+  padding-top: 30px;
+}
+
+#ssearch mat-form-field {
+  padding-left: 15px;
+  width: 200px;
+}
+
+#ssearch button {
+  width: 195px;
+  margin-left: 10px;
+  margin-top: 5px;
+  background-color: #3b4e5f;
+  color: white;
+}
+
+/* ── Tab toggle ──────────────────────────────────────────────────────────── */
+#tabtoggle {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  padding: 4px;
+}
+
+#tabtoggle button {
+  width: 100px;
+  background-color: #b0bec5;
+  color: #2c3e50;
+  font-size: 12px;
+}
+
+#tabtoggle button.activetab {
+  background-color: #3b4e5f;
+  color: white;
+}
+
+/* ── Certificate request form ────────────────────────────────────────────── */
+#certreqform {
+  padding-top: 20px;
+}
+
+#certreqform mat-form-field {
+  width: 100%;
+}
+
+/* ── Status badge ────────────────────────────────────────────────────────── */
+#statusbadge {
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+#statusbadge span {
+  display: inline-block;
+  padding: 5px 18px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.badge-pending   { background-color: #fff3cd; color: #856404; }
+.badge-approved  { background-color: #d1e7dd; color: #0f5132; }
+.badge-rejected  { background-color: #f8d7da; color: #842029; }
+.badge-ready     { background-color: #cff4fc; color: #055160; }
+.badge-completed { background-color: #d3d3d3; color: #333333; }
+
+/* ── Section labels ──────────────────────────────────────────────────────── */
+.sectionlabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: #3b4e5f;
+  margin: 12px 0 8px 0;
+  border-left: 3px solid #3b4e5f;
+  padding-left: 8px;
+}
+
+/* ── Approve / Reject decision panel ─────────────────────────────────────── */
+#approvepanel {
+  padding: 10px 0;
+}
+
+#decisionpanel {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+}
+
+#approvebtn {
+  flex: 1;
+  background-color: #2e7d32;
+  color: white;
+}
+
+#rejectbtn {
+  flex: 1;
+  background-color: #c62828;
+  color: white;
+}
+
+#approvebtn:disabled,
+#rejectbtn:disabled {
+  opacity: 0.4;
+}
+
+/* ── Certificate create panel ────────────────────────────────────────────── */
+#certpanel {
+  padding-top: 10px;
+}
+
+/* ── Scan image panel ────────────────────────────────────────────────────── */
+#scanpanel {
+  height: 100px;
+  margin-bottom: 30px;
+}
+
+#scanpanel img {
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#scanselectbutton,
+#scanclearbutton {
+  width: 150px;
+  display: block;
+  margin-left: 110px;
+  margin-bottom: 5px;
+  background-color: #3b4e5f;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+#scanselectbutton {
+  margin-top: -100px;
+}
+
+/* ── Certificate button panel ────────────────────────────────────────────── */
+#certbutpanel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#certbutpanel button {
+  flex: 1;
+  min-width: 100px;
+  background-color: #3b4e5f;
+  color: white;
+  font-size: 12px;
+}
+
+#certbutpanel button:disabled {
+  opacity: 0.4;
+}
+
+/* ── Citizen tab button panel ────────────────────────────────────────────── */
+#butpanel {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#butpanel button {
+  width: 82px;
+  margin: 3px;
+  background-color: #3b4e5f;
+  color: white;
+}
+
+/* ── Table row states ────────────────────────────────────────────────────── */
+.selected-row {
+  background-color: #c9e6ff !important;
+}
+
+.mat-row:hover {
+  background-color: inherit !important;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+/* ── Form validation colours (same as employee) ──────────────────────────── */
+#certreqform mat-form-field .ng-valid,
+.ng-valid.required {
+  background-color: lightgreen;
+}
+
+#certreqform mat-form-field .ng-dirty {
+  background-color: gold;
+}
+
+/* ── Divider spacing ─────────────────────────────────────────────────────── */
+mat-divider {
+  margin: 10px 0;
+}
+
+.status-dashboard {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.status-card {
+  width: 180px;
+  height: 100px;
+  border-radius: 12px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* Individual status colors */
+.pending {
+  background: #f39c12;
+}
+
+.approved {
+  background: #2ecc71;
+}
+
+.rejected {
+  background: #e74c3c;
+}
+
+.certificate-ready {
+  background: #3498db;
+}
+
+.completed {
+  background: #9b59b6;
+}
+
+.status-title {
+  font-size: 16px;
+}
+
+.status-count {
+  font-size: 28px;
+  margin-top: 5px;
+}

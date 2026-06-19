@@ -1,0 +1,26 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>campaign</mat-icon>
+      Announcements
+    </mat-card-title>
+    <div id="loading">
+      <img [src]="imageurl">
+    </div>
+  </mat-card-header>
+
+  <mat-card-content id="board">
+
+    <div *ngFor="let item of announcements" class="board-item">
+      <div class="item-title">{{ item.title }}</div>
+      <div class="item-content">{{ item.content }}</div>
+      <div class="item-date">{{ item.publishedat | date:'mediumDate' }}</div>
+    </div>
+
+    <div *ngIf="announcements.length === 0" class="no-items">
+      No announcements at this time.
+    </div>
+
+  </mat-card-content>
+
+</mat-card>

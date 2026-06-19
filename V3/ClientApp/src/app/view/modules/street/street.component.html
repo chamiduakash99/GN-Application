@@ -1,0 +1,267 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <mat-grid-tile [colspan]="4" [rowspan]="10">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Street Detail</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content id="streetform">
+        <form [formGroup]="form">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Codename</mat-label>
+            <input matInput formControlName="codename">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Full Name</mat-label>
+            <input matInput formControlName="fullname">
+          </mat-form-field>
+
+<!--          INNER FROM -->
+          <mat-card class="styled-card">
+            <b>Select the GND</b>
+            <mat-card-content>
+<br><br>
+              <form [formGroup]="innerform" class="grid-container">
+
+                <!-- Province -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Province</mat-label>
+                  <mat-select formControlName="province"  (selectionChange)="selectProvineChnage($event)">
+                    <mat-option value="">Select Province</mat-option>
+                    <mat-option *ngFor="let province of provinces" [value]="province">
+                      {{ province.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- District -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>District</mat-label>
+                  <mat-select formControlName="district" (selectionChange)="selectDistrictChnage($event)">
+                    <mat-option value="">Select District</mat-option>
+                    <mat-option *ngFor="let district of districts" [value]="district">
+                      {{ district.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- Division -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Division</mat-label>
+                  <mat-select formControlName="division" (selectionChange)="selectDivisionChnage($event)">
+                    <mat-option value="">Select Division</mat-option>
+                    <mat-option *ngFor="let division of divisions" [value]="division">
+                      {{ division.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <!-- GND -->
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>GND</mat-label>
+                  <mat-select formControlName="gnd" (selectionChange)="selectGndChnage($event)">
+                    <mat-option value="">Select GND</mat-option>
+                    <mat-option *ngFor="let gnd of gnds" [value]="gnd">
+                      {{ gnd.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+              </form>
+
+            </mat-card-content>
+          </mat-card>
+
+          <br><br>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Length (m)</mat-label>
+            <input matInput type="number" formControlName="length">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Width (m)</mat-label>
+            <input matInput type="number" formControlName="width">
+          </mat-form-field>
+
+
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street Status</mat-label>
+            <mat-select formControlName="streetstatus">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let status of streetstatuses" [value]="status">{{status.status}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street Type</mat-label>
+            <mat-select formControlName="streettype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let type of streettypes" [value]="type">{{type.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street Material</mat-label>
+            <mat-select formControlName="streetmatierial">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let mat of streetmatierials" [value]="mat">{{mat.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Start Latitude</mat-label>
+            <input matInput type="number" step="0.000001" formControlName="startlatitude">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Start Longitude</mat-label>
+            <input matInput type="number" step="0.000001" formControlName="startlongitude">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End Latitude</mat-label>
+            <input matInput type="number" step="0.000001" formControlName="endlatitude">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>End Longitude</mat-label>
+            <input matInput type="number" step="0.000001" formControlName="endlongitude">
+          </mat-form-field>
+
+<!--          <div id="imgpanel">-->
+<!--            <img [src]="imageempurl" width="100" height="100">-->
+<!--            <input id="mapImage" hidden type="file" (change)="selectMapImage($event)" formControlName="mapimage">-->
+<!--            <label for="mapImage" id="selectbutton">Select</label>-->
+<!--            <label id="clearbutton" (click)="clearMapImage()">Clear</label>-->
+<!--          </div>-->
+
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Description</mat-label>-->
+<!--            <input matInput formControlName="description">-->
+<!--          </mat-form-field>-->
+
+          <div id="butpanel">
+            <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
+            <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Street Search</mat-card-title>
+
+      </mat-card-header>
+      <mat-card-content>
+
+        <form [formGroup]="ssearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Search by Code Name</mat-label>
+            <input matInput formControlName="sscodename">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Search by Full Name</mat-label>
+            <input matInput formControlName="ssfullname">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street Status</mat-label>
+            <mat-select formControlName="ssstreetstatus">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let status of streetstatuses" [value]="status.status">
+                {{status.status}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street Type</mat-label>
+            <mat-select formControlName="ssstreettype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let type of streettypes" [value]="type.name">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Street Material</mat-label>
+            <mat-select formControlName="ssstreetmatierial">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let mat of streetmatierials" [value]="mat.name">
+                {{mat.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button color="primary" (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button color="primary" (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear Search
+            </button>
+          </div>
+
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="8" [rowspan]="6">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Street Table</mat-card-title>
+        <div id="loading">
+          <img [src]="imageurl">
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="data">
+
+          <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+          </ng-container>
+
+<!--          <ng-container *ngFor="let cscolumn of cscolumns;let i = index;" [matColumnDef]="cscolumn">-->
+<!--            <mat-header-cell *matHeaderCellDef>-->
+<!--              <mat-form [formGroup]="csearch" class="csearch">-->
+<!--                <mat-form-field appearance="outline">-->
+<!--                  <mat-label>{{csprompts[i]}}</mat-label>-->
+<!--                  <input matInput [formControlName]="cscolumn"-->
+<!--                         (keyup)="filterTable()">-->
+<!--                </mat-form-field>-->
+<!--              </mat-form>-->
+<!--            </mat-header-cell>-->
+<!--          </ng-container>-->
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+<!--          <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>-->
+          <mat-row *matRowDef="let row; columns: columns;" (click)="fillForm(row)" [ngClass]="{'selected-row': row === selectedrow}"></mat-row>
+
+        </mat-table>
+
+        <mat-paginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]"></mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+
+</mat-grid-list>

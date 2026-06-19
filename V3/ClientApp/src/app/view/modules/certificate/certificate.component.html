@@ -1,0 +1,165 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- LEFT PANEL — Certificate Form                                            -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+  <mat-grid-tile [colspan]="4" [rowspan]="18">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Issue Certificate</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content id="certpanel">
+
+        <mat-form [formGroup]="certform">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Certificate No</mat-label>
+            <input matInput formControlName="certificateno">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput [matDatepicker]="expdate" formControlName="expirydate">
+            <mat-datepicker-toggle matSuffix [for]="expdate"></mat-datepicker-toggle>
+            <mat-datepicker #expdate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>GN Officer</mat-label>
+            <mat-select formControlName="employee">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let emp of employees" [value]="emp">{{emp.callingname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Scan upload -->
+          <div id="scanpanel">
+            <img [src]="scannedimageurl" alt="Scanned certificate preview">
+            <input id="scanImage" hidden="hidden" (change)="selectScan($event)" type="file" formControlName="scannedcopy">
+            <label for="scanImage" id="scanselectbutton">Select Scan</label>
+            <label id="scanclearbutton" (click)="clearScan()">Clear</label>
+          </div>
+
+          <div id="certbutpanel">
+            <button mat-raised-button (click)="createCertificate()" [disabled]="!enacreate">
+              <mat-icon>note_add</mat-icon> Create
+            </button>
+            <button mat-raised-button (click)="uploadScan()" [disabled]="!enaupload">
+              <mat-icon>upload</mat-icon> Upload Scan
+            </button>
+            <button mat-raised-button (click)="markPickedUp()" [disabled]="!enapickup">
+              <mat-icon>done_all</mat-icon> Mark Picked
+            </button>
+            <button mat-raised-button (click)="clear()">
+              <mat-icon>clear</mat-icon> Clear
+            </button>
+          </div>
+
+        </mat-form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT TOP — Server-side Search                                           -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card id="ssearch">
+      <mat-card-header>
+        <mat-card-title>Certificate Search</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-form [formGroup]="sscertsearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Certificate No</mat-label>
+            <input matInput formControlName="sscertno">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Issued Date</mat-label>
+            <input matInput formControlName="sscertissued">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Expiry Date</mat-label>
+            <input matInput formControlName="sscertexpiry">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>GN Officer</mat-label>
+            <mat-select formControlName="sscertemployee">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let emp of employees" [value]="emp.id">{{emp.callingname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button color="primary" (click)="btnSearchCert()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button color="primary" (click)="btnSearchClearCert()">
+              <mat-icon>reorder</mat-icon> Clear Search
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT BOTTOM — Certificate Table                                         -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+
+  <mat-grid-tile [colspan]="8" [rowspan]="14">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Certificates Issued for Selected Request</mat-card-title>
+        <div id="loading">
+          <img [src]="imageurl" alt="loading status">
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-table [dataSource]="certdata">
+
+          <ng-container *ngFor="let col of certcolumns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{certheaders[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, certbinders[i])}}</mat-cell>
+          </ng-container>
+
+          <ng-container *ngFor="let cscol of cscertcolumns; let i = index" [matColumnDef]="cscol">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cscertsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{cscertprompts[i]}}</mat-label>
+                  <input matInput [formControlName]="cscol" (keyup)="filterCertTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="certcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="cscertcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: certcolumns;"
+                   (click)="fillCertForm(row)"
+                   [ngClass]="{'selected-row': row === selectedcertrow}">
+          </mat-row>
+
+        </mat-table>
+
+        <mat-paginator #certpaginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]"></mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

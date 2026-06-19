@@ -1,0 +1,116 @@
+<div class="login-wrapper">
+
+  <!-- LEFT SIDE VISUAL PANEL -->
+  <div class="left-panel">
+
+    <div class="branding">
+
+      <h1>Citizen Portal</h1>
+      <p>Secure Digital Government Access System</p>
+
+    </div>
+
+    <div class="animation-circle"></div>
+
+  </div>
+
+  <!-- RIGHT SIDE LOGIN PANEL -->
+  <div class="right-panel">
+
+    <div class="login-card">
+
+      <h2>Citizen Login</h2>
+
+      <p class="subtitle">
+        Select your identity type to continue
+      </p>
+
+      <!-- USER TYPE SELECT -->
+      <div class="user-type">
+
+        <div class="type-card"
+             [class.active]="userType === 'adult'"
+             (click)="selectType('adult')">
+
+          <mat-icon>person</mat-icon>
+          <h3>Adult</h3>
+          <p>18+ Citizens</p>
+
+        </div>
+
+        <div class="type-card"
+             [class.active]="userType === 'child'"
+             (click)="selectType('child')">
+
+          <mat-icon>child_care</mat-icon>
+          <h3>Child</h3>
+          <p>Under 18 Citizens</p>
+
+        </div>
+
+      </div>
+
+      <!-- FORM -->
+      <form [formGroup]="loginForm" class="login-form">
+
+        <!-- COMMON FIELD -->
+<!--        <mat-form-field appearance="outline">-->
+<!--          <mat-label>Email / Username</mat-label>-->
+<!--          <input matInput formControlName="username">-->
+<!--        </mat-form-field>-->
+        <mat-form-field appearance="outline">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="fullname">
+        </mat-form-field>
+        <!-- ADULT FIELDS -->
+        <div *ngIf="userType === 'adult'" class="slide-in">
+
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Full Name</mat-label>-->
+<!--            <input matInput formControlName="fullname">-->
+<!--          </mat-form-field>-->
+
+          <mat-form-field appearance="outline">
+            <mat-label>NIC Number</mat-label>
+            <input matInput formControlName="nic">
+          </mat-form-field>
+
+        </div>
+
+        <!-- CHILD FIELDS -->
+        <div *ngIf="userType === 'child'" class="slide-in">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Birth Certificate Number</mat-label>
+            <input matInput formControlName="birthcert">
+          </mat-form-field>
+
+        </div>
+
+        <!-- PASSWORD -->
+<!--        <mat-form-field appearance="outline">-->
+<!--          <mat-label>Password</mat-label>-->
+<!--          <input matInput type="password" formControlName="password">-->
+<!--        </mat-form-field>-->
+
+        <!-- LOGIN BUTTON -->
+        <button mat-raised-button color="primary"
+                class="login-btn"
+                (click)="login()">
+
+          <mat-icon>login</mat-icon>
+          Login
+
+        </button>
+
+      </form>
+
+      <p class="footer-text">
+        Secure Government Authentication System
+      </p>
+
+    </div>
+
+  </div>
+
+</div>

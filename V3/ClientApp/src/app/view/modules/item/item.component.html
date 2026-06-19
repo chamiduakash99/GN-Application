@@ -1,0 +1,173 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+   <!--Form-->
+    <mat-grid-tile [colspan]="4" [rowspan]="10">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Item Form</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-form [formGroup]="itemForm">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Item Code</mat-label>
+                    <input matInput formControlName="code">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Item Name</mat-label>
+                    <input matInput formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Item Purchase Price</mat-label>
+                    <input matInput formControlName="pprice">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Item Sales Price</mat-label>
+                    <input matInput formControlName="sprice">
+                </mat-form-field>
+
+                <div id="imgpanel">
+                  <img [src]="imageempurl">
+                  <input id="userImage" hidden="hidden" (change)="selectImage($event)" Select type="file" formControlName="photo">
+                  <label for="userImage" id="selectbutton">Select</label>
+                  <label id="clearbutton" (click)="clearImage()">Clear</label>
+                </div>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Item Quantity</mat-label>
+                    <input matInput formControlName="quantity">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Item ROP</mat-label>
+                    <input matInput formControlName="rop">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Date of Introduced</mat-label>
+                    <input matInput [matDatepicker]="dointro" formControlName="dointroduced">
+                    <mat-datepicker-toggle matIconSuffix [for]="dointro"></mat-datepicker-toggle>
+                    <mat-datepicker #dointro></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Item Status</mat-label>
+                    <mat-select formControlName="itemstatus">
+                        <mat-option *ngFor="let itemStatuses of itemStatus" [value]="itemStatuses">{{itemStatuses.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Item Brand</mat-label>
+                    <mat-select formControlName="brand">
+                        <mat-option *ngFor="let brand of brands" [value]="brand">{{brand.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Item Category</mat-label>
+                  <mat-select formControlName="category">
+                    <mat-option *ngFor="let category of categories" [value]="category">{{category.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Item Subcategory</mat-label>
+                    <mat-select formControlName="subcategory">
+                        <mat-option *ngFor="let subcategory of subcategories" [value]="subcategory">{{subcategory.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Select Item Unittype</mat-label>
+                    <mat-select formControlName="unittype">
+                        <mat-option *ngFor="let unittype of unittypes" [value]="unittype">{{unittype.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <div id="butpanel">
+                    <button mat-raised-button (click)="add()">Add</button>
+                    <button mat-raised-button>Clear</button>
+                    <button mat-raised-button>Update</button>
+                    <button mat-raised-button>Delete</button>
+                </div>
+              </mat-form>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+
+    <!--Search-->
+    <mat-grid-tile [colspan]="8" [rowspan]="4">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>Item Search</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-form [formGroup]="itemSearchForm">
+                <mat-form-field appearance="outline">
+                  <mat-label>Item Name</mat-label>
+                  <input matInput formControlName="name">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Select Item Brand</mat-label>
+                  <mat-select formControlName="brand">
+                    <mat-option *ngFor="let brand of brands" [value]="brand.name">{{brand.name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <button mat-raised-button (click)="search()">Search</button>
+                <button mat-raised-button (click)="searchClear()">Clear Search</button>
+              </mat-form>
+
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+
+    <!--View-->
+    <mat-grid-tile [colspan]="8" [rowspan]="6">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>Item Table</mat-card-title>
+            <div id="loading">
+              <img [src]="imageurl">
+            </div>
+          </mat-card-header>
+            <mat-card-content>
+
+                <mat-table [dataSource]="data">
+                    <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
+                        <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
+                        <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+                    </ng-container>
+
+<!--                    <ng-container *ngFor="let cscolumn of cscolumns;let i = index;" [matColumnDef]="cscolumn">-->
+<!--                        <mat-header-cell *matHeaderCellDef>-->
+<!--                            <mat-form [formGroup]="csearch" class="csearch">-->
+<!--                                <mat-form-field appearance="outline">-->
+<!--                                    <mat-label>{{csprompts[i]}}</mat-label>-->
+<!--                                    <input matInput [formControlName]="cscolumn"-->
+<!--                                           (keyup)="filterTable()">-->
+<!--                                </mat-form-field>-->
+<!--                            </mat-form>-->
+<!--                        </mat-header-cell>-->
+<!--                    </ng-container>-->
+
+                    <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+<!--                    <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>-->
+                    <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+
+                </mat-table>
+
+                <mat-paginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]" showFirstLastButtons></mat-paginator>
+
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+
+</mat-grid-list>

@@ -1,0 +1,353 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <mat-grid-tile [colspan]="4" [rowspan]="10">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Land Detail</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content id="landform">
+        <form [formGroup]="form">
+
+
+
+          <mat-card class="styled-card">
+            <b>Select the GND & Street</b>
+            <mat-card-content>
+              <br>
+              <form [formGroup]="innerform" class="grid-container">
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Province</mat-label>
+                  <mat-select formControlName="province"  (selectionChange)="selectProvineChnage($event)">
+                    <mat-option value="">Select Province</mat-option>
+                    <mat-option *ngFor="let province of provinces" [value]="province">
+                      {{ province.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>District</mat-label>
+                  <mat-select formControlName="district" (selectionChange)="selectDistrictChnage($event)">
+                    <mat-option value="">Select District</mat-option>
+                    <mat-option *ngFor="let district of districts" [value]="district">
+                      {{ district.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>Division</mat-label>
+                  <mat-select formControlName="division" (selectionChange)="selectDivisionChnage($event)">
+                    <mat-option value="">Select Division</mat-option>
+                    <mat-option *ngFor="let division of divisions" [value]="division">
+                      {{ division.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="form-field">
+                  <mat-label>GND</mat-label>
+                  <mat-select formControlName="gnd" (selectionChange)="selectGndChnage($event)">
+                    <mat-option value="">Select GND</mat-option>
+                    <mat-option *ngFor="let gnd of gnds" [value]="gnd">
+                      {{ gnd.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+<!--                <mat-form-field appearance="outline" class="form-field">-->
+<!--                  <mat-label>Street</mat-label>-->
+<!--                  <mat-select formControlName="street" (selectionChange)="selectStreetChnage($event)">-->
+<!--                    <mat-option value="">Select Street</mat-option>-->
+<!--                    <mat-option *ngFor="let s of streets" [value]="s">{{ s.fullname }}</mat-option>-->
+<!--                  </mat-select>-->
+
+<!--                  <input type="text" matInput formControlName="street" [matAutocomplete]="auto" >-->
+<!--                  <mat-autocomplete #auto="matAutocomplete">-->
+<!--                    <mat-option *ngFor="let street of filteredStreet | async" [value]="street.fullname" >-->
+<!--                      <div class="option-content">-->
+<!--                        <strong>{{ street.fullname }}</strong><br>-->
+<!--                        <small>{{ street.gnd.name }} | {{street.gnd.division.name }} | {{ street.gnd.division.district.name }} | {{ street.gnd.division.district.province.name }}</small>-->
+<!--                      </div>-->
+<!--                    </mat-option>-->
+<!--                  </mat-autocomplete>-->
+
+<!--                </mat-form-field>-->
+<!--                <mat-form-field appearance="outline" class="full-width">-->
+<!--                  <mat-label>Select Street</mat-label>-->
+<!--                  <input type="text" matInput [formControl]="streetControl" [matAutocomplete]="auto" (focus)="showAllStreets()" >-->
+<!--                  <mat-icon>search</mat-icon>-->
+<!--                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onStreetChnage($event)">-->
+<!--                    <mat-option *ngFor="let street of filteredStreet | async" [value]="street.fullname">-->
+<!--                      <div class="option-content">-->
+<!--                        <strong>{{ street.fullname }}</strong><br>-->
+<!--                        <small>{{ street.gnd.name }} | {{street.gnd.division.name }} | {{ street.gnd.division.district.name }} | {{ street.gnd.division.district.province.name }}</small>-->
+<!--                      </div>-->
+<!--                    </mat-option>-->
+<!--                  </mat-autocomplete>-->
+<!--                </mat-form-field>-->
+                <mat-icon>search</mat-icon>
+                <app-group-autocomplete
+                  [control]="form | getControl:'street'"
+                  [options]="streets"
+                  [displayKey]="'fullname'"
+                  label="Select Street Name"
+                  placeholder="Type to search street names">
+                </app-group-autocomplete>
+              </form>
+
+            </mat-card-content>
+          </mat-card>
+
+          <br><br>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="citizen">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Deed No</mat-label>
+            <input matInput formControlName="deedno">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Land Type</mat-label>
+            <mat-select formControlName="landtype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let lt of landtypes" [value]="lt">{{lt.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fence Type</mat-label>
+            <mat-select formControlName="fencetype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let ft of fencetypes" [value]="ft">{{ft.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div id="listtrnasfer">
+
+            <div class="list">
+              <mat-selection-list  #availablelist>
+                <mat-list-option  multiple  *ngFor="let landfeature of landfeatures" [value]="landfeature" >{{landfeature.name}}</mat-list-option>
+              </mat-selection-list>
+            </div>
+
+            <div id="pnlmiddle">
+              <button mat-raised-button (click)="rightSelected()">&gt;</button>
+              <button mat-raised-button (click)="leftSelected()">&lt;</button>
+              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>
+              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>
+            </div>
+
+            <div class="list">
+              <mat-selection-list  formControlName="landfeaturedetails" #selectedlist>
+                <mat-list-option *ngFor="let landfeaturedetails of landfeaturedetailsList" [value]="landfeaturedetails">{{landfeaturedetails.landfeature.name}}</mat-list-option>
+              </mat-selection-list>
+            </div>
+
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Latitude</mat-label>
+            <input matInput type="number" step="0.000001" formControlName="latitude">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Longitude</mat-label>
+            <input matInput type="number" step="0.000001" formControlName="longitude">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Size (sq.m)</mat-label>
+            <input matInput type="number" step="0.01" formControlName="size">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput formControlName="remarks" rows="3"></textarea>
+          </mat-form-field>
+
+<!--          <div id="imgpanel">-->
+<!--            <img [src]="imagelandurl" width="100" height="100" alt="map preview">-->
+<!--            <input id="mapImage" hidden type="file" (change)="selectMapImage($event)">-->
+<!--            <label for="mapImage" id="selectbutton">Select Map</label>-->
+<!--            <label id="clearbutton" (click)="clearImage()">Clear</label>-->
+<!--          </div>-->
+
+<!--          <div id="imgpanel">-->
+<!--            <img [src]="imagedeedurl" width="100" height="100" alt="deed preview">-->
+<!--            <input id="deedImage" hidden type="file" (change)="selectDeedImage($event)">-->
+<!--            <label for="deedImage" id="selectbutton">Select Deed</label>-->
+<!--            <label id="clearbutton" (click)="clearDeed()">Clear</label>-->
+<!--          </div>-->
+          <div id="butpanel">
+            <button mat-raised-button (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
+            <button mat-raised-button (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority)">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority)">Delete</button>
+          </div>
+
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Land Search</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <form [formGroup]="ssearch">
+
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Search by Name</mat-label>-->
+<!--            <input matInput formControlName="ssname">-->
+<!--          </mat-form-field>-->
+
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="sscitizen">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let citizen of citizens" [value]="citizen.name">{{citizen.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Land Type</mat-label>
+            <mat-select formControlName="sslandtype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let landtype of landtypes" [value]="landtype.name">{{landtype.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fence Type</mat-label>
+            <mat-select formControlName="ssfencetype">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let fencetype of fencetypes" [value]="fencetype.name">{{fencetype.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Street</mat-label>
+            <mat-select formControlName="ssstreet">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let street of streets" [value]="street.fullname">{{street.fullname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Deed No</mat-label>
+            <input matInput formControlName="ssdeedno">
+          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Land Feature</mat-label>-->
+<!--            <mat-select formControlName="sslandfeature">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let feature of landfeatures" [value]="feature.name">{{feature.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
+
+          <div>
+            <button mat-raised-button color="primary" (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button color="primary" (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear Search
+            </button>
+          </div>
+
+        </form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="8" [rowspan]="6">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Land Table</mat-card-title>
+        <div id="loading">
+          <img [src]="imageurl">
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <mat-table [dataSource]="data">
+
+          <!-- Data Columns -->
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+          </ng-container>
+
+<!--          &lt;!&ndash; Optional Column Search &ndash;&gt;-->
+<!--          <ng-container *ngFor="let cscolumn of cscolumns; let i = index;" [matColumnDef]="cscolumn">-->
+<!--            <mat-header-cell *matHeaderCellDef>-->
+<!--              <form [formGroup]="csearch" class="csearch">-->
+<!--                <mat-form-field appearance="outline">-->
+<!--                  <mat-label>{{csprompts[i]}}</mat-label>-->
+<!--                  <input matInput [formControlName]="cscolumn" (keyup)="filterTable()">-->
+<!--                </mat-form-field>-->
+<!--              </form>-->
+<!--            </mat-header-cell>-->
+<!--          </ng-container>-->
+
+          <!-- Header & Data Rows -->
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+<!--          <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>-->
+          <mat-row *matRowDef="let row; columns: columns;"
+                   (click)="fillForm(row)"
+                   [ngClass]="{'selected-row': row === selectedrow}">
+          </mat-row>
+
+        </mat-table>
+
+        <!-- Paginator -->
+        <mat-paginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]"></mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+
+
+  <!--  <mat-grid-tile [colspan]="8" [rowspan]="6">-->
+<!--    <mat-card>-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Land Table</mat-card-title>-->
+<!--        <div id="loading">-->
+<!--          <img [src]="imageurl">-->
+<!--        </div>-->
+<!--      </mat-card-header>-->
+
+<!--      <mat-card-content>-->
+
+<!--        <mat-table [dataSource]="data">-->
+
+<!--          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">-->
+<!--            <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>-->
+<!--            <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>-->
+<!--          </ng-container>-->
+
+<!--          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>-->
+<!--          <mat-row *matRowDef="let row; columns: columns;" (click)="fillForm(row)" [ngClass]="{'selected-row': row === selectedrow}"></mat-row>-->
+
+<!--        </mat-table>-->
+
+<!--        <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>-->
+
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+</mat-grid-list>

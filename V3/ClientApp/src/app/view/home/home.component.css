@@ -1,0 +1,80 @@
+.main-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #ffffff;
+  padding: 10px;
+}
+
+/* Header */
+.header-card {
+  background-size: cover;
+  background-position: center;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#headImg {
+  width: 100% ;
+  height: auto;
+}
+
+/* Toolbar */
+.toolbar-middle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+.spacer {
+  flex: 1;
+}
+
+/* Summary Cards */
+.summary-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.summary-card {
+  flex: 1;
+  text-align: center;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  min-width: 200px;
+}
+
+/* Lists */
+.activity-list, .event-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.activity-list li, .event-list li {
+  background: #f9fafc;
+  margin: 8px 0;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* Message cards */
+.message-header {
+  background-image: url('/assets/GNL8.png');
+  color: #fff;
+  font-weight: bold;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+/* Responsive fix */
+@media (max-width: 900px) {
+  .summary-section {
+    flex-direction: column;
+  }
+  mat-grid-list {
+    grid-template-columns: 1fr !important;
+  }
+}

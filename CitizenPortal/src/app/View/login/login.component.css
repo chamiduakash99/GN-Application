@@ -1,0 +1,245 @@
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.login-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+/* =========================
+   LEFT PANEL
+========================= */
+
+.left-panel {
+  flex: 1;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+}
+.branding h1 {
+  font-size: 42px;
+  font-weight: bold;
+  animation: fadeDown 1s ease;
+}
+
+.branding p {
+  opacity: 0.8;
+}
+
+/* animated circle */
+.animation-circle {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: rgba(56,189,248,0.2);
+  border-radius: 50%;
+  animation: float 6s infinite ease-in-out;
+}
+
+/* =========================
+   RIGHT PANEL
+========================= */
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f4f7fb;
+}
+
+.login-card {
+  width: 420px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  animation: fadeUp 0.8s ease;
+}
+
+h2 {
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* =========================
+   USER TYPE CARDS
+========================= */
+
+.user-type {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.type-card {
+  flex: 1;
+  text-align: center;
+  padding: 18px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+
+  position: relative;
+  overflow: hidden;
+}
+/*.type-card {*/
+/*  flex: 1;*/
+/*  text-align: center;*/
+/*  padding: 15px;*/
+/*  border-radius: 12px;*/
+/*  border: 2px solid #e5e7eb;*/
+/*  cursor: pointer;*/
+/*  transition: 0.3s;*/
+/*}*/
+
+.type-card mat-icon {
+  font-size: 36px;
+  margin-bottom: 5px;
+  transition: 0.3s;
+}
+
+.type-card.active {
+  border-color: #38bdf8;
+  background: #e0f2fe;
+  transform: scale(1.05);
+}
+
+.type-card:hover {
+  transform: translateY(-3px);
+}
+.type-card:nth-child(1) mat-icon {
+  color: #2563eb;
+}
+
+.type-card:nth-child(1):hover {
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+}
+.type-card:nth-child(2) mat-icon {
+  color: #ec4899;
+}
+
+.type-card:nth-child(2):hover {
+  background: linear-gradient(135deg, #fce7f3, #fdf2f8);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(236,72,153,0.25);
+}
+.type-card.active:nth-child(1) {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 15px 30px rgba(37,99,235,0.4);
+}
+.type-card.active:nth-child(2) {
+  background: linear-gradient(135deg, #ec4899, #db2777);
+  box-shadow: 0 15px 30px rgba(236,72,153,0.4);
+}
+.type-card.active h3,
+.type-card.active p,
+.type-card.active mat-icon {
+  color: white !important;
+}
+/* =========================
+   FORM
+========================= */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.login-btn {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.login-btn:hover {
+  transform: scale(1.05);
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+.slide-in {
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-30px);
+  }
+}
+
+/* =========================
+   FOOTER TEXT
+========================= */
+
+.footer-text {
+  margin-top: 15px;
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+}

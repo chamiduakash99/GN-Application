@@ -1,0 +1,21 @@
+# Spring Boot
+target/
+*.class
+*.jar
+*.war
+
+# Angular
+node_modules/
+dist/
+.angular/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Database
+*.mwb.bak
+
+# Large files
+*.rar

@@ -1,0 +1,308 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- LEFT PANEL — CITIZEN PORTAL FORM                              -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+
+  <mat-grid-tile [colspan]="4" [rowspan]="14">
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>Citizen Certificate Portal</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content id="certreqform">
+
+        <form [formGroup]="reqform">
+
+          <!-- Citizen -->
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="citizen">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let citizen of citizens" [value]="citizen">
+                {{citizen.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Certificate Type -->
+          <mat-form-field appearance="outline">
+            <mat-label>Certificate Type</mat-label>
+            <mat-select formControlName="certificatetype">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let type of certificatetypes" [value]="type">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Purpose -->
+          <mat-form-field appearance="outline">
+            <mat-label>Purpose</mat-label>
+            <textarea matInput rows="3" formControlName="purpose"></textarea>
+          </mat-form-field>
+
+          <!-- Status (read-only display) -->
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <input matInput formControlName="requeststatus" readonly>
+          </mat-form-field>
+
+          <!-- Requested Date -->
+          <mat-form-field appearance="outline">
+            <mat-label>Requested Date</mat-label>
+            <input matInput [matDatepicker]="reqdate" formControlName="requesteddate">
+            <mat-datepicker-toggle matSuffix [for]="reqdate"></mat-datepicker-toggle>
+            <mat-datepicker #reqdate></mat-datepicker>
+          </mat-form-field>
+
+          <!-- Reject Reason -->
+          <mat-form-field appearance="outline" *ngIf="certificaterequest?.rejectreason">
+            <mat-label>Reject Reason</mat-label>
+            <textarea matInput formControlName="rejectreason" readonly></textarea>
+          </mat-form-field>
+
+          <!-- Buttons -->
+
+          <div id="butpanel">
+
+            <button mat-raised-button color="primary"
+                    (click)="add()"
+                    [disabled]="!canSubmit()">
+              Submit
+            </button>
+
+            <button mat-raised-button color="accent"
+                    (click)="update()"
+                    [disabled]="!canUpdate()">
+              Update
+            </button>
+
+            <button mat-raised-button color="warn"
+                    (click)="delete()"
+                    [disabled]="!canDelete()">
+              Delete
+            </button>
+
+            <button mat-raised-button (click)="clear()">
+              Clear
+            </button>
+
+          </div>
+
+          <!--          <div id="butpanel">-->
+
+          <!--            <button mat-raised-button (click)="add()" [disabled]="!enaadd">-->
+          <!--              Submit-->
+          <!--            </button>-->
+
+          <!--            <button mat-raised-button (click)="update()" [disabled]="!enaupd">-->
+          <!--              Update-->
+          <!--            </button>-->
+
+          <!--            <button mat-raised-button (click)="delete()" [disabled]="!enadel">-->
+          <!--              Delete-->
+          <!--            </button>-->
+
+          <!--            <button mat-raised-button (click)="clear()">-->
+          <!--              Clear-->
+          <!--            </button>-->
+
+          <!--          </div>-->
+
+        </form>
+
+      </mat-card-content>
+
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT TOP — SEARCH                                           -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>Request Progress</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <mat-horizontal-stepper [selectedIndex]="progressIndex" linear>
+
+          <!-- Step 1 -->
+          <mat-step [completed]="progressIndex >= 0">
+            <ng-template matStepLabel>
+              Submitted
+            </ng-template>
+
+            Request submitted successfully.
+          </mat-step>
+
+          <!-- Step 2 -->
+          <mat-step [completed]="progressIndex >= 1">
+            <ng-template matStepLabel>
+              Under Review
+            </ng-template>
+
+            GN officer is reviewing your request.
+          </mat-step>
+
+          <!-- Step 3 -->
+          <mat-step [completed]="progressIndex >= 2">
+            <ng-template matStepLabel>
+              Approved
+            </ng-template>
+
+            Your request has been approved.
+          </mat-step>
+
+          <!-- Step 4 -->
+          <mat-step [completed]="progressIndex >= 3">
+            <ng-template matStepLabel>
+              Certificate Ready
+            </ng-template>
+
+            Certificate has been created.
+          </mat-step>
+
+          <!-- Step 5 -->
+          <mat-step [completed]="progressIndex >= 4">
+            <ng-template matStepLabel>
+              Completed
+            </ng-template>
+
+            Certificate picked up successfully.
+          </mat-step>
+
+        </mat-horizontal-stepper>
+
+        <!-- Rejected Message -->
+        <div *ngIf="certificaterequest?.requeststatus?.name === 'Rejected'"
+             class="reject-box">
+
+          <h3>Request Rejected</h3>
+
+          <p>
+            {{certificaterequest.rejectreason}}
+          </p>
+
+        </div>
+
+      </mat-card-content>
+
+    </mat-card>
+
+  </mat-grid-tile>
+
+  <!--  <mat-grid-tile [colspan]="8" [rowspan]="4">-->
+  <!--    <mat-card>-->
+
+  <!--      <mat-card-header>-->
+  <!--        <mat-card-title>Search Requests</mat-card-title>-->
+  <!--      </mat-card-header>-->
+
+  <!--      <mat-card-content>-->
+
+  <!--        <form [formGroup]="ssreqsearch">-->
+
+  <!--          <mat-form-field appearance="outline">-->
+  <!--            <mat-label>Citizen</mat-label>-->
+  <!--            <mat-select formControlName="sscitizens">-->
+  <!--              <mat-option [value]="null">Not Selected</mat-option>-->
+  <!--              <mat-option *ngFor="let c of citizens" [value]="c.id">-->
+  <!--                {{c.name}}-->
+  <!--              </mat-option>-->
+  <!--            </mat-select>-->
+  <!--          </mat-form-field>-->
+
+  <!--          <mat-form-field appearance="outline">-->
+  <!--            <mat-label>Type</mat-label>-->
+  <!--            <mat-select formControlName="sstype">-->
+  <!--              <mat-option [value]="null">Not Selected</mat-option>-->
+  <!--              <mat-option *ngFor="let t of certificatetypes" [value]="t.id">-->
+  <!--                {{t.name}}-->
+  <!--              </mat-option>-->
+  <!--            </mat-select>-->
+  <!--          </mat-form-field>-->
+
+  <!--          <mat-form-field appearance="outline">-->
+  <!--            <mat-label>Status</mat-label>-->
+  <!--            <mat-select formControlName="ssstatus">-->
+  <!--              <mat-option [value]="null">Not Selected</mat-option>-->
+  <!--              <mat-option *ngFor="let s of requeststatuses" [value]="s.id">-->
+  <!--                {{s.name}}-->
+  <!--              </mat-option>-->
+  <!--            </mat-select>-->
+  <!--          </mat-form-field>-->
+
+  <!--          <div>-->
+  <!--            <button mat-raised-button (click)="btnSearchMc()">-->
+  <!--              Search-->
+  <!--            </button>-->
+
+  <!--            <button mat-raised-button (click)="btnSearchClearMc()">-->
+  <!--              Clear-->
+  <!--            </button>-->
+  <!--          </div>-->
+
+  <!--        </form>-->
+
+  <!--      </mat-card-content>-->
+
+  <!--    </mat-card>-->
+  <!--  </mat-grid-tile>-->
+
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT MIDDLE — REQUEST TABLE                                 -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+
+  <mat-grid-tile [colspan]="8" [rowspan]="10">
+    <mat-card>
+
+      <mat-card-header>
+        <mat-card-title>My Certificate Requests</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <mat-table [dataSource]="data">
+
+          <!-- Dynamic Columns -->
+          <ng-container *ngFor="let col of columns; let i = index"
+                        [matColumnDef]="col">
+
+            <mat-header-cell *matHeaderCellDef>
+              {{headers[i]}}
+            </mat-header-cell>
+
+            <mat-cell *matCellDef="let element">
+              {{uiassist.getProperty(element, binders[i])}}
+            </mat-cell>
+
+          </ng-container>
+
+          <!-- Header + Rows -->
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+
+          <mat-row *matRowDef="let row; columns: columns"
+                   (click)="fillForm(row)"
+                   [ngClass]="{'selected-row': row === selectedRow}">
+          </mat-row>
+
+        </mat-table>
+
+        <mat-paginator [pageSize]="5"
+                       [pageSizeOptions]="[5,10,20]">
+        </mat-paginator>
+
+      </mat-card-content>
+
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

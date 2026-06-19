@@ -1,0 +1,82 @@
+.top-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  height: 75px;
+  padding: 0 25px;
+
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 30px;
+  color: #38bdf8;
+}
+
+.system-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.nav-buttons button {
+  height: 45px;
+  padding: 0 18px;
+
+  border-radius: 12px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  transition: all 0.3s ease;
+}
+
+.nav-buttons button mat-icon {
+  margin-right: 6px;
+}
+
+.nav-buttons button:hover {
+  background: rgba(255,255,255,0.12);
+  transform: translateY(-2px);
+}
+
+.active-link {
+  background: #38bdf8 !important;
+  color: #0f172a !important;
+  font-weight: 700;
+}
+
+.main-content {
+  padding: 20px;
+}
+
+.page-wrapper {
+  display: flex;
+  height: calc(100vh - 64px); /* 64px = mat-toolbar height, adjust if your toolbar height differs */
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  box-sizing: border-box;
+}
