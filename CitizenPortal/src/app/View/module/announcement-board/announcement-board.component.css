@@ -1,38 +1,139 @@
-#board {
-  max-height: calc(100vh - 200px);
+.ann-panel {
+  width: 100%;
+  height: 100%;
+  padding: 16px 12px;
+  box-sizing: border-box;
+  background: #f1f5f9;
   overflow-y: auto;
 }
 
-.board-item {
-  background: #f9f9f9;
-  border-radius: 8px;
-  padding: 10px 12px;
-  margin-bottom: 10px;
-  border-left: 4px solid #1a237e;
+/* Header */
+.ann-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
-.item-title {
-  font-weight: 600;
-  font-size: 14px;
-  color: #212121;
+.ann-header mat-icon {
+  color: #38bdf8;
+  font-size: 20px;
 }
 
-.item-content {
+/* Each card */
+.ann-item {
+  background: white;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-left: 4px solid #38bdf8;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.ann-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* NEW badge */
+.ann-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #38bdf8;
+  color: #0f172a;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.ann-title {
+  font-weight: 700;
   font-size: 13px;
-  color: #616161;
-  margin: 4px 0;
-  white-space: pre-wrap;
+  color: #0f172a;
+  margin-bottom: 8px;
+  padding-right: 36px; /* space for badge */
+  line-height: 1.4;
 }
 
-.item-date {
+.ann-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.ann-content {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+/* Footer with date */
+.ann-footer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 11px;
-  color: #9e9e9e;
+  color: #94a3b8;
 }
 
-.no-items {
-  text-align: center;
-  color: #9e9e9e;
-  padding: 20px;
+.ann-cal-icon {
+  font-size: 13px;
+  width: 13px;
+  height: 13px;
+  color: #38bdf8;
 }
 
+/* Loading */
+.ann-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-top: 30px;
+}
 
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.ann-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #94a3b8;
+  margin-top: 40px;
+  gap: 8px;
+}
+
+.ann-empty mat-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.ann-empty p {
+  font-size: 13px;
+  margin: 0;
+}

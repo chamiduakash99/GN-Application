@@ -1,26 +1,27 @@
-<mat-card>
-  <mat-card-header>
-    <mat-card-title>
-      <mat-icon>campaign</mat-icon>
-      Announcements
-    </mat-card-title>
-    <div id="loading">
-      <img [src]="imageurl">
+<div class="ann-panel">
+  <div class="ann-header">
+    <mat-icon>campaign</mat-icon>
+    <span>Announcements</span>
+  </div>
+
+  <div *ngIf="loading" class="ann-loading">
+    <mat-icon class="spin">autorenew</mat-icon>
+    Loading...
+  </div>
+
+  <div *ngFor="let item of announcements" class="ann-item">
+    <div class="ann-badge">NEW</div>
+    <div class="ann-title">{{ item.title }}</div>
+    <div class="ann-divider"></div>
+    <div class="ann-content">{{ item.content }}</div>
+    <div class="ann-footer">
+      <mat-icon class="ann-cal-icon">calendar_today</mat-icon>
+      <span>{{ item.publishedat | date:'mediumDate' }}</span>
     </div>
-  </mat-card-header>
+  </div>
 
-  <mat-card-content id="board">
-
-    <div *ngFor="let item of announcements" class="board-item">
-      <div class="item-title">{{ item.title }}</div>
-      <div class="item-content">{{ item.content }}</div>
-      <div class="item-date">{{ item.publishedat | date:'mediumDate' }}</div>
-    </div>
-
-    <div *ngIf="announcements.length === 0" class="no-items">
-      No announcements at this time.
-    </div>
-
-  </mat-card-content>
-
-</mat-card>
+  <div *ngIf="!loading && announcements.length === 0" class="ann-empty">
+    <mat-icon>notifications_off</mat-icon>
+    <p>No announcements at this time.</p>
+  </div>
+</div>
