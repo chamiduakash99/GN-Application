@@ -1,6 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -35,9 +36,14 @@ public class Certificaterequest {
     @JsonIgnore
     @OneToMany(mappedBy = "certificaterequest")
     private Collection<Certificate> certificates;
+
     @ManyToOne
     @JoinColumn(name = "citizen_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnoreProperties({"religion","matiralstatus","educationlevel","ethnicity","gender","birthcetificateno","medicalconditions","remarks","isconvicted"})
     private Citizen citizen;
+//    @ManyToOne
+//    @JoinColumn(name = "citizen_id", referencedColumnName = "id", nullable = false)
+//    private Citizen citizen;
     @ManyToOne
     @JoinColumn(name = "certificatetype_id", referencedColumnName = "id", nullable = false)
     private Certificatetype certificatetype;

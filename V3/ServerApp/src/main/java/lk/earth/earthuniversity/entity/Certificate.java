@@ -1,5 +1,6 @@
 package lk.earth.earthuniversity.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -30,6 +31,7 @@ public class Certificate {
     @Basic
     @Column(name = "expirydate")
     private Date expirydate;
+    @JsonIgnore
     @Basic
     @Column(name = "scannedcopy")
     private byte[] scannedcopy;
