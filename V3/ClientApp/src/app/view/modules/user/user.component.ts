@@ -176,7 +176,7 @@ export class UserComponent implements OnInit{
       .then((usrs: User[]) => {
         this.users = usrs;
         console.log(this.users)
-        this.imageurl = 'assets/fulfilled.png';
+        this.imageurl = 'assets/fullfilled.png';
       })
       .catch((error) => {
         console.log(error);

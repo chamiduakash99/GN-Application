@@ -278,6 +278,7 @@ export class AnnouncementComponent {
         if (result) {
 
           this.as.add(this.announcement).then((responce: [] | undefined) => {
+            console.log("Server response:", JSON.stringify(responce));
             if (responce != undefined) { // @ts-ignore
               addstatus = responce['errors'] == "";
               if (!addstatus) { // @ts-ignore
