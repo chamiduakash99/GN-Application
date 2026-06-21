@@ -80,3 +80,14 @@
   padding: 16px;
   box-sizing: border-box;
 }
+
+app-announcement-board {
+  width: 280px;
+  min-width: 280px;
+  height: 100%;
+  overflow-y: auto;
+  border-left: 1px solid #e2e8f0;
+  background: #f1f5f9;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.06);
+  box-sizing: border-box;
+}

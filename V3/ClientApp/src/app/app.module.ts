@@ -58,6 +58,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { CertificateComponent } from './view/modules/certificate/certificate.component';
 import { AnnouncementComponent } from './view/modules/announcement/announcement.component';
 import { ComplaintComponent } from './view/modules/complaint/complaint.component';
+import { IdcardrequestComponent } from './view/modules/idcardrequest/idcardrequest.component';
 
 
 
@@ -90,7 +91,8 @@ import { ComplaintComponent } from './view/modules/complaint/complaint.component
     CertificateportalComponent,
     CertificateComponent,
     AnnouncementComponent,
-    ComplaintComponent
+    ComplaintComponent,
+    IdcardrequestComponent
   ],
   imports: [
     MatDatepickerModule,

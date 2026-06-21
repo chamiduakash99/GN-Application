@@ -11,8 +11,14 @@ export class ComplaintStatusService {
 
   constructor(private http: HttpClient) {}
 
-  getAllList(): Promise<Complaintstatus[]> {
+  getAll(): Promise<Complaintstatus[]> {
     return this.http.get<Complaintstatus[]>(this.url)
+      .toPromise()
+      .then(res => res ?? []);
+  }
+
+  getAllList(): Promise<Complaintstatus[]> {
+    return this.http.get<Complaintstatus[]>(this.url + '/list')
       .toPromise()
       .then(res => res ?? []);
   }

@@ -1,19 +1,18 @@
 import {Citizen} from "./Citizen";
-import {Complaintstatus} from "./Complaintstatus";
 import {Employee} from "./employee";
+import {Complaintstatus} from "./Complaintstatus";
 
 export class Complaint {
-
-  public id !: number;
-  public subject !: string;
-  public description !: string;
-  public complaineddate !: string;
-  public rejectreason !: string;
-  public actiontaken !: string;
-  public referredto !: string;
-  public citizen !: Citizen;
-  public complaintstatus !: Complaintstatus;
-  public employee !: Employee;
+  public id!: number;
+  public subject!: string;
+  public description!: string;
+  public complaineddate!: string;
+  public rejectreason!: string;
+  public actiontaken!: string;
+  public referredto!: string;
+  public citizen!: Citizen;
+  public employee!: Employee;
+  public complaintstatus!: Complaintstatus;
 
   constructor(
     id: number,
@@ -24,8 +23,8 @@ export class Complaint {
     actiontaken: string,
     referredto: string,
     citizen: Citizen,
-    complaintstatus: Complaintstatus,
-    employee: Employee
+    employee: Employee,
+    complaintstatus: Complaintstatus
   ) {
     this.id = id;
     this.subject = subject;
@@ -35,7 +34,7 @@ export class Complaint {
     this.actiontaken = actiontaken;
     this.referredto = referredto;
     this.citizen = citizen;
-    this.complaintstatus = complaintstatus;
     this.employee = employee;
+    this.complaintstatus = complaintstatus;
   }
 }

@@ -3,7 +3,7 @@
   <!-- Logo Area -->
   <div class="logo-section">
     <mat-icon class="logo-icon">account_balance</mat-icon>
-    <span class="system-title">Citizen Portal</span>
+    <span class="system-title">Grama Niladhari Office Citizen Portal</span>
   </div>
 
   <!-- Spacer -->
@@ -19,7 +19,7 @@
 
     <button mat-button routerLink="citizen">
       <mat-icon>groups</mat-icon>
-      Citizens
+      Citizen Login
     </button>
 
     <button mat-button routerLink="certificate">
@@ -27,10 +27,20 @@
       Certificates
     </button>
 
-    <button mat-button>
-      <mat-icon>bar_chart</mat-icon>
-      Reports
+    <button mat-button routerLink="idcardrequest">
+      <mat-icon>description</mat-icon>
+      ID Card Request
     </button>
+
+    <button mat-button routerLink="complaint">
+      <mat-icon>report_problem</mat-icon>
+      Complaint
+    </button>
+
+<!--    <button mat-button>-->
+<!--      <mat-icon>bar_chart</mat-icon>-->
+<!--      Reports-->
+<!--    </button>-->
 
     <button mat-icon-button  (click)="logout()">
       <mat-icon>logout</mat-icon>

@@ -31,10 +31,7 @@ export class AuthorizationManager {
   Citizen = [
     {name: 'Citizen', isVisible: false, routerLink: 'citizen'}
   ]
-  // CertificateRequest = [
-  //   { name: 'Certificate Portal', isVisible: false, routerLink: 'certificateportal' },
-  //   { name: 'Certificate Request', isVisible: false, routerLink: 'certificaterequest' }
-  // ];
+
   CertificateRequest = [
     {name: 'Certificate',  isVisible: false, routerLink: 'certificate'},
     {name: 'CertificateRequest',  isVisible: false, routerLink: 'certificaterequest'}
@@ -42,6 +39,14 @@ export class AuthorizationManager {
 
   Announcement = [
     {name: 'Announcement',  isVisible: false, routerLink: 'announcement'}
+  ];
+
+  Complaint = [
+    {name: 'Complaint',  isVisible: false, routerLink: 'complaint'}
+  ];
+
+  IdCardRequest = [
+    {name: 'IdCardRequest',  isVisible: false, routerLink: 'idcardrequest'}
   ];
 
   Reports = [
@@ -57,7 +62,9 @@ export class AuthorizationManager {
       { Menu : 'Reports' , MenuItems : this.Reports },
       { Menu : 'Citizen' , MenuItems : this.Citizen },
       { Menu : 'CertificateRequest' , MenuItems : this.CertificateRequest },
-      { Menu : 'Announcement' , MenuItems : this.Announcement }
+      { Menu : 'Announcement' , MenuItems : this.Announcement },
+      { Menu : 'Complaint' , MenuItems : this.Complaint },
+      { Menu : 'IdCardRequest' , MenuItems : this.IdCardRequest }
 
     ]
   }

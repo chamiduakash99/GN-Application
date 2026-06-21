@@ -22,7 +22,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {HttpClientModule} from "@angular/common/http";
 import {MatDialogModule} from "@angular/material/dialog";
 import {AuthorizationManager} from "./View/service/authorizationmanager";
-import {DatePipe} from "@angular/common";
+import {CommonModule, DatePipe} from "@angular/common";
 import {MatInputModule} from "@angular/material/input";
 import {MatNativeDateModule} from "@angular/material/core";
 import {MatSidenavModule} from "@angular/material/sidenav";
@@ -36,7 +36,9 @@ import {GetControlPipe} from "./View/util/ui/GetControlPipe";
 import {MatStepperModule} from "@angular/material/stepper";
 import { LoginComponent } from './View/login/login.component';
 import { AnnouncementBoardComponent } from './View/module/announcement-board/announcement-board.component';
-import { ComplaintportalComponent } from './View/module/complaintportal/complaintportal.component';
+import {ComplaintComponent} from "./View/module/complaintportal/complaintportal.component";
+import { IdcardrequestPortalComponent } from './View/module/idcardrequest-portal/idcardrequest-portal.component';
+// import { ComplaintportalComponent } from './View/module/complaintportal/complaintportal.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { ComplaintportalComponent } from './View/module/complaintportal/complain
     CertificateRequestComponent,
     LoginComponent,
     AnnouncementBoardComponent,
-    ComplaintportalComponent,
+    ComplaintComponent,
+    IdcardrequestPortalComponent,
+
 
   ],
   imports: [
@@ -76,7 +80,9 @@ import { ComplaintportalComponent } from './View/module/complaintportal/complain
     MatAutocompleteModule,
     AppGroupAutocompleteComponent,
     GetControlPipe,
-    MatStepperModule
+    MatStepperModule,
+    CommonModule,
+
   ],
   providers: [
     DatePipe,

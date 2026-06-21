@@ -24,6 +24,8 @@ import {CertificaterequestComponent} from "./view/modules/certificaterequest/cer
 import {CertificateportalComponent} from "./view/modules/certificateportal/certificateportal.component";
 import {CertificateComponent} from "./view/modules/certificate/certificate.component";
 import {AnnouncementComponent} from "./view/modules/announcement/announcement.component";
+import {ComplaintComponent} from "./view/modules/complaint/complaint.component";
+import {IdcardrequestComponent} from "./view/modules/idcardrequest/idcardrequest.component";
 
 
 const routes: Routes = [
@@ -60,7 +62,9 @@ const routes: Routes = [
       { path: "certificaterequest", component: CertificaterequestComponent },
       { path: "certificateportal", component: CertificateportalComponent },
       { path: "certificate", component: CertificateComponent },
-      { path: "announcement", component: AnnouncementComponent }
+      { path: "announcement", component: AnnouncementComponent },
+      { path: "complaint", component: ComplaintComponent },
+      { path: "idcardrequest", component: IdcardrequestComponent }
 
     ]
   }];
