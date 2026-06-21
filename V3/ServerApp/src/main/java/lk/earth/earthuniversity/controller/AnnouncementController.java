@@ -157,7 +157,6 @@ public class AnnouncementController {
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String, String> update(@RequestBody Announcement announcement) {
-
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
@@ -168,6 +167,11 @@ public class AnnouncementController {
         }
 
         if (errors.equals("")) {
+            // Fetch fresh from DB using custom query to get employee
+            Announcement existing = announcementDao.findByMyId(announcement.getId());
+            Employee employee = existing.getEmployee();
+
+            announcement.setEmployee(employee);
             announcementDao.save(announcement);
         } else {
             errors = "Server Validation Errors : <br>" + errors;
@@ -176,9 +180,34 @@ public class AnnouncementController {
         response.put("id", String.valueOf(announcement.getId()));
         response.put("url", "/announcements/put");
         response.put("errors", errors);
-
         return response;
     }
+
+//    @PutMapping
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public HashMap<String, String> update(@RequestBody Announcement announcement) {
+//
+//        HashMap<String, String> response = new HashMap<>();
+//        String errors = "";
+//
+//        Optional<Announcement> ext = announcementDao.findById(announcement.getId());
+//
+//        if (ext.isEmpty()) {
+//            errors = errors + "Announcement not found <br>";
+//        }
+//
+//        if (errors.equals("")) {
+//            announcementDao.save(announcement);
+//        } else {
+//            errors = "Server Validation Errors : <br>" + errors;
+//        }
+//
+//        response.put("id", String.valueOf(announcement.getId()));
+//        response.put("url", "/announcements/put");
+//        response.put("errors", errors);
+//
+//        return response;
+//    }
 
     // 5) DELETE
     @DeleteMapping("/{id}")
