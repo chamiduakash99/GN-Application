@@ -1,0 +1,147 @@
+/* ── Base card ───────────────────────────────────────────────────────────── */
+mat-card {
+  width: 100%;
+  height: 100%;
+  margin: 10px 10px -10px 10px;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08) !important;
+  transition: 0.3s ease;
+}
+mat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+}
+mat-card-content {
+  overflow: auto;
+  height: 100%;
+}
+mat-card-header {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  align-items: center;
+}
+mat-card-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* ── Complaint form ───────────────────────────────────────────────────────── */
+#complaintform {
+  padding-top: 20px;
+}
+#complaintform mat-form-field {
+  width: 100%;
+}
+textarea {
+  resize: none;
+}
+
+/* ── Button panel ────────────────────────────────────────────────────────── */
+#butpanel {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#butpanel button {
+  width: 90px;
+  margin: 3px;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+#butpanel button:hover {
+  transform: scale(1.03);
+}
+#butpanel button:disabled {
+  opacity: 0.4;
+}
+
+/* ── Stepper ─────────────────────────────────────────────────────────────── */
+mat-horizontal-stepper {
+  background: transparent;
+  margin-top: 10px;
+}
+::ng-deep .mat-step-header.mat-active {
+  background: #e0f2fe;
+  border-radius: 10px;
+}
+
+/* ── Reject box ──────────────────────────────────────────────────────────── */
+.reject-box {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #fee2e2;
+  border-left: 5px solid #ef4444;
+  color: #991b1b;
+  animation: fadeIn 0.4s ease-in-out;
+}
+.reject-box h3 {
+  margin: 0 0 5px;
+}
+
+/* ── Resolve box ─────────────────────────────────────────────────────────── */
+.resolve-box {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #dcfce7;
+  border-left: 5px solid #22c55e;
+  color: #166534;
+  animation: fadeIn 0.4s ease-in-out;
+}
+.resolve-box h3 {
+  margin: 0 0 5px;
+}
+
+/* ── Hint text ───────────────────────────────────────────────────────────── */
+.hint-text {
+  color: #94a3b8;
+  margin-top: 20px;
+  text-align: center;
+  font-style: italic;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+mat-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+mat-header-cell {
+  background: #0f172a;
+  color: white;
+  font-weight: 600;
+}
+mat-cell {
+  padding: 12px;
+}
+mat-row {
+  transition: 0.2s;
+  cursor: pointer;
+}
+mat-row:hover {
+  background: #f1f5f9;
+}
+.selected-row {
+  background: #dbeafe !important;
+}
+mat-paginator {
+  margin-top: 10px;
+}
+
+/* ── Form validation colours ─────────────────────────────────────────────── */
+#complaintform mat-form-field .ng-valid,
+.ng-valid.required {
+  background-color: lightgreen;
+}
+#complaintform mat-form-field .ng-dirty {
+  background-color: gold;
+}
+
+/* ── Animation ───────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

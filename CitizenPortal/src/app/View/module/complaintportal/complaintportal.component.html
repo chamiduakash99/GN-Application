@@ -1,198 +1,166 @@
-<!--<mat-grid-list [cols]="12" rowHeight="4rem">-->
+<mat-grid-list [cols]="12" rowHeight="4rem">
 
-<!--  &lt;!&ndash; ═════════════════════════════════════════════════════════════ &ndash;&gt;-->
-<!--  &lt;!&ndash; LEFT PANEL — CITIZEN COMPLAINT FORM &ndash;&gt;-->
-<!--  &lt;!&ndash; ═════════════════════════════════════════════════════════════ &ndash;&gt;-->
-<!--  <mat-grid-tile [colspan]="4" [rowspan]="14">-->
-<!--    <mat-card>-->
-<!--      <mat-card-header>-->
-<!--        <mat-card-title>Citizen Complaint Portal</mat-card-title>-->
-<!--      </mat-card-header>-->
-<!--      <mat-card-content id="complaintform">-->
-<!--        <form [formGroup]="complaintform">-->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- LEFT PANEL — Citizen Complaint Form -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="4" [rowspan]="14">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Submit a Complaint</mat-card-title>
+      </mat-card-header>
+      <mat-card-content id="complaintform">
+        <form [formGroup]="form">
 
-<!--          &lt;!&ndash; Subject &ndash;&gt;-->
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Subject</mat-label>-->
-<!--            <input matInput formControlName="subject">-->
-<!--          </mat-form-field>-->
+          <!-- Citizen (pre-filtered to logged-in citizen) -->
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="citizen">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-<!--          &lt;!&ndash; Description &ndash;&gt;-->
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Describe your complaint</mat-label>-->
-<!--            <textarea matInput rows="4" formControlName="description"></textarea>-->
-<!--          </mat-form-field>-->
+          <!-- Officer to assign -->
+          <mat-form-field appearance="outline">
+            <mat-label>GN Officer</mat-label>
+            <mat-select formControlName="employee">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let e of employees" [value]="e">{{e.callingname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-<!--          &lt;!&ndash; Status (read-only display) &ndash;&gt;-->
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Status</mat-label>-->
-<!--            <input matInput formControlName="complaintstatus" readonly>-->
-<!--          </mat-form-field>-->
+          <!-- Subject -->
+          <mat-form-field appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject" placeholder="Brief subject of complaint">
+          </mat-form-field>
 
-<!--          &lt;!&ndash; Complained Date &ndash;&gt;-->
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Complained Date</mat-label>-->
-<!--            <input matInput formControlName="complaineddate" readonly>-->
-<!--          </mat-form-field>-->
+          <!-- Description -->
+          <mat-form-field appearance="outline">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="4" formControlName="description"
+                      placeholder="Describe your complaint in detail..."></textarea>
+          </mat-form-field>
 
-<!--          &lt;!&ndash; Reject Reason &ndash;&gt;-->
-<!--          <mat-form-field appearance="outline" *ngIf="complaint?.rejectreason">-->
-<!--            <mat-label>Reject Reason</mat-label>-->
-<!--            <textarea matInput formControlName="rejectreason" readonly></textarea>-->
-<!--          </mat-form-field>-->
+          <!-- Status (read-only, shown after row selection) -->
+          <mat-form-field appearance="outline" *ngIf="selectedRow">
+            <mat-label>Status</mat-label>
+            <input matInput formControlName="complaintstatus" readonly>
+          </mat-form-field>
 
-<!--          &lt;!&ndash; Action Taken / Referred To &ndash;&gt;-->
-<!--          <mat-form-field appearance="outline" *ngIf="complaint?.actiontaken">-->
-<!--            <mat-label>Action Taken</mat-label>-->
-<!--            <textarea matInput formControlName="actiontaken" readonly></textarea>-->
-<!--          </mat-form-field>-->
+          <!-- Reject Reason (read-only, shown only when rejected) -->
+          <mat-form-field appearance="outline"
+                          *ngIf="complaint?.rejectreason && complaint?.rejectreason !== ''">
+            <mat-label>Reject Reason</mat-label>
+            <textarea matInput rows="2" formControlName="rejectreason" readonly></textarea>
+          </mat-form-field>
 
-<!--          <mat-form-field appearance="outline" *ngIf="complaint?.referredto">-->
-<!--            <mat-label>Referred To</mat-label>-->
-<!--            <input matInput formControlName="referredto" readonly>-->
-<!--          </mat-form-field>-->
+          <!-- Action Taken (read-only, shown when available) -->
+          <mat-form-field appearance="outline"
+                          *ngIf="complaint?.actiontaken && complaint?.actiontaken !== ''">
+            <mat-label>Action Taken</mat-label>
+            <textarea matInput rows="2" formControlName="actiontaken" readonly></textarea>
+          </mat-form-field>
 
-<!--          &lt;!&ndash; Buttons &ndash;&gt;-->
-<!--          <div id="butpanel">-->
-<!--            <button mat-raised-button color="primary"-->
-<!--                    (click)="add()"-->
-<!--                    [disabled]="!canSubmit()">-->
-<!--              Submit-->
-<!--            </button>-->
-<!--            <button mat-raised-button color="accent"-->
-<!--                    (click)="update()"-->
-<!--                    [disabled]="!canUpdate()">-->
-<!--              Update-->
-<!--            </button>-->
-<!--            <button mat-raised-button color="warn"-->
-<!--                    (click)="delete()"-->
-<!--                    [disabled]="!canDelete()">-->
-<!--              Delete-->
-<!--            </button>-->
-<!--            <button mat-raised-button (click)="clear()">-->
-<!--              Clear-->
-<!--            </button>-->
-<!--          </div>-->
+          <!-- Referred To (read-only) -->
+          <mat-form-field appearance="outline"
+                          *ngIf="complaint?.referredto && complaint?.referredto !== ''">
+            <mat-label>Referred To</mat-label>
+            <input matInput formControlName="referredto" readonly>
+          </mat-form-field>
 
-<!--        </form>-->
-<!--      </mat-card-content>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
+          <!-- Buttons -->
+          <div id="butpanel">
+            <button mat-raised-button color="primary"
+                    (click)="add()" [disabled]="!canSubmit()">
+              Submit
+            </button>
+            <button mat-raised-button color="warn"
+                    (click)="delete()" [disabled]="!canDelete()">
+              Delete
+            </button>
+            <button mat-raised-button (click)="clear()">
+              Clear
+            </button>
+          </div>
 
-<!--  &lt;!&ndash; ═════════════════════════════════════════════════════════════ &ndash;&gt;-->
-<!--  &lt;!&ndash; RIGHT TOP — PROGRESS &ndash;&gt;-->
-<!--  &lt;!&ndash; ═════════════════════════════════════════════════════════════ &ndash;&gt;-->
-<!--  <mat-grid-tile [colspan]="8" [rowspan]="4">-->
-<!--    <mat-card>-->
-<!--      <mat-card-header>-->
-<!--        <mat-card-title>Complaint Progress</mat-card-title>-->
-<!--      </mat-card-header>-->
-<!--      <mat-card-content>-->
-<!--        <mat-horizontal-stepper [selectedIndex]="progressIndex" linear>-->
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
 
-<!--          &lt;!&ndash; Step 1 &ndash;&gt;-->
-<!--          <mat-step [completed]="progressIndex >= 0">-->
-<!--            <ng-template matStepLabel>-->
-<!--              Submitted-->
-<!--            </ng-template>-->
-<!--            Complaint submitted successfully.-->
-<!--          </mat-step>-->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT TOP — Status Info Panel -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Complaint Status</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
 
-<!--          &lt;!&ndash; Step 2 &ndash;&gt;-->
-<!--          <mat-step [completed]="progressIndex >= 1">-->
-<!--            <ng-template matStepLabel>-->
-<!--              Under Review-->
-<!--            </ng-template>-->
-<!--            GN officer is reviewing your complaint.-->
-<!--          </mat-step>-->
+        <!-- Status stepper (shown when a row is selected) -->
+        <div *ngIf="selectedRow; else noSelection">
+          <mat-horizontal-stepper
+            [selectedIndex]="
+              complaint?.complaintstatus?.name === 'Pending'       ? 0 :
+              complaint?.complaintstatus?.name === 'Investigating' ? 1 :
+              complaint?.complaintstatus?.name === 'Passed'        ? 2 :
+              complaint?.complaintstatus?.name === 'Resolved'      ? 3 : 0">
 
-<!--          &lt;!&ndash; Step 3 &ndash;&gt;-->
-<!--          <mat-step [completed]="progressIndex >= 2">-->
-<!--            <ng-template matStepLabel>-->
-<!--              Approved-->
-<!--            </ng-template>-->
-<!--            Your complaint has been approved.-->
-<!--          </mat-step>-->
+            <mat-step label="Submitted"></mat-step>
+            <mat-step label="Investigating"></mat-step>
+            <mat-step label="Passed to Authority"></mat-step>
+            <mat-step label="Resolved"></mat-step>
+          </mat-horizontal-stepper>
 
-<!--          &lt;!&ndash; Step 4 &ndash;&gt;-->
-<!--          <mat-step [completed]="progressIndex >= 3">-->
-<!--            <ng-template matStepLabel>-->
-<!--              Investigating-->
-<!--            </ng-template>-->
-<!--            Your complaint is being investigated.-->
-<!--          </mat-step>-->
+          <!-- Rejected box -->
+          <div *ngIf="complaint?.complaintstatus?.name === 'Rejected'" class="reject-box">
+            <h3>Complaint Rejected</h3>
+            <p>{{complaint.rejectreason}}</p>
+          </div>
 
-<!--          &lt;!&ndash; Step 5 &ndash;&gt;-->
-<!--          <mat-step [completed]="progressIndex >= 4">-->
-<!--            <ng-template matStepLabel>-->
-<!--              Completed-->
-<!--            </ng-template>-->
-<!--            Your complaint has been resolved or passed to the relevant authority.-->
-<!--          </mat-step>-->
+          <!-- Resolved box -->
+          <div *ngIf="complaint?.complaintstatus?.name === 'Resolved'" class="resolve-box">
+            <h3>Complaint Resolved</h3>
+            <p *ngIf="complaint.actiontaken">{{complaint.actiontaken}}</p>
+          </div>
+        </div>
 
-<!--        </mat-horizontal-stepper>-->
+        <ng-template #noSelection>
+          <p class="hint-text">Select a complaint from the table below to see its progress.</p>
+        </ng-template>
 
-<!--        &lt;!&ndash; Rejected Message &ndash;&gt;-->
-<!--        <div *ngIf="complaint?.complaintstatus?.name === 'Rejected'"-->
-<!--             class="reject-box">-->
-<!--          <h3>Complaint Rejected</h3>-->
-<!--          <p>-->
-<!--            {{complaint.rejectreason}}-->
-<!--          </p>-->
-<!--        </div>-->
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
 
-<!--        &lt;!&ndash; Action / Outcome Message &ndash;&gt;-->
-<!--        <div *ngIf="complaint?.actiontaken"-->
-<!--             class="resolved-box">-->
-<!--          <h3>Action Taken</h3>-->
-<!--          <p>{{complaint.actiontaken}}</p>-->
-<!--          <div *ngIf="complaint.referredto">-->
-<!--            <h3>Referred To</h3>-->
-<!--            <p>{{complaint.referredto}}</p>-->
-<!--          </div>-->
-<!--          <h3>Current Status</h3>-->
-<!--          <p>{{complaint?.complaintstatus?.name}}</p>-->
-<!--        </div>-->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT BOTTOM — My Complaints Table -->
+  <!-- ═════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="10">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>My Complaints</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="data">
 
-<!--      </mat-card-content>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
+          <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, binders[i])}}</mat-cell>
+          </ng-container>
 
-<!--  &lt;!&ndash; ═════════════════════════════════════════════════════════════ &ndash;&gt;-->
-<!--  &lt;!&ndash; RIGHT MIDDLE — COMPLAINT TABLE &ndash;&gt;-->
-<!--  &lt;!&ndash; ═════════════════════════════════════════════════════════════ &ndash;&gt;-->
-<!--  <mat-grid-tile [colspan]="8" [rowspan]="10">-->
-<!--    <mat-card>-->
-<!--      <mat-card-header>-->
-<!--        <mat-card-title>My Complaints</mat-card-title>-->
-<!--      </mat-card-header>-->
-<!--      <mat-card-content>-->
-<!--        <mat-table [dataSource]="data">-->
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns"
+                   (click)="fillForm(row)"
+                   [ngClass]="{'selected-row': row === selectedRow}">
+          </mat-row>
 
-<!--          &lt;!&ndash; Dynamic Columns &ndash;&gt;-->
-<!--          <ng-container *ngFor="let col of columns; let i = index"-->
-<!--                        [matColumnDef]="col">-->
-<!--            <mat-header-cell *matHeaderCellDef>-->
-<!--              {{headers[i]}}-->
-<!--            </mat-header-cell>-->
-<!--            <mat-cell *matCellDef="let element">-->
-<!--              {{uiassist.getProperty(element, binders[i])}}-->
-<!--            </mat-cell>-->
-<!--          </ng-container>-->
+        </mat-table>
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
 
-<!--          &lt;!&ndash; Header + Rows &ndash;&gt;-->
-<!--          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>-->
-<!--          <mat-row *matRowDef="let row; columns: columns"-->
-<!--                   (click)="fillForm(row)"-->
-<!--                   [ngClass]="{'selected-row': row === selectedRow}">-->
-<!--          </mat-row>-->
-<!--        </mat-table>-->
-
-<!--        <mat-paginator [pageSize]="5"-->
-<!--                       [pageSizeOptions]="[5,10,20]">-->
-<!--        </mat-paginator>-->
-<!--      </mat-card-content>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
-
-<!--</mat-grid-list>-->
+</mat-grid-list>
