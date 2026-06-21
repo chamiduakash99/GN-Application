@@ -1,0 +1,211 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- LEFT PANEL — Form -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="4" [rowspan]="16">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>ID Card Request</mat-card-title>
+      </mat-card-header>
+      <mat-card-content id="idcardform">
+
+        <mat-form [formGroup]="form">
+
+          <!-- Citizen -->
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="citizen">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Assigned Officer -->
+          <mat-form-field appearance="outline">
+            <mat-label>Assigned Officer</mat-label>
+            <mat-select formControlName="employee">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let e of employees" [value]="e">{{e.callingname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Reason — drives conditional fields below -->
+          <mat-form-field appearance="outline">
+            <mat-label>Reason</mat-label>
+            <mat-select formControlName="reason">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let r of reasons" [value]="r">{{r.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Status (officer can update) -->
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="idcardrequeststatus">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let s of idcardrequeststatus" [value]="s">{{s.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- ── FIRST TIME CREATION FIELDS ─────────────────────────────── -->
+          <div *ngIf="isFirstTime" class="sectionlabel">Birth Certificate / ID Details</div>
+
+          <mat-form-field appearance="outline" *ngIf="isFirstTime">
+            <mat-label>BC Number or ID Number <span class="req">*</span></mat-label>
+            <input matInput formControlName="bcnooridno"
+                   placeholder="Enter birth certificate or existing ID number">
+            <mat-hint>Required for first-time applications</mat-hint>
+          </mat-form-field>
+
+          <!-- ── MISPLACED / DAMAGED FIELDS ─────────────────────────────── -->
+          <div *ngIf="isPoliceRequired" class="sectionlabel">Police Complaint Details</div>
+
+          <mat-form-field appearance="outline" *ngIf="isPoliceRequired">
+            <mat-label>Complaint Date <span class="req">*</span></mat-label>
+            <input matInput [matDatepicker]="compdate" formControlName="complaintdate">
+            <mat-datepicker-toggle matSuffix [for]="compdate"></mat-datepicker-toggle>
+            <mat-datepicker #compdate></mat-datepicker>
+            <mat-hint>Date complaint was lodged at police</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" *ngIf="isPoliceRequired">
+            <mat-label>Police Station <span class="req">*</span></mat-label>
+            <input matInput formControlName="complaintpolicestation"
+                   placeholder="e.g. Colombo Central Police">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" *ngIf="isPoliceRequired">
+            <mat-label>Complaint Reference No <span class="req">*</span></mat-label>
+            <input matInput formControlName="complaintno"
+                   placeholder="e.g. CMP-7788">
+          </mat-form-field>
+
+          <!-- Reject Reason -->
+          <mat-form-field appearance="outline">
+            <mat-label>Reject Reason</mat-label>
+            <textarea matInput rows="2" formControlName="rejectreason"
+                      placeholder="Enter reason if rejecting..."></textarea>
+          </mat-form-field>
+
+          <!-- Hint when no reason selected -->
+          <div *ngIf="selectedReasonId === 0" class="reason-hint">
+            <mat-icon>info</mat-icon>
+            Please select a Reason to see the required fields.
+          </div>
+
+          <!-- Buttons -->
+          <div id="butpanel">
+            <button mat-raised-button (click)="add()" [disabled]="!enaadd">
+              <mat-icon>add</mat-icon> Add
+            </button>
+            <button mat-raised-button (click)="update()" [disabled]="!enaupd">
+              <mat-icon>edit</mat-icon> Update
+            </button>
+            <button mat-raised-button (click)="delete()" [disabled]="!enadel">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+            <button mat-raised-button (click)="clear()">
+              <mat-icon>clear</mat-icon> Clear
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT TOP — Server-side Search -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card id="ssearch">
+      <mat-card-header>
+        <mat-card-title>ID Card Request Search</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form [formGroup]="sssearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="sscitizens">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="ssstatus">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let s of idcardrequeststatus" [value]="s.id">{{s.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Reason</mat-label>
+            <mat-select formControlName="ssreason">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let r of reasons" [value]="r.id">{{r.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear Search
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT BOTTOM — ID Card Request Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="12">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>ID Card Requests</mat-card-title>
+        <div id="loading">
+          <img [src]="imageurl" alt="loading">
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="data">
+
+          <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, binders[i])}}</mat-cell>
+          </ng-container>
+
+          <ng-container *ngFor="let cscol of cscolumns; let i = index" [matColumnDef]="cscol">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cssearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{csprompts[i]}}</mat-label>
+                  <input matInput [formControlName]="cscol" (keyup)="filterTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns;"
+                   (click)="fillForm(row)"
+                   [ngClass]="{'selected-row': row === selectedrow}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

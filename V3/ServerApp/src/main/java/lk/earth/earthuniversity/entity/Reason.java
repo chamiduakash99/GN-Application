@@ -19,6 +19,15 @@ public class Reason {
     @OneToMany(mappedBy = "reason")
     private Collection<Idcardrequest> idcardrequestsById;
 
+    public Reason() {
+
+    }
+
+    public Reason(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

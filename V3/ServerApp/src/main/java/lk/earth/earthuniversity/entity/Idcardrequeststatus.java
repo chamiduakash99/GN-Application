@@ -23,6 +23,15 @@ public class Idcardrequeststatus {
         return id;
     }
 
+    public Idcardrequeststatus() {
+
+    }
+
+    public Idcardrequeststatus(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
