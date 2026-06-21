@@ -19,3 +19,14 @@ dist/
 
 # Large files
 *.rar
+
+# Gradle
+.gradle/
+build/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
