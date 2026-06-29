@@ -1,1 +1,202 @@
-<p>household works!</p>
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- LEFT PANEL — Household Form -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="4" [rowspan]="18">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Household Management</mat-card-title>
+      </mat-card-header>
+      <mat-card-content id="hhform">
+
+        <mat-form [formGroup]="hhform">
+
+          <!-- Household Number -->
+          <mat-form-field appearance="outline">
+            <mat-label>Household No</mat-label>
+            <input matInput formControlName="householdno" placeholder="e.g. HH006">
+          </mat-form-field>
+
+          <!-- Address -->
+          <mat-form-field appearance="outline">
+            <mat-label>Address</mat-label>
+            <textarea matInput rows="3" formControlName="address"
+                      placeholder="Full address of the household"></textarea>
+          </mat-form-field>
+
+          <!-- Registration Date -->
+          <mat-form-field appearance="outline">
+            <mat-label>Registration Date</mat-label>
+            <input matInput [matDatepicker]="regdate" formControlName="registrationdate">
+            <mat-datepicker-toggle matSuffix [for]="regdate"></mat-datepicker-toggle>
+            <mat-datepicker #regdate></mat-datepicker>
+            <mat-hint>Leave blank to auto-set today's date</mat-hint>
+          </mat-form-field>
+
+          <!-- Head Citizen — dropdown of all citizens -->
+          <mat-form-field appearance="outline">
+            <mat-label>Head of Household</mat-label>
+            <mat-select formControlName="headcitizenId">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c.id">
+                {{c.name}} (ID: {{c.id}})
+              </mat-option>
+            </mat-select>
+            <mat-hint *ngIf="selectedrow">Currently: {{headCitizenName}}</mat-hint>
+          </mat-form-field>
+
+          <!-- Summary panel shown when a household is selected -->
+          <div class="summary-panel" *ngIf="selectedrow">
+            <div class="summary-row">
+              <span class="summary-label">Members:</span>
+              <span class="summary-value">{{members.length}}</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Household No:</span>
+              <span class="summary-value">{{household?.householdno}}</span>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div id="butpanel">
+            <button mat-raised-button (click)="add()" [disabled]="!enaadd">
+              <mat-icon>add</mat-icon> Add
+            </button>
+            <button mat-raised-button (click)="update()" [disabled]="!enaupd">
+              <mat-icon>edit</mat-icon> Update
+            </button>
+            <button mat-raised-button (click)="delete()" [disabled]="!enadel">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+            <button mat-raised-button (click)="clear()">
+              <mat-icon>clear</mat-icon> Clear
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT TOP — Server-side Search -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="3">
+    <mat-card id="ssearch">
+      <mat-card-header>
+        <mat-card-title>Household Search</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form [formGroup]="sssearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Household No</mat-label>
+            <input matInput formControlName="sshouseholdno" placeholder="e.g. HH001">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="ssaddress" placeholder="e.g. Ward 1">
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT MIDDLE — Household Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="8">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Households</mat-card-title>
+        <div id="loading">
+          <img [src]="imageurl" alt="loading">
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="hhdata">
+
+          <ng-container *ngFor="let col of hhcolumns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{hhheaders[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, hhbinders[i])}}</mat-cell>
+          </ng-container>
+
+          <ng-container *ngFor="let cscol of cshhcolumns; let i = index" [matColumnDef]="cscol">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cssearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{cshhprompts[i]}}</mat-label>
+                  <input matInput [formControlName]="cscol" (keyup)="filterTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="hhcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="cshhcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: hhcolumns;"
+                   (click)="fillForm(row)"
+                   [ngClass]="{'selected-row': row === selectedrow}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #hhpaginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT BOTTOM — Household Members Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="7">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Members of Selected Household
+          <span class="member-badge" *ngIf="members.length > 0">{{members.length}}</span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div *ngIf="members.length === 0 && !selectedrow" class="empty-hint">
+          Select a household above to view its members.
+        </div>
+
+        <div *ngIf="members.length === 0 && selectedrow" class="empty-hint">
+          This household has no registered members yet.
+        </div>
+
+        <mat-table [dataSource]="memdata" *ngIf="members.length > 0">
+
+          <ng-container *ngFor="let col of memcolumns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{memheaders[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, membinders[i])}}</mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="memcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: memcolumns;"
+                   [ngClass]="{'selected-row': row === selectedmemberrow,
+                               'head-row': row.id === household?.headcitizenId}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #mempaginator [pageSize]="5" [pageSizeOptions]="[5,10]"
+                       *ngIf="members.length > 0"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

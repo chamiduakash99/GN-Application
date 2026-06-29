@@ -102,7 +102,7 @@
 
     <!--Search-->
     <mat-grid-tile [colspan]="8" [rowspan]="4">
-        <mat-card>
+        <mat-card id="ssearch">
             <mat-card-header>
                 <mat-card-title>Item Search</mat-card-title>
             </mat-card-header>
@@ -120,8 +120,8 @@
                   </mat-select>
                 </mat-form-field>
 
-                <button mat-raised-button (click)="search()">Search</button>
-                <button mat-raised-button (click)="searchClear()">Clear Search</button>
+                <button mat-raised-button (click)="search()"><mat-icon>search</mat-icon>Search</button>
+                <button mat-raised-button (click)="searchClear()"><mat-icon>reorder</mat-icon>Clear Search</button>
               </mat-form>
 
             </mat-card-content>

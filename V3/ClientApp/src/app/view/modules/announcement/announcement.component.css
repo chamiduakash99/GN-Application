@@ -10,13 +10,15 @@ mat-card-content {
 }
 
 mat-card-header {
-  background: #c0d9c3;
+  background: #0c1b31;
+  color: #f2f5fd;
 }
 
 #loading img {
   width: 30px;
   height: 25px;
   margin-left: 200px;
+  filter: saturate(400%);
 }
 
 .csearch {
@@ -38,8 +40,8 @@ mat-card-header {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #435f3b;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 
 
@@ -62,13 +64,13 @@ mat-card-header {
 #butpanel button {
   width: 82px;
   margin: 3px;
-  background-color: #435f3b;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 
 
 .selected-row {
-  background-color: #c9e6ff !important;
+  background-color: #78b8dd !important;
 }
 
 .mat-row:hover {
@@ -81,9 +83,9 @@ button:disabled {
 
 #announcementform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: lightgreen;
+  background-color: #78b8dd;
 }
 
 #announcementform mat-form-field .ng-dirty {
-  background-color: gold;
+  background-color: #d4d881;
 }

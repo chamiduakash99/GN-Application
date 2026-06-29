@@ -31,6 +31,8 @@ import {Landfeaturedetails} from "../../../entity/Landfeaturedetails";
 import {Citizenaidprogram} from "../../../entity/Citizenaidprogram";
 import {AuthorizationManager} from "../../../service/authorizationmanager";
 import {Citizenguardian} from "../../../entity/Citizenguardian";
+import { Citizenstatus } from 'src/app/entity/citizenstatus';
+import { CitizenstatusService } from 'src/app/service/citizenstatusservice';
 
 @Component({
   selector: 'app-citizen',
@@ -40,9 +42,9 @@ import {Citizenguardian} from "../../../entity/Citizenguardian";
 export class CitizenComponent implements OnInit {
 
   // TABLE
-  columns: string[] = ['name', 'nic', 'gender', 'religion', 'ethnicity'];
-  headers: string[] = ['Name', 'NIC', 'Gender', 'Religion', 'Ethnicity'];
-  binders: string[] = ['name', 'nic', 'gender.name', 'religion.name', 'ethnicity.name'];
+  columns: string[] = ['name', 'nic', 'gender', 'religion', 'ethnicity','citizenstatus'];
+  headers: string[] = ['Name', 'NIC', 'Gender', 'Religion', 'Ethnicity','Status'];
+  binders: string[] = ['name', 'nic', 'gender.name', 'religion.name', 'ethnicity.name','citizenstatus.name'];
 
   data!: MatTableDataSource<Citizen>;
   imageurl: string = '';
@@ -64,7 +66,8 @@ export class CitizenComponent implements OnInit {
   educationlevels: Educationlevel[] = [];
   ethnicities: Ethnicity[] = [];
   genders: Gender[] = [];
-  // aidprograms: Aidprogram[] = [];
+  citizenstatuses: Citizenstatus[] = [];
+  aidprograms: Aidprogram[] = [];
 
   citizen!: Citizen;
   oldcitizen!: Citizen;
@@ -88,7 +91,7 @@ export class CitizenComponent implements OnInit {
   @ViewChild('selectedlist') selectedlist!: MatSelectionList;
 
 
-  @Input()aidprograms: Array<Aidprogram> = [];
+  @Input()Aidprograms: Array<Aidprogram> = [];
   oldaidprograms:Array<Aidprogram>=[];
   @Input()selectedaidprograms: Array<Aidprogram> =[];
   citizenaidprograms: Array<Citizenaidprogram> = [];
@@ -125,6 +128,7 @@ export class CitizenComponent implements OnInit {
     private es: EducationlevelService,
     private ets: EthnicityService,
     private gs: GenderService,
+    private css: CitizenstatusService,
     private aps: AidprogramService,
     private rts: RelationshiptypeService,
     public authService: AuthorizationManager,
@@ -149,6 +153,7 @@ export class CitizenComponent implements OnInit {
       educationlevel: new FormControl(),
       ethnicity: new FormControl(),
       gender: new FormControl(),
+      citizenstatus: new FormControl(),
 
       citizenaidprograms: new FormControl(),
       citizenguardians: new FormControl()
@@ -167,7 +172,8 @@ export class CitizenComponent implements OnInit {
       ssnic: new FormControl(),           // NIC
       ssreligion: new FormControl(),      // Religion ID
       ssethnicity: new FormControl(),     // Ethnicity ID
-      sseducationlevel: new FormControl() // Education Level ID
+      sseducationlevel: new FormControl(), // Education Level ID
+      sscitizenstatus: new FormControl()
     });
     // @ts-ignore
     this.citizenguardian =  new Citizenguardian(
@@ -201,6 +207,7 @@ export class CitizenComponent implements OnInit {
     this.gs.getAllListNameId().then(r => this.genders = r);
     this.aps.getAllListNameId().then(r => this.aidprograms = r);
     this.rts.getAllListNameId().then(r => this.relationshiptypes = r);
+    this.css.getAllListNameId().then(r => this.citizenstatuses = r);
 
     this.aps.getAllListNameId().then((r:Aidprogram[]) => {
       this.aidprograms = r
@@ -338,6 +345,9 @@ export class CitizenComponent implements OnInit {
     // @ts-ignore
     this.citizen.gender = this.genders.find(g => g.id === this.citizen.gender?.id);
 
+    // @ts-ignore
+    this.citizen.citizenstatus = this.citizenstatuses.find(s => s.id === this.citizen.citizenstatus?.id);
+
     // ===== OPTIONAL RELATION LISTS =====
 
     // Aid Programs (if used as multi-select)
@@ -346,9 +356,17 @@ export class CitizenComponent implements OnInit {
     //     this.aidprograms.find(a => a.id === ap.aidprogram?.id)
     //   );
     // }
-    this.aidprograms = this.oldaidprograms;
-    this.citizenaidprograms = this.citizen?.citizenaidprograms;
-    this.citizen.citizenaidprograms.forEach((citizenaidprogram:Citizenaidprogram)=> this.aidprograms = this.aidprograms.filter((lf)=> lf.id != citizenaidprogram.aidprogram.id));
+
+    this.citizen.citizenaidprograms?.forEach((citizenaidprogram: Citizenaidprogram) => {
+      this.aidprograms = this.aidprograms.filter(
+        (lf) => lf.id != citizenaidprogram.aidprogram.id
+      );
+    });
+    // this.aidprograms = this.oldaidprograms;
+    // this.citizenaidprograms = this.citizen?.citizenaidprograms;
+    // this.citizen.citizenaidprograms.forEach((citizenaidprogram:Citizenaidprogram)=> this.aidprograms = this.aidprograms.filter((lf)=> lf.id != citizenaidprogram.aidprogram.id));
+
+
     // this.user.userroles.forEach((ur)=> this.roles = this.roles.filter((r)=> r.id != ur.role.id )); // Load or remove roles by comparing with user.userroles
 
 
@@ -392,6 +410,7 @@ export class CitizenComponent implements OnInit {
     let religion = ssearchdata.ssreligion;
     let ethnicity = ssearchdata.ssethnicity;
     let educationlevel = ssearchdata.sseducationlevel;
+    let citizenstatus = ssearchdata.sscitizenstatus;
 
 
     let query = "";
@@ -401,6 +420,7 @@ export class CitizenComponent implements OnInit {
     if (religion != null && religion !== "") query = query + "&religion=" + religion;
     if (ethnicity != null && ethnicity !== "") query = query + "&ethnicity=" + ethnicity;
     if (educationlevel != null && educationlevel !== "") query = query + "&educationlevel=" + educationlevel;
+    if (citizenstatus != null && citizenstatus !== "") query = query + "&citizenstatus=" + citizenstatus;
 
 
     if (query != "") query = query.replace(/^./, "?");
@@ -581,6 +601,10 @@ export class CitizenComponent implements OnInit {
               errors += "<br>NIC is required";
               break;
 
+            case 'citizenstatus':
+              errors += "<br>Citizen Status is required";
+              break;
+
             case 'email':
               errors += "<br>Invalid Email";
               break;
@@ -644,6 +668,10 @@ export class CitizenComponent implements OnInit {
 
           case 'birthcetificateno':
             label = 'Birth Certificate No';
+            break;
+
+          case 'citizenstatus':
+            label = 'Citizen Status';
             break;
 
           case 'dateofbirth':

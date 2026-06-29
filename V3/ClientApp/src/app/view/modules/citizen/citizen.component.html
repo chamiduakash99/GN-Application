@@ -41,6 +41,15 @@
             <input matInput type="date" formControlName="dateofbirth">
           </mat-form-field>
 
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen Status</mat-label>
+            <mat-select formControlName="citizenstatus">
+              <mat-option *ngFor="let cs of citizenstatuses" [value]="cs">
+                {{ cs.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
           <!-- Mobile -->
           <mat-form-field appearance="outline">
             <mat-label>Mobile No</mat-label>
@@ -268,6 +277,15 @@
             <mat-select formControlName="sseducationlevel">
               <mat-option *ngFor="let e of educationlevels" [value]="e.name">
                 {{ e.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen Status</mat-label>
+            <mat-select formControlName="sscitizenstatus">
+              <mat-option *ngFor="let cs of citizenstatuses" [value]="cs.name">
+                {{ cs.name }}
               </mat-option>
             </mat-select>
           </mat-form-field>

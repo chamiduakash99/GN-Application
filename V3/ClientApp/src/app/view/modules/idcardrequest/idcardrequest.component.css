@@ -1,4 +1,3 @@
-/* ── Base card ───────────────────────────────────────────────────────────── */
 mat-card {
   width: 100%;
   height: 100%;
@@ -9,7 +8,8 @@ mat-card-content {
   height: 100%;
 }
 mat-card-header {
-  background: #c0c9d9;
+  background: #0c1b31;
+  color: #f2f5fd;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,21 +17,19 @@ mat-card-header {
   gap: 8px;
 }
 
-/* ── Loading image ────────────────────────────────────────────────────────── */
 #loading img {
   width: 30px;
   height: 25px;
   margin-left: 200px;
+  filter: saturate(400%);
 }
 
-/* ── Client-side search ──────────────────────────────────────────────────── */
 .csearch {
   height: 40px;
   width: 100%;
   margin-top: 5px;
 }
 
-/* ── Server-side search card ─────────────────────────────────────────────── */
 #ssearch mat-card-content {
   padding-top: 30px;
 }
@@ -43,11 +41,10 @@ mat-card-header {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 
-/* ── Main form ────────────────────────────────────────────────────────────── */
 #idcardform {
   padding-top: 20px;
 }
@@ -55,32 +52,29 @@ mat-card-header {
   width: 100%;
 }
 
-/* ── Section labels ──────────────────────────────────────────────────────── */
 .sectionlabel {
   font-size: 13px;
   font-weight: 600;
-  color: #3b4e5f;
+  color: #f00;
   margin: 14px 0 6px 0;
   border-left: 3px solid #3b4e5f;
   padding-left: 8px;
 }
 
-/* ── Required star ───────────────────────────────────────────────────────── */
 .req {
-  color: #c62828;
+  color: #f00;
   margin-left: 2px;
 }
 
-/* ── Reason hint ─────────────────────────────────────────────────────────── */
 .reason-hint {
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #78909c;
+  color: #152054;
   font-size: 13px;
   margin: 12px 0;
   padding: 10px;
-  background: #f5f5f5;
+  background: #f2f5fd;
   border-radius: 8px;
 }
 .reason-hint mat-icon {
@@ -89,7 +83,6 @@ mat-card-header {
   height: 18px;
 }
 
-/* ── Button panel ────────────────────────────────────────────────────────── */
 #butpanel {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -97,16 +90,15 @@ mat-card-header {
 #butpanel button {
   width: 82px;
   margin: 3px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 #butpanel button:disabled {
   opacity: 0.4;
 }
 
-/* ── Table row states ────────────────────────────────────────────────────── */
 .selected-row {
-  background-color: #c9e6ff !important;
+  background-color: #78b8dd !important;
 }
 .mat-row:hover {
   background-color: inherit !important;
@@ -115,11 +107,10 @@ button:disabled {
   opacity: 0.5;
 }
 
-/* ── Form validation colours ─────────────────────────────────────────────── */
 #idcardform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: lightgreen;
+  background-color: #78b8dd;
 }
 #idcardform mat-form-field .ng-dirty {
-  background-color: gold;
+  background-color: #d4d881;
 }
