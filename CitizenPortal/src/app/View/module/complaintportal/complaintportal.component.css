@@ -16,8 +16,8 @@ mat-card-content {
   height: 100%;
 }
 mat-card-header {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
+  background: linear-gradient(135deg, #081f5b, #083d77);
+  color: #f0f3f7;
   padding: 12px 16px;
   border-radius: 16px 16px 0 0;
   display: flex;
@@ -64,7 +64,7 @@ mat-horizontal-stepper {
   margin-top: 10px;
 }
 ::ng-deep .mat-step-header.mat-active {
-  background: #e0f2fe;
+  background: #f0f3f7;
   border-radius: 10px;
 }
 
@@ -98,7 +98,7 @@ mat-horizontal-stepper {
 
 /* ── Hint text ───────────────────────────────────────────────────────────── */
 .hint-text {
-  color: #94a3b8;
+  color: #808080;
   margin-top: 20px;
   text-align: center;
   font-style: italic;
@@ -110,8 +110,8 @@ mat-table {
   overflow: hidden;
 }
 mat-header-cell {
-  background: #0f172a;
-  color: white;
+  background: #081f5b;
+  color: #f0f3f7;
   font-weight: 600;
 }
 mat-cell {
@@ -122,10 +122,10 @@ mat-row {
   cursor: pointer;
 }
 mat-row:hover {
-  background: #f1f5f9;
+  background: #f0f3f7;
 }
 .selected-row {
-  background: #dbeafe !important;
+  background: #081f5b !important;
 }
 mat-paginator {
   margin-top: 10px;
@@ -134,10 +134,10 @@ mat-paginator {
 /* ── Form validation colours ─────────────────────────────────────────────── */
 #complaintform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: lightgreen;
+  background-color: #5681f5;
 }
 #complaintform mat-form-field .ng-dirty {
-  background-color: gold;
+  background-color: #ffd600;
 }
 
 /* ── Animation ───────────────────────────────────────────────────────────── */
