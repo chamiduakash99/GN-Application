@@ -96,18 +96,7 @@ public class AnnouncementController {
                     announcementDao.save(announcement);
                 }
             }
-//            Authentication authentication =
-//                    SecurityContextHolder.getContext().getAuthentication();
-//
-//            String username = authentication.getName();
-//
-//            User user = userDao.findByUsername(username);
-//
-//            Employee employee = user.getEmployee();
-//
-//            announcement.setEmployee(employee);
-//
-//            announcementDao.save(announcement);
+
         } else {
             errors = "Server Validation Errors : <br>" + errors;
         }
@@ -118,39 +107,7 @@ public class AnnouncementController {
 
         return response;
     }
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public HashMap<String, String> save(@RequestBody Announcement announcement) {
-//
-//        HashMap<String, String> response = new HashMap<>();
-//        String errors = "";
-//
-//        if (announcement.getTitle() == null || announcement.getTitle().isEmpty()) {
-//            errors += "Title is required <br>";
-//        }
-//
-//        //  IMPORTANT FIX HERE
-//        if (announcement.getEmployee() == null || announcement.getEmployee().getId() == null) {
-//            errors += "Employee is required <br>";
-//        }
-//
-//        if (errors.equals("")) {
-//
-//            //  FETCH REAL EMPLOYEE FROM DB
-//            Employee emp = new Employee();
-//            emp.setId(announcement.getEmployee().getId());
-//
-//            announcement.setEmployee(emp);
-//
-//            announcementDao.save(announcement);
-//        }
-//
-//        response.put("id", String.valueOf(announcement.getId()));
-//        response.put("url", "/announcements/post");
-//        response.put("errors", errors);
-//
-//        return response;
-//    }
+
 
 
     // 4) UPDATE
@@ -183,31 +140,6 @@ public class AnnouncementController {
         return response;
     }
 
-//    @PutMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public HashMap<String, String> update(@RequestBody Announcement announcement) {
-//
-//        HashMap<String, String> response = new HashMap<>();
-//        String errors = "";
-//
-//        Optional<Announcement> ext = announcementDao.findById(announcement.getId());
-//
-//        if (ext.isEmpty()) {
-//            errors = errors + "Announcement not found <br>";
-//        }
-//
-//        if (errors.equals("")) {
-//            announcementDao.save(announcement);
-//        } else {
-//            errors = "Server Validation Errors : <br>" + errors;
-//        }
-//
-//        response.put("id", String.valueOf(announcement.getId()));
-//        response.put("url", "/announcements/put");
-//        response.put("errors", errors);
-//
-//        return response;
-//    }
 
     // 5) DELETE
     @DeleteMapping("/{id}")

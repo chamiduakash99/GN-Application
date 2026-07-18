@@ -1,30 +1,27 @@
 package lk.earth.earthuniversity.controller;
 
-import lk.earth.earthuniversity.dao.TreetypeDao;
-import lk.earth.earthuniversity.entity.Treetype;
+import lk.earth.earthuniversity.dao.TreepermissionstatusDao;
+import lk.earth.earthuniversity.entity.Treepermissionstatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/treetypes")
+@RequestMapping("/treepermissionstatuses")
 public class TreepermissionstatusController {
 
     @Autowired
-    private TreetypeDao treetypedao;
+    private TreepermissionstatusDao treepermissionstatusdao;
 
     @GetMapping(produces = "application/json")
-    public List<Treetype> get() {
-        return treetypedao.findAll();
+    public List<Treepermissionstatus> get() {
+        return treepermissionstatusdao.findAll();
     }
 
     @GetMapping(path = "/list", produces = "application/json")
-    public List<Treetype> getList() {
-        return treetypedao.findAllNameId();
+    public List<Treepermissionstatus> getList() {
+        return treepermissionstatusdao.findAllNameId();
     }
 }

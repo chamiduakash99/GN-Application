@@ -1,11 +1,13 @@
 package lk.earth.earthuniversity.dao;
 
-import lk.earth.earthuniversity.entity.Landtype;
+import lk.earth.earthuniversity.entity.Treetype;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
-@Repository
-public interface LandtypeDao extends JpaRepository<Landtype, Integer> {
+import java.util.List;
 
-    Landtype findByName(String name);
+public interface TreetypeDao extends JpaRepository<Treetype, Integer> {
+
+    @Query("select new Treetype(t.id, t.name) from Treetype t")
+    List<Treetype> findAllNameId();
 }

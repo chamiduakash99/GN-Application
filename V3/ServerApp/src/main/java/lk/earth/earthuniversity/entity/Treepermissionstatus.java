@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-public class Treetype {
+public class Treepermissionstatus {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -19,12 +19,12 @@ public class Treetype {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "treetype")
+    @OneToMany(mappedBy = "treepermissionstatus")
     private Collection<Treecuttingrequest> treecuttingrequests;
 
-    public Treetype() {}
+    public Treepermissionstatus() {}
 
-    public Treetype(Integer id, String name) {
+    public Treepermissionstatus(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -39,7 +39,7 @@ public class Treetype {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Treetype that = (Treetype) o;
+        Treepermissionstatus that = (Treepermissionstatus) o;
         return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
@@ -47,7 +47,5 @@ public class Treetype {
     public int hashCode() { return Objects.hash(id, name); }
 
     public Collection<Treecuttingrequest> getTreecuttingrequests() { return treecuttingrequests; }
-    public void setTreecuttingrequests(Collection<Treecuttingrequest> treecuttingrequests) {
-        this.treecuttingrequests = treecuttingrequests;
-    }
+    public void setTreecuttingrequests(Collection<Treecuttingrequest> t) { this.treecuttingrequests = t; }
 }
