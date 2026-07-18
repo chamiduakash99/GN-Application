@@ -357,11 +357,23 @@ export class CitizenComponent implements OnInit {
     //   );
     // }
 
-    this.citizen.citizenaidprograms?.forEach((citizenaidprogram: Citizenaidprogram) => {
-      this.aidprograms = this.aidprograms.filter(
-        (lf) => lf.id != citizenaidprogram.aidprogram.id
-      );
+    this.citizen.citizenaidprograms = this.citizen.citizenaidprograms ?? [];
+
+    this.citizen.citizenaidprograms.forEach((citizenaidprogram: Citizenaidprogram) => {
+
+      if (citizenaidprogram.aidprogram) {
+        this.aidprograms = this.aidprograms.filter(
+          (ap) => ap.id !== citizenaidprogram.aidprogram.id
+        );
+      }
+
     });
+
+    // this.citizen.citizenaidprograms?.forEach((citizenaidprogram: Citizenaidprogram) => {
+    //   this.aidprograms = this.aidprograms.filter(
+    //     (lf) => lf.id != citizenaidprogram.aidprogram.id
+    //   );
+    // });
     // this.aidprograms = this.oldaidprograms;
     // this.citizenaidprograms = this.citizen?.citizenaidprograms;
     // this.citizen.citizenaidprograms.forEach((citizenaidprogram:Citizenaidprogram)=> this.aidprograms = this.aidprograms.filter((lf)=> lf.id != citizenaidprogram.aidprogram.id));
@@ -378,7 +390,7 @@ export class CitizenComponent implements OnInit {
     //   }));
     // }
 
-    this.citizenguardians = this.citizen.citizenguardians;
+    this.citizenguardians = this.citizen.citizenguardians ?? [];
     this.indata = new MatTableDataSource<Citizenguardian>(this.citizenguardians);
     // ===== PATCH FORM =====
     this.form.patchValue(this.citizen);

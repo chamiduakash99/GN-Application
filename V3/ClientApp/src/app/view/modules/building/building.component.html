@@ -24,7 +24,7 @@
                 <mat-select formControlName="landDetail">
                   <mat-option [value]="null" selected>Not Selected</mat-option>
                   <mat-option *ngFor="let land of lands" [value]="land">
-                    {{ land.street?.fullname }} | {{ land.size }} sq.m
+                    {{ land.street.fullname }} | {{ land.size }} sq.m
                   </mat-option>
 <!--                  <mat-option *ngFor="let land of lands" [value]="land">-->
 <!--                    {{land.street.fullname}} | {{land.size}} sq.m-->

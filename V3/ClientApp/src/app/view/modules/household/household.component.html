@@ -54,7 +54,7 @@
             </div>
             <div class="summary-row">
               <span class="summary-label">Household No:</span>
-              <span class="summary-value">{{household?.householdno}}</span>
+              <span class="summary-value">{{household.householdno}}</span>
             </div>
           </div>
 
@@ -189,7 +189,7 @@
           <mat-header-row *matHeaderRowDef="memcolumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: memcolumns;"
                    [ngClass]="{'selected-row': row === selectedmemberrow,
-                               'head-row': row.id === household?.headcitizenId}">
+                               'head-row': row.id === household.headcitizenId}">
           </mat-row>
 
         </mat-table>
