@@ -13,7 +13,7 @@ mat-card-content {
 }
 
 mat-card-header {
-  background: #c0c9d9;
+  background: #f0f3f7;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -49,8 +49,8 @@ mat-card-header {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #083d77;
+  color: #f0f3f7;
 }
 
 /* ── Tab toggle ──────────────────────────────────────────────────────────── */
@@ -63,14 +63,14 @@ mat-card-header {
 
 #tabtoggle button {
   width: 100px;
-  background-color: #b0bec5;
-  color: #2c3e50;
+  background-color: #f0f3f7;
+  color: #083d77;
   font-size: 12px;
 }
 
 #tabtoggle button.activetab {
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #083d77;
+  color: #f0f3f7;
 }
 
 /* ── Certificate request form ────────────────────────────────────────────── */
@@ -107,9 +107,9 @@ mat-card-header {
 .sectionlabel {
   font-size: 13px;
   font-weight: 500;
-  color: #3b4e5f;
+  color: #083d77;
   margin: 12px 0 8px 0;
-  border-left: 3px solid #3b4e5f;
+  border-left: 3px solid #081f5b;
   padding-left: 8px;
 }
 
@@ -157,7 +157,7 @@ mat-card-header {
   height: 100px;
   width: 100px;
   object-fit: cover;
-  border: 1px solid #ccc;
+  border: 1px solid #f0f3f7;
   border-radius: 4px;
 }
 
@@ -167,8 +167,8 @@ mat-card-header {
   display: block;
   margin-left: 110px;
   margin-bottom: 5px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #081f5b;
+  color: #f0f3f7;
   padding: 8px;
   border-radius: 5px;
   text-align: center;
@@ -192,8 +192,8 @@ mat-card-header {
 #certbutpanel button {
   flex: 1;
   min-width: 100px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #081f5b;
+  color: #f0f3f7;
   font-size: 12px;
 }
 
@@ -210,13 +210,13 @@ mat-card-header {
 #butpanel button {
   width: 82px;
   margin: 3px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #081f5b;
+  color: #f0f3f7;
 }
 
 /* ── Table row states ────────────────────────────────────────────────────── */
 .selected-row {
-  background-color: #c9e6ff !important;
+  background-color: #081f5b !important;
 }
 
 .mat-row:hover {
@@ -230,11 +230,12 @@ button:disabled {
 /* ── Form validation colours (same as employee) ──────────────────────────── */
 #certreqform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: lightgreen;
+  background-color: #5681f5;
+  border-radius: 4px;
 }
 
 #certreqform mat-form-field .ng-dirty {
-  background-color: gold;
+  background-color: #ffd600;
 }
 
 /* ── Divider spacing ─────────────────────────────────────────────────────── */
@@ -259,7 +260,7 @@ mat-horizontal-stepper {
 
 mat-grid-list {
   padding: 15px;
-  background: #f4f7fb;
+  background: #f0f3f7;
 }
 
 /* =========================
@@ -279,7 +280,7 @@ mat-card:hover {
 }
 
 mat-card-header {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
+  background: linear-gradient(135deg, #081f5b, #083d77);
   color: white;
   padding: 12px 16px;
   border-radius: 16px 16px 0 0;
@@ -344,7 +345,7 @@ mat-horizontal-stepper {
 }
 
 ::ng-deep .mat-step-header.mat-active {
-  background: #e0f2fe;
+  background: #f0f3f7;
 }
 
 /* =========================
@@ -375,7 +376,7 @@ mat-table {
 }
 
 mat-header-cell {
-  background: #0f172a;
+  background: #081f5b;
   color: black;
   font-weight: 600;
 }

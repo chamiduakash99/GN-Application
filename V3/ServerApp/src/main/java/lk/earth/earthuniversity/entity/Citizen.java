@@ -82,6 +82,12 @@ public class Citizen {
     @JsonIgnore
     @OneToMany(mappedBy = "citizen")
     private Collection<Idcardrequest> idcardrequests;
+    @ManyToOne
+    @JoinColumn(name = "citizenStatus_id", referencedColumnName = "id", nullable = false)
+    private Citizenstatus citizenstatus;
+    @ManyToOne
+    @JoinColumn(name = "household_id", referencedColumnName = "id")
+    private Household household;
 
     public int getId() {
         return id;
@@ -299,5 +305,21 @@ public class Citizen {
 
     public void setIdcardrequests(Collection<Idcardrequest> idcardrequests) {
         this.idcardrequests = idcardrequests;
+    }
+
+    public Citizenstatus getCitizenstatus() {
+        return citizenstatus;
+    }
+
+    public void setCitizenstatus(Citizenstatus citizenstatus) {
+        this.citizenstatus = citizenstatus;
+    }
+
+    public Household getHousehold() {
+        return household;
+    }
+
+    public void setHousehold(Household household) {
+        this.household = household;
     }
 }

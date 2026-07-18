@@ -1,0 +1,303 @@
+<div class="page-container">
+
+
+  <!-- ================= LEFT PANEL ================= -->
+
+  <div class="left-panel">
+    <mat-card class="form-card">
+      <mat-card-title>
+        Tree Cutting Permission Request
+      </mat-card-title>
+      <mat-card-content>
+        <form [formGroup]="form">
+
+          <!-- Citizen -->
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="citizen">
+              <mat-option *ngFor="let c of citizens"
+                          [value]="c">
+
+                {{c.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              Citizen is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Employee -->
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>GN Officer</mat-label>
+            <mat-select formControlName="employee">
+              <mat-option *ngFor="let e of employees"
+                          [value]="e">
+                {{e.fullname}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+
+          <!-- Tree Type -->
+
+          <mat-form-field appearance="outline" class="full-width">
+
+            <mat-label>Tree Type</mat-label>
+            <mat-select formControlName="treetype">
+              <mat-option *ngFor="let t of treetypes"
+                          [value]="t">
+                {{t.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              Tree type is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Deed No -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Land Deed No</mat-label>
+            <input matInput
+                   formControlName="deedno">
+          </mat-form-field>
+
+          <!-- Tree Count -->
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Number of Trees</mat-label>
+            <input matInput
+                   type="number"
+                   formControlName="treecount">
+          </mat-form-field>
+
+          <!-- Reason -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>
+              Reason For Cutting
+            </mat-label>
+            <textarea matInput
+                      rows="4"
+                      formControlName="reasonforcutting">
+</textarea>
+          </mat-form-field>
+          <!-- Transport Toggle -->
+          <mat-checkbox formControlName="needstransport">
+            Need Wood Transport Permission
+          </mat-checkbox>
+
+          <!-- Transport Details -->
+
+          <div *ngIf="needsTransportChecked">
+
+            <h3>
+              Transport Details
+            </h3>
+
+            <mat-form-field appearance="outline"
+                            class="full-width">
+              <mat-label>
+                Destination
+              </mat-label>
+              <input matInput
+                     formControlName="destination">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline"
+                            class="full-width">
+              <mat-label>
+                Vehicle Type
+              </mat-label>
+              <input matInput
+                     formControlName="vehicletype">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline"
+                            class="full-width">
+              <mat-label>
+                Vehicle Number
+              </mat-label>
+              <input matInput
+                     formControlName="vehiclenumber">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline"
+                            class="full-width">
+              <mat-label>
+                Transport Date
+              </mat-label>
+              <input matInput
+                     formControlName="transportdate">
+            </mat-form-field>
+          </div>
+
+          <!-- Status -->
+
+          <mat-form-field appearance="outline"
+                          class="full-width" *ngIf="selectedRow">
+            <mat-label>Status</mat-label>
+            <input matInput
+                   formControlName="treepermissionstatus"
+                   readonly>
+          </mat-form-field>
+          <!-- Requested Date -->
+          <mat-form-field appearance="outline"
+                          class="full-width"
+                          *ngIf="selectedRow">
+            <mat-label>
+              Requested Date
+            </mat-label>
+            <input matInput
+                   formControlName="requesteddate"
+                   readonly>
+          </mat-form-field>
+        </form>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+
+        <button mat-raised-button
+                color="primary"
+                (click)="add()"
+                [disabled]="!canSubmit()">Submit
+        </button>
+
+        <button mat-raised-button
+                color="warn"
+                (click)="delete()"
+                [disabled]="!canDelete()">Delete
+        </button>
+
+        <button mat-raised-button
+                (click)="clear()">Clear
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- ================= RIGHT PANEL ================= -->
+  <div class="right-panel">
+    <!-- Progress -->
+
+    <mat-card class="stepper-card"
+              *ngIf="selectedRow">
+      <mat-card-title>
+        Request Progress
+      </mat-card-title>
+      <mat-card-content>
+        <mat-stepper [selectedIndex]="progressIndex"
+                     *ngIf="treecuttingrequest?.treepermissionstatus?.name !== 'Rejected'">
+          <mat-step label="Pending">
+            Your request has been submitted and is waiting for GN officer review.
+          </mat-step>
+          <mat-step label="Approved">
+            Your tree cutting request has been approved.
+          </mat-step>
+          <mat-step label="Permit Issued">
+            Permission PDF has been issued.
+          </mat-step>
+        </mat-stepper>
+
+        <div class="rejected-notice"
+             *ngIf="treecuttingrequest?.treepermissionstatus?.name === 'Rejected'">
+          <mat-icon color="warn">
+            cancel
+          </mat-icon>
+          <span>
+Request Rejected
+</span>
+          <p>
+            {{treecuttingrequest.rejectreason}}
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <!-- Table -->
+    <mat-card class="table-card">
+      <mat-card-title>
+        My Tree Cutting Requests
+      </mat-card-title>
+      <mat-card-content>
+        <table mat-table
+               [dataSource]="data"
+               class="full-width">
+          <!-- Tree Type -->
+          <ng-container matColumnDef="treetype">
+            <th mat-header-cell *matHeaderCellDef>
+              Tree Type
+            </th>
+            <td mat-cell *matCellDef="let req">
+              {{req.treetype?.name}}
+            </td>
+          </ng-container>
+          <!-- Status -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+              Status
+            </th>
+            <td mat-cell *matCellDef="let req">
+          <span class="status-badge">
+          {{req.treepermissionstatus?.name}}
+          </span>
+            </td>
+          </ng-container>
+          <!-- Deed -->
+          <ng-container matColumnDef="deedno">
+            <th mat-header-cell *matHeaderCellDef>
+              Deed No
+            </th>
+            <td mat-cell *matCellDef="let req">
+              {{req.deedno}}
+            </td>
+          </ng-container>
+          <!-- Tree Count -->
+          <ng-container matColumnDef="treecount">
+            <th mat-header-cell *matHeaderCellDef>
+              Trees
+            </th>
+            <td mat-cell *matCellDef="let req">
+              {{req.treecount}}
+            </td>
+          </ng-container>
+          <!-- Date -->
+          <ng-container matColumnDef="requesteddate">
+            <th mat-header-cell *matHeaderCellDef>
+              Requested
+            </th>
+            <td mat-cell *matCellDef="let req">
+              {{req.requesteddate | date:'yyyy-MM-dd'}}
+            </td>
+          </ng-container>
+          <!-- Transport -->
+          <ng-container matColumnDef="transport">
+            <th mat-header-cell *matHeaderCellDef>
+              Transport
+            </th>
+            <td mat-cell *matCellDef="let req">
+              <mat-icon *ngIf="req.needstransport"
+                        color="primary">
+                local_shipping
+              </mat-icon>
+              <mat-icon *ngIf="!req.needstransport">
+                block
+              </mat-icon>
+            </td>
+          </ng-container>
+          <tr mat-header-row
+              *matHeaderRowDef="columns">
+          </tr>
+          <tr mat-row
+              *matRowDef="let row; columns: columns;"
+              (click)="fillForm(row)"
+              [class.selected-row]="row === selectedRow">
+          </tr>
+        </table>
+        <mat-paginator
+          [pageSizeOptions]="[5,10,20]"
+          showFirstLastButtons>
+        </mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

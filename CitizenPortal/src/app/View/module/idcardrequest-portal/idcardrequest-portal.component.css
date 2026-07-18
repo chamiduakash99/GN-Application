@@ -16,8 +16,8 @@ mat-card-content {
   height: 100%;
 }
 mat-card-header {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
+  background: linear-gradient(135deg, #081f5b, #083d77);
+  color: #f0f3f7;
   padding: 12px 16px;
   border-radius: 16px 16px 0 0;
   display: flex;
@@ -43,7 +43,7 @@ textarea {
 .sectionlabel {
   font-size: 13px;
   font-weight: 600;
-  color: #1e40af;
+  color: #081f5b;
   margin: 14px 0 6px 0;
   padding: 8px 10px;
   background: #eff6ff;
@@ -66,15 +66,15 @@ textarea {
   font-size: 13px;
   margin: 12px 0;
   padding: 12px;
-  background: #f8fafc;
+  background: #f0f3f7;
   border: 1px dashed #cbd5e1;
   border-radius: 8px;
 }
 .reason-hint mat-icon {
-  font-size: 18px;
-  width: 18px;
+  font-size: 16px;
+  width: 20px;
   height: 18px;
-  color: #3b82f6;
+  color: #081f5b;
 }
 
 /* ── Button panel ────────────────────────────────────────────────────────── */
@@ -102,7 +102,7 @@ mat-horizontal-stepper {
   margin-top: 10px;
 }
 ::ng-deep .mat-step-header.mat-active {
-  background: #e0f2fe;
+  background: #f0f3f7;
   border-radius: 10px;
 }
 
@@ -124,9 +124,9 @@ mat-horizontal-stepper {
 .info-panel {
   margin-top: 15px;
   padding: 14px;
-  background: #f8fafc;
+  background: #f0f3f7;
   border-radius: 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #f0f3f7;
 }
 .info-row {
   display: flex;
@@ -136,13 +136,13 @@ mat-horizontal-stepper {
 }
 .info-label {
   font-weight: 600;
-  color: #475569;
+  color: #081f5b;
   min-width: 110px;
 }
 
 /* ── Hint text ───────────────────────────────────────────────────────────── */
 .hint-text {
-  color: #94a3b8;
+  color: #808080;
   margin-top: 20px;
   text-align: center;
   font-style: italic;
@@ -154,7 +154,7 @@ mat-table {
   overflow: hidden;
 }
 mat-header-cell {
-  background: #0f172a;
+  background: #081f5b;
   color: white;
   font-weight: 600;
 }
@@ -166,10 +166,10 @@ mat-row {
   cursor: pointer;
 }
 mat-row:hover {
-  background: #f1f5f9;
+  background: #f0f3f7;
 }
 .selected-row {
-  background: #dbeafe !important;
+  background: #083d77 !important;
 }
 mat-paginator {
   margin-top: 10px;
@@ -178,10 +178,10 @@ mat-paginator {
 /* ── Validation colours ──────────────────────────────────────────────────── */
 #idcardform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: lightgreen;
+  background-color: #5681f5;
 }
 #idcardform mat-form-field .ng-dirty {
-  background-color: gold;
+  background-color: #ffd600;
 }
 
 /* ── Animation ───────────────────────────────────────────────────────────── */

@@ -3,9 +3,9 @@ mat-card {  width: 100%;  height:100%;  margin: 10px 10px -10px 10px ; }
 
 mat-card-content { overflow: auto; height: 100%; }
 
-mat-card-header { background: #c0d9c3; }
+mat-card-header { background: #0c1b31; color: #f2f5fd;}
 
-#loading img{ width: 30px; height: 25px; margin-left: 200px;}
+#loading img{ width: 30px; height: 25px; margin-left: 200px; filter: saturate(400%);}
 
 .csearch{   height: 40px;   width: 100%;  margin-top: 5px;    }
 
@@ -13,28 +13,28 @@ mat-card-header { background: #c0d9c3; }
 
 #ssearch mat-form-field { padding-left: 15px; width: 200px; }
 
-#ssearch button{ width: 195px; margin-left:10px; margin-top: 5px; background-color: #435f3b; color: white}
+#ssearch button{ width: 195px; margin-left:10px; margin-top: 5px; background-color: #152054; color: #f2f5fd}
 
 #userform { padding-top: 20px; }
 
-#butpanel button{ width: 82px;margin:3px;background-color: #435f3b;color: white;}
+#butpanel button{ width: 82px;margin:3px;background-color: #152054;color: #f2f5fd;}
 
 #listtrnasfer {display: inline-flex; margin-bottom: 30px;margin-left: 10px}
 
 #pnlmiddle button{ margin: 8px; display: block!important;}
 
-.list{ border: solid gray; border-radius: 5px; max-height: 160px; width: 180px;margin-top: 10px; overflow: auto}
+.list{ border: solid #152054; border-radius: 5px; max-height: 160px; width: 180px;margin-top: 10px; overflow: auto}
 
 .list mat-list-option{ height: 27px;}
 
 .list .mat-mdc-list-item .mdc-list-item__primary-text{ font-size: 14px!important;}
 
-.selected-row{ background-color: #c9e6ff!important; }
+.selected-row{ background-color: #78b8dd!important; }
 
 .mat-row:hover { background-color: inherit!important; }
 
 #userform mat-form-field .ng-dirty{
-  background-color: gold;
+  background-color: #d4d881;
 }
 
 
@@ -49,5 +49,5 @@ button:disabled {
   position: inherit;
 }
 #btnPwdGenerate button{
-  background-color: #435f3b;color: white;
+  background-color: #f00;color: #f2f5fd;
 }

@@ -1,6 +1,3 @@
-
-
-/* ── Base card ───────────────────────────────────────────────────────────── */
 mat-card {
   width: 100%;
   height: 100%;
@@ -13,7 +10,8 @@ mat-card-content {
 }
 
 mat-card-header {
-  background: #c0c9d9;
+  background: #0c1b31;
+  color: #f2f5fd;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -21,21 +19,19 @@ mat-card-header {
   gap: 8px;
 }
 
-/* ── Loading image ────────────────────────────────────────────────────────── */
 #loading img {
   width: 30px;
   height: 25px;
   margin-left: 200px;
+  filter: saturate(400%);
 }
 
-/* ── Client-side search row ──────────────────────────────────────────────── */
 .csearch {
   height: 40px;
   width: 100%;
   margin-top: 5px;
 }
 
-/* ── Server-side search card ─────────────────────────────────────────────── */
 #ssearch mat-card-content {
   padding-top: 30px;
 }
@@ -49,11 +45,10 @@ mat-card-header {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 
-/* ── Tab toggle ──────────────────────────────────────────────────────────── */
 #tabtoggle {
   display: flex;
   gap: 6px;
@@ -63,17 +58,16 @@ mat-card-header {
 
 #tabtoggle button {
   width: 100px;
-  background-color: #b0bec5;
-  color: #2c3e50;
+  background-color: #f00; /* #152054 */
+  color: #f00; /* #f2f5fd */
   font-size: 12px;
 }
 
 #tabtoggle button.activetab {
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #f00;
+  color: #f2f5fd;
 }
 
-/* ── Certificate request form ────────────────────────────────────────────── */
 #certreqform {
   padding-top: 20px;
 }
@@ -82,7 +76,6 @@ mat-card-header {
   width: 100%;
 }
 
-/* ── Status badge ────────────────────────────────────────────────────────── */
 #statusbadge {
   margin-bottom: 14px;
   text-align: center;
@@ -103,17 +96,15 @@ mat-card-header {
 .badge-ready     { background-color: #cff4fc; color: #055160; }
 .badge-completed { background-color: #d3d3d3; color: #333333; }
 
-/* ── Section labels ──────────────────────────────────────────────────────── */
 .sectionlabel {
   font-size: 13px;
   font-weight: 500;
-  color: #3b4e5f;
+  color: #f00;
   margin: 12px 0 8px 0;
-  border-left: 3px solid #3b4e5f;
+  border-left: 3px solid #f00;
   padding-left: 8px;
 }
 
-/* ── Approve / Reject decision panel ─────────────────────────────────────── */
 #approvepanel {
   padding: 10px 0;
 }
@@ -127,14 +118,14 @@ mat-card-header {
 
 #approvebtn {
   flex: 1;
-  background-color: #2e7d32;
-  color: white;
+  background-color: #f00;
+  color: #f2f5fd;
 }
 
 #rejectbtn {
   flex: 1;
-  background-color: #c62828;
-  color: white;
+  background-color: #f00;
+  color: #f2f5fd;
 }
 
 #approvebtn:disabled,
@@ -142,12 +133,10 @@ mat-card-header {
   opacity: 0.4;
 }
 
-/* ── Certificate create panel ────────────────────────────────────────────── */
 #certpanel {
   padding-top: 10px;
 }
 
-/* ── Scan image panel ────────────────────────────────────────────────────── */
 #scanpanel {
   height: 100px;
   margin-bottom: 30px;
@@ -157,7 +146,7 @@ mat-card-header {
   height: 100px;
   width: 100px;
   object-fit: cover;
-  border: 1px solid #ccc;
+  border: 1px solid #f2f5fd;
   border-radius: 4px;
 }
 
@@ -167,8 +156,8 @@ mat-card-header {
   display: block;
   margin-left: 110px;
   margin-bottom: 5px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
   padding: 8px;
   border-radius: 5px;
   text-align: center;
@@ -180,7 +169,6 @@ mat-card-header {
   margin-top: -100px;
 }
 
-/* ── Certificate button panel ────────────────────────────────────────────── */
 #certbutpanel {
   display: flex;
   flex-wrap: wrap;
@@ -192,8 +180,8 @@ mat-card-header {
 #certbutpanel button {
   flex: 1;
   min-width: 100px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
   font-size: 12px;
 }
 
@@ -201,7 +189,6 @@ mat-card-header {
   opacity: 0.4;
 }
 
-/* ── Citizen tab button panel ────────────────────────────────────────────── */
 #butpanel {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -210,13 +197,12 @@ mat-card-header {
 #butpanel button {
   width: 82px;
   margin: 3px;
-  background-color: #3b4e5f;
-  color: white;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 
-/* ── Table row states ────────────────────────────────────────────────────── */
 .selected-row {
-  background-color: #c9e6ff !important;
+  background-color: #78b8dd !important;
 }
 
 .mat-row:hover {
@@ -227,17 +213,15 @@ button:disabled {
   opacity: 0.5;
 }
 
-/* ── Form validation colours (same as employee) ──────────────────────────── */
 #certreqform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: lightgreen;
+  background-color: #78b8dd;
 }
 
 #certreqform mat-form-field .ng-dirty {
-  background-color: gold;
+  background-color: #d4d881;
 }
 
-/* ── Divider spacing ─────────────────────────────────────────────────────── */
 mat-divider {
   margin: 10px 0;
 }
@@ -253,7 +237,7 @@ mat-divider {
   width: 180px;
   height: 100px;
   border-radius: 12px;
-  color: white;
+  color: #f2f5fd;
   display: flex;
   flex-direction: column;
   justify-content: center;
