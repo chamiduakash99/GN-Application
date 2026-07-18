@@ -1,4 +1,4 @@
-export class Treetype {
+export class Treepermissionstatus {
   public id!: number;
   public name!: string;
 

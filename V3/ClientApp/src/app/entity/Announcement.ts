@@ -9,8 +9,6 @@ export class Announcement{
   public publishedat !: string;
   public expiredat !: string;
   public employee !: Employee;
-
-
   constructor(
     id:number,
     title:string,

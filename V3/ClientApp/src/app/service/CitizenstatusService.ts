@@ -1,24 +1,23 @@
-import {Empstatus} from "../entity/empstatus";
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Citizenstatus } from "../entity/citizenstatus";
 
 @Injectable({
   providedIn: 'root'
 })
+export class CitizenstatusService {
 
-export class Empstatusservice {
+  private baseUrl = 'http://localhost:8080/citizenstatuses';
 
-  constructor(private http: HttpClient) {  }
+  constructor(private http: HttpClient) { }
 
-  async getAllList(): Promise<Array<Empstatus>> {
+  async getAllListNameId(): Promise<Array<Citizenstatus>> {
+    const items = await this.http.get<Array<Citizenstatus>>(this.baseUrl + '/list').toPromise();
 
-    const employeestatuss = await this.http.get<Array<Empstatus>>('http://localhost:8080/employeestatuses/list').toPromise();
-    if(employeestatuss == undefined){
+    if (items == undefined) {
       return [];
     }
-    return employeestatuss;
+
+    return items;
   }
-
 }
-
-

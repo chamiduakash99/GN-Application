@@ -13,8 +13,8 @@ export class Land {
   public size!: number;
   public landtype!: Landtype;
   public citizen!: Citizen;
-  public image!: string; // base64 string or url
-  public deed!: string;  // base64 string or url
+  public image!: string;
+  public deed!: string;
   public fencetype!: Fencetype;
   public remarks!: string;
   public landfeaturedetails!:Array<Landfeaturedetails>;

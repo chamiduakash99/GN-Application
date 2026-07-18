@@ -21,11 +21,13 @@ import {LandComponent} from "./view/modules/land/land.component";
 import {BuildingComponent} from "./view/modules/building/building.component";
 import {CitizenComponent} from "./view/modules/citizen/citizen.component";
 import {CertificaterequestComponent} from "./view/modules/certificaterequest/certificaterequest.component";
-import {CertificateportalComponent} from "./view/modules/certificateportal/certificateportal.component";
 import {CertificateComponent} from "./view/modules/certificate/certificate.component";
 import {AnnouncementComponent} from "./view/modules/announcement/announcement.component";
 import {ComplaintComponent} from "./view/modules/complaint/complaint.component";
 import {IdcardrequestComponent} from "./view/modules/idcardrequest/idcardrequest.component";
+import {HouseholdComponent} from "./view/modules/household/household.component";
+import {TreecuttingrequestComponent} from "./view/modules/treecuttingrequest/treecuttingrequest.component";
+import {VoterregistryComponent} from "./view/modules/voterregistry/voterregistry.component";
 
 
 const routes: Routes = [
@@ -60,11 +62,13 @@ const routes: Routes = [
       { path: "building", component: BuildingComponent },
       { path: "citizen", component: CitizenComponent },
       { path: "certificaterequest", component: CertificaterequestComponent },
-      { path: "certificateportal", component: CertificateportalComponent },
       { path: "certificate", component: CertificateComponent },
       { path: "announcement", component: AnnouncementComponent },
       { path: "complaint", component: ComplaintComponent },
-      { path: "idcardrequest", component: IdcardrequestComponent }
+      { path: "idcardrequest", component: IdcardrequestComponent },
+      { path: "household", component: HouseholdComponent },
+      { path: "treecuttingrequest", component: TreecuttingrequestComponent },
+      { path: "voterregistry", component: VoterregistryComponent }
 
     ]
   }];

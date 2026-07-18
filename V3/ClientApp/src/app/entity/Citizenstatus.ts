@@ -1,4 +1,4 @@
-export class Empstatus {
+export class Citizenstatus {
 
   public id !: number;
   public name !: string;

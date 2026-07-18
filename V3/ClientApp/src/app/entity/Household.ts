@@ -1,37 +1,26 @@
-import {Landfeaturedetails} from "./Landfeaturedetails";
-import {Citizenaidprogram} from "./Citizenaidprogram";
-import {Citizenguardian} from "./Citizenguardian";
+import {Citizen} from './Citizen';
 
-export class Citizen {
+export class Household {
   public id!: number;
-  public name!: string;
-  public nic!: string;
+  public householdno!: string;
+  public address!: string;
+  public registrationdate!: string;
+  public headcitizenId!: number;
+  public citizensById!: Citizen[];
 
-  public namewithinitials!: string;
-  public dateofbirth!: Date;
-  public mobileno!: string;
-  public email!: string;
-  public isconvicted!: number;
-  public medicalconditions!: string;
-  public remarks!: string;
-
-  public religion!: any;
-  public matiralstatus!: any;
-  public educationlevel!: any;
-  public ethnicity!: any;
-  public gender!: any;
-
-  public citizenaidprograms!:Array<Citizenaidprogram>;
-  public citizenguardians!:Array<Citizenguardian>;
-
-  public birthcetificateno!: string;
-
-  constructor(id: number, name: string, nic: string) {
+  constructor(
+    id: number,
+    householdno: string,
+    address?: string,
+    registrationdate?: string,
+    headcitizenId?: number,
+    citizensById?: Citizen[]
+  ) {
     this.id = id;
-    this.name = name;
-    this.nic = nic;
-
-    this.citizenaidprograms = [];
-    this.citizenguardians = [];
+    this.householdno = householdno;
+    this.address = address ?? '';
+    this.registrationdate = registrationdate ?? '';
+    this.headcitizenId = headcitizenId ?? 0;
+    this.citizensById = citizensById ?? [];
   }
 }

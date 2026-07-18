@@ -1,53 +1,43 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Citizen } from '../entity/Citizen';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Household} from '../entity/Household';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CitizenService {
+export class HouseholdService {
 
-  private baseUrl = 'http://localhost:8080/citizens';
+  private readonly url = 'http://localhost:8080/households';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  // Get all citizens (with optional query filters)
-  async getAll(query: string = ''): Promise<Array<Citizen>> {
-    const citizens = await this.http.get<Array<Citizen>>(this.baseUrl + query).toPromise();
-    return citizens ?? [];
+  getAll(query: string): Promise<Household[]> {
+    const finalUrl = query && query.trim() !== ''
+      ? this.url + query
+      : this.url;
+    return this.http.get<Household[]>(finalUrl)
+      .toPromise()
+      .then(res => res ?? []);
   }
 
-  // Get citizen by ID
-  async getById(id: number): Promise<Citizen | undefined> {
-    return this.http.get<Citizen>(`${this.baseUrl}/${id}`).toPromise();
+  getAllList(): Promise<Household[]> {
+    return this.http.get<Household[]>(this.url + '/list')
+      .toPromise()
+      .then(res => res ?? []);
   }
 
-  // Add new citizen
-  async add(citizen: Citizen): Promise<Citizen | undefined> {
-    return this.http.post<Citizen>(this.baseUrl, citizen).toPromise();
+  add(household: Household): Promise<[] | undefined> {
+    return this.http.post<[]>(this.url, household).toPromise().catch(error => {
+      console.log('Add Error:', error);
+      return undefined;
+    });
   }
 
-  // Update citizen
-  async update(citizen: Citizen): Promise<Citizen | undefined> {
-    return this.http.put<Citizen>(this.baseUrl, citizen).toPromise();
+  update(household: Household): Promise<[] | undefined> {
+    return this.http.put<[]>(this.url, household).toPromise();
   }
 
-  // Delete citizen
-  async delete(id: number): Promise<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`).toPromise();
+  delete(id: number): Promise<[] | undefined> {
+    return this.http.delete<[]>(`${this.url}/${id}`).toPromise();
   }
-
-  async getAllListNameId(): Promise<Array<Citizen>> {
-
-    const citizens = await this.http
-      .get<Array<Citizen>>(this.baseUrl + '/list')
-      .toPromise();
-
-    if (citizens == undefined) {
-      return [];
-    }
-
-    return citizens;
-  }
-
 }

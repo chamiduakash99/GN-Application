@@ -1,9 +1,24 @@
-export class Aidprogram {
-  public id!: number;
-  public name!: string;
+import {Citizen} from './Citizen';
+import {Household} from './Household';
 
-  constructor(id: number, name: string) {
+export class Voterregistry {
+  public id!: number;
+  public serialno!: number;
+  public registereddate!: string;
+  public citizen!: Citizen;
+  public household!: Household;
+
+  constructor(
+    id: number,
+    serialno: number,
+    registereddate: string,
+    citizen: Citizen,
+    household: Household
+  ) {
     this.id = id;
-    this.name = name;
+    this.serialno = serialno;
+    this.registereddate = registereddate;
+    this.citizen = citizen;
+    this.household = household;
   }
 }

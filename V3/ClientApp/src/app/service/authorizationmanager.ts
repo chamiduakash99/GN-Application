@@ -20,21 +20,24 @@ export class AuthorizationManager {
     { name: 'Operation', isVisible: false, routerLink: 'operation' }
   ];
 
-  Inventory = [
-    {name: 'Item', isVisible: false, routerLink: 'item'}
-  ]
   Infrastructure = [
     {name: 'Street', isVisible: false, routerLink: 'street'},
     {name: 'Land', isVisible: false, routerLink: 'land'},
     {name: 'Building', isVisible: false, routerLink: 'building'}
   ]
   Citizen = [
-    {name: 'Citizen', isVisible: false, routerLink: 'citizen'}
+    {name: 'Citizen', isVisible: false, routerLink: 'citizen'},
+    {name: 'Household', isVisible: false, routerLink: 'household'},
+    {name: 'VoterRegistry', isVisible: false, routerLink: 'voterregistry'}
   ]
 
   CertificateRequest = [
     {name: 'Certificate',  isVisible: false, routerLink: 'certificate'},
     {name: 'CertificateRequest',  isVisible: false, routerLink: 'certificaterequest'}
+  ];
+
+  TreeCuttingRequest = [
+    {name: 'TreeCuttingRequest',  isVisible: false, routerLink: 'treecuttingrequest'}
   ];
 
   Announcement = [
@@ -57,14 +60,15 @@ export class AuthorizationManager {
   getNavListItem(){
     return [
       { Menu : 'Admin' , MenuItems : this.Admin },
-      { Menu : 'Inventory' , MenuItems : this.Inventory },
       { Menu : 'Infrastructure' , MenuItems : this.Infrastructure },
       { Menu : 'Reports' , MenuItems : this.Reports },
       { Menu : 'Citizen' , MenuItems : this.Citizen },
       { Menu : 'CertificateRequest' , MenuItems : this.CertificateRequest },
+      { Menu : 'TreeCuttingRequest' , MenuItems : this.TreeCuttingRequest },
       { Menu : 'Announcement' , MenuItems : this.Announcement },
       { Menu : 'Complaint' , MenuItems : this.Complaint },
-      { Menu : 'IdCardRequest' , MenuItems : this.IdCardRequest }
+      { Menu : 'IdCardRequest' , MenuItems : this.IdCardRequest },
+
 
     ]
   }

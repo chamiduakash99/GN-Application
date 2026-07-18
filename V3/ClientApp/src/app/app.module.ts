@@ -53,12 +53,14 @@ import {GetControlPipe} from "./util/ui/GetControlPipe";
 import {BuildingComponent} from "./view/modules/building/building.component";
 import { CitizenComponent } from './view/modules/citizen/citizen.component';
 import { CertificaterequestComponent } from './view/modules/certificaterequest/certificaterequest.component';
-import { CertificateportalComponent } from './view/modules/certificateportal/certificateportal.component';
 import { MatStepperModule } from '@angular/material/stepper';
 import { CertificateComponent } from './view/modules/certificate/certificate.component';
 import { AnnouncementComponent } from './view/modules/announcement/announcement.component';
 import { ComplaintComponent } from './view/modules/complaint/complaint.component';
 import { IdcardrequestComponent } from './view/modules/idcardrequest/idcardrequest.component';
+import { HouseholdComponent } from './view/modules/household/household.component';
+import { TreecuttingrequestComponent } from './view/modules/treecuttingrequest/treecuttingrequest.component';
+import { VoterregistryComponent } from './view/modules/voterregistry/voterregistry.component';
 
 
 
@@ -88,11 +90,13 @@ import { IdcardrequestComponent } from './view/modules/idcardrequest/idcardreque
     BuildingComponent,
     CitizenComponent,
     CertificaterequestComponent,
-    CertificateportalComponent,
     CertificateComponent,
     AnnouncementComponent,
     ComplaintComponent,
-    IdcardrequestComponent
+    IdcardrequestComponent,
+    HouseholdComponent,
+    TreecuttingrequestComponent,
+    VoterregistryComponent
   ],
   imports: [
     MatDatepickerModule,

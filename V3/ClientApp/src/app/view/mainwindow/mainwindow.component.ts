@@ -15,14 +15,17 @@ export class MainwindowComponent {
   menuGroup: any[] = [];
 
   // Set Mat icons you need to add to Menus
-  matIcons : any = {
-    'Admin': 'person',
-    'Inventory': 'description',
-    'Infrastructure': 'build',
-    'Reports': "description",
-    'Citizen': "person"
-
+  matIcons: any = {
+    'Admin': 'admin_panel_settings',
+    'CertificateRequest': 'verified',
+    'Infrastructure': 'location_city',
+    'Reports': 'assessment',
+    'Citizen': 'groups',
+    'Announcement': 'campaign',
+    'Complaint': 'report_problem',
+    'IdCardRequest': 'badge'
   };
+
 
   userImage: string = 'assets/default.png'
   constructor(private router: Router,public authService: AuthorizationManager,public darkModeSevice:DarkModeService) {
