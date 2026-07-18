@@ -1,0 +1,274 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- TOP STATS BAR -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="12" [rowspan]="3">
+    <div class="stats-bar">
+
+      <div class="stat-card total">
+        <mat-icon>how_to_vote</mat-icon>
+        <div class="stat-info">
+          <span class="stat-number">{{totalVoters}}</span>
+          <span class="stat-label">Total Eligible Voters</span>
+        </div>
+      </div>
+
+      <div class="stat-card households">
+        <mat-icon>home</mat-icon>
+        <div class="stat-info">
+          <span class="stat-number">{{totalHouseholds}}</span>
+          <span class="stat-label">Households Represented</span>
+        </div>
+      </div>
+
+      <div class="stat-card date" *ngIf="registryDate">
+        <mat-icon>event</mat-icon>
+        <div class="stat-info">
+          <span class="stat-number">{{registryDate | date:'dd MMM yyyy'}}</span>
+          <span class="stat-label">Registry Generated Date</span>
+        </div>
+      </div>
+
+      <div class="stat-card selected" *ngIf="selectedHousehold">
+        <mat-icon>home_work</mat-icon>
+        <div class="stat-info">
+          <span class="stat-number">{{selectedHousehold.votercount}}</span>
+          <span class="stat-label">Voters in {{selectedHousehold.householdno}}</span>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="action-group">
+        <button mat-raised-button id="generatebtn" (click)="generate()">
+          <mat-icon>refresh</mat-icon> Generate Registry
+        </button>
+        <button mat-raised-button id="clearbtn" (click)="clearSelection()">
+          <mat-icon>clear</mat-icon> Clear
+        </button>
+        <div id="loading">
+          <img [src]="imageurl" alt="loading status">
+        </div>
+      </div>
+
+    </div>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- LEFT — Household Summary Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="4" [rowspan]="15">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Households</mat-card-title>
+        <span class="hint-text">Click a row to see voters</span>
+      </mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="hhdata">
+
+          <!-- householdno -->
+          <ng-container matColumnDef="householdno">
+            <mat-header-cell *matHeaderCellDef>Household No</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <strong>{{row.householdno}}</strong>
+            </mat-cell>
+          </ng-container>
+
+          <!-- address -->
+          <ng-container matColumnDef="address">
+            <mat-header-cell *matHeaderCellDef>Address</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{row.address}}</mat-cell>
+          </ng-container>
+
+          <!-- voter count -->
+          <ng-container matColumnDef="votercount">
+            <mat-header-cell *matHeaderCellDef>Voters</mat-header-cell>
+            <mat-cell *matCellDef="let row">
+              <span class="voter-badge">{{row.votercount}}</span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Client-side search row -->
+          <ng-container matColumnDef="cshhno">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cshhsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search No</mat-label>
+                  <input matInput formControlName="cshhno" (keyup)="filterHouseholdTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csaddr">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cshhsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search Address</mat-label>
+                  <input matInput formControlName="csaddr" (keyup)="filterHouseholdTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="cscount">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="hhcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="cshhcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: hhcolumns;"
+                   (click)="selectHousehold(row)"
+                   [ngClass]="{'selected-row': row === selectedHousehold}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #hhpaginator [pageSize]="8" [pageSizeOptions]="[5,8,15]"></mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT — Voter List Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="15">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <span *ngIf="!selectedHousehold">All Eligible Voters</span>
+          <span *ngIf="selectedHousehold">
+            Voters — {{selectedHousehold.householdno}}
+            <span class="address-sub">{{selectedHousehold.address}}</span>
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <!-- Empty state -->
+        <div *ngIf="voters.length === 0 && !selectedHousehold" class="empty-hint">
+          <mat-icon>how_to_vote</mat-icon>
+          <p>Click <strong>Generate Registry</strong> to populate the voter list,<br>
+            then select a household to view its members.</p>
+        </div>
+
+        <div *ngIf="voters.length === 0 && selectedHousehold" class="empty-hint">
+          <mat-icon>person_off</mat-icon>
+          <p>No eligible voters found for this household.</p>
+        </div>
+
+        <mat-table [dataSource]="voterdata" *ngIf="voters.length > 0">
+
+          <!-- Serial No -->
+          <ng-container matColumnDef="serialno">
+            <mat-header-cell *matHeaderCellDef>Serial No</mat-header-cell>
+            <mat-cell *matCellDef="let v">
+              <span class="serial-badge">{{v.serialno}}</span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Name -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Full Name</mat-header-cell>
+            <mat-cell *matCellDef="let v"><strong>{{v.citizen?.name}}</strong></mat-cell>
+          </ng-container>
+
+          <!-- Name with initials -->
+          <ng-container matColumnDef="namewithinitials">
+            <mat-header-cell *matHeaderCellDef>Name w/ Initials</mat-header-cell>
+            <mat-cell *matCellDef="let v">{{v.citizen?.namewithinitials}}</mat-cell>
+          </ng-container>
+
+          <!-- NIC -->
+          <ng-container matColumnDef="nic">
+            <mat-header-cell *matHeaderCellDef>NIC</mat-header-cell>
+            <mat-cell *matCellDef="let v">{{v.citizen?.nic}}</mat-cell>
+          </ng-container>
+
+          <!-- DOB -->
+          <ng-container matColumnDef="dateofbirth">
+            <mat-header-cell *matHeaderCellDef>Date of Birth</mat-header-cell>
+            <mat-cell *matCellDef="let v">{{v.citizen?.dateofbirth}}</mat-cell>
+          </ng-container>
+
+          <!-- Mobile -->
+          <ng-container matColumnDef="mobileno">
+            <mat-header-cell *matHeaderCellDef>Mobile</mat-header-cell>
+            <mat-cell *matCellDef="let v">{{v.citizen?.mobileno}}</mat-cell>
+          </ng-container>
+
+          <!-- Remove action -->
+          <ng-container matColumnDef="action">
+            <mat-header-cell *matHeaderCellDef>Remove</mat-header-cell>
+            <mat-cell *matCellDef="let v">
+              <button mat-icon-button color="warn"
+                      (click)="removeVoter(v)"
+                      matTooltip="Remove from registry">
+                <mat-icon>person_remove</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Client-side search row -->
+          <ng-container matColumnDef="csserial">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csvotersearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Serial</mat-label>
+                  <input matInput formControlName="csserial" (keyup)="filterVoterTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csname">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csvotersearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Name</mat-label>
+                  <input matInput formControlName="csname" (keyup)="filterVoterTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csnic">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csvotersearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>NIC</mat-label>
+                  <input matInput formControlName="csnic" (keyup)="filterVoterTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csdob">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csvotersearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>DOB</mat-label>
+                  <input matInput formControlName="csdob" (keyup)="filterVoterTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="votercolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="csvotercolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: votercolumns;"
+                   [ngClass]="{'selected-row': row === selectedVoter}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #voterpaginator [pageSize]="8"
+                       [pageSizeOptions]="[5,8,15,20]"
+                       *ngIf="voters.length > 0">
+        </mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>
