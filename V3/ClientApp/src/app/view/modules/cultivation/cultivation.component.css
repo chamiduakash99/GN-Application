@@ -1,0 +1,241 @@
+/* Main Grid */
+mat-grid-list {
+  width: 100%;
+}
+
+
+/* All Cards */
+mat-card {
+  width: 95%;
+  height: 95%;
+  margin: auto;
+  overflow: auto;
+}
+
+
+/* Card Headers */
+mat-card-header {
+  background-color: #f5f5f5;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+
+mat-card-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+/* Form Section Labels */
+.sectionlabel {
+  font-size: 16px;
+  font-weight: bold;
+  color: #3f51b5;
+  margin: 5px 0 15px 0;
+}
+
+
+/* Form Fields */
+mat-form-field {
+  width: 100%;
+}
+
+
+/* Area Row */
+.area-row {
+  display: flex;
+  gap: 10px;
+}
+
+.area-field {
+  flex: 2;
+}
+
+.unit-field {
+  flex: 1;
+}
+
+
+/* Buttons */
+#culbutpanel,
+#harbutpanel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+
+button {
+  min-width: 90px;
+}
+
+
+/* Divider */
+mat-divider {
+  margin: 15px 0;
+}
+
+
+/* Harvest Header */
+.harvest-sub {
+  font-size: 13px;
+  color: gray;
+  margin-left: 5px;
+}
+
+
+.harvest-for {
+  font-size: 14px;
+  color: #666;
+}
+
+
+/* Empty Messages */
+.harvest-hint,
+.empty-hint {
+  text-align: center;
+  padding: 25px;
+  color: gray;
+}
+
+
+.empty-hint mat-icon,
+.harvest-hint mat-icon {
+  font-size: 40px;
+  height: 40px;
+  width: 40px;
+}
+
+
+/* Search Panel */
+#ssearch mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+
+#ssearch mat-form-field {
+  width: 30%;
+  margin-right: 10px;
+}
+
+
+#ssearch button {
+  margin-right: 10px;
+}
+
+
+/* Tables */
+mat-table {
+  width: 100%;
+}
+
+
+mat-header-cell {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+
+mat-cell,
+mat-header-cell {
+  padding: 8px;
+}
+
+
+/* Row Hover */
+mat-row:hover {
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+
+
+/* Selected Row */
+.selected-row {
+  background-color: #dce7ff !important;
+}
+
+
+/* Table Search Row */
+.csearch {
+  width: 100%;
+}
+
+
+.csearch mat-form-field {
+  width: 100%;
+  margin: 0;
+}
+
+
+/* Status Chips */
+
+.status-chip {
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: white;
+  display: inline-block;
+  text-align: center;
+}
+
+
+/* Active */
+.status-chip.active {
+  background-color: #4caf50;
+}
+
+
+/* Harvested */
+.status-chip.harvested {
+  background-color: #2196f3;
+}
+
+
+/* Abandoned */
+.status-chip.abandoned {
+  background-color: #f44336;
+}
+
+
+/* Loading Image */
+#loading {
+  margin-left: auto;
+  margin-right: 15px;
+}
+
+
+#loading img {
+  width: 35px;
+  height: 35px;
+}
+
+
+/* Pagination */
+mat-paginator {
+  margin-top: 5px;
+}
+
+
+/* Responsive */
+@media screen and (max-width: 900px) {
+
+  .area-row {
+    display: block;
+  }
+
+  #ssearch mat-form-field {
+    width: 100%;
+  }
+
+  #culbutpanel,
+  #harbutpanel {
+    flex-direction: column;
+  }
+
+  button {
+    width: 100%;
+  }
+
+}

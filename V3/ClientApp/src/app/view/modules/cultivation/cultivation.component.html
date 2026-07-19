@@ -1,0 +1,325 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- LEFT PANEL — Cultivation Form + Harvest Form -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="4" [rowspan]="22">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Cultivation & Harvesting</mat-card-title>
+      </mat-card-header>
+      <mat-card-content id="culform">
+
+        <!-- ══ CULTIVATION FORM ════════════════════════════════════════════ -->
+        <mat-form [formGroup]="culform">
+
+          <p class="sectionlabel">Cultivation Details</p>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Cultivation No</mat-label>
+            <input matInput formControlName="cultivationno" placeholder="e.g. CUL0001">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Farmer (Citizen)</mat-label>
+            <mat-select formControlName="citizen">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Land (Deed No)</mat-label>
+            <mat-select formControlName="landdetail">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let l of landdetails" [value]="l">
+                {{l.deed}} — {{l.size}} acres
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Crop Type</mat-label>
+            <mat-select formControlName="croptype">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let t of croptypes" [value]="t">{{t.name}}</mat-option>
+            </mat-select>
+            <mat-hint *ngIf="selectedCroptypeHint">{{selectedCroptypeHint}}</mat-hint>
+          </mat-form-field>
+
+          <div class="area-row">
+            <mat-form-field appearance="outline" class="area-field">
+              <mat-label>Cultivated Area</mat-label>
+              <input matInput type="number" formControlName="cultivatedarea" placeholder="e.g. 2.5">
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="unit-field">
+              <mat-label>Unit</mat-label>
+              <mat-select formControlName="areaunit">
+                <mat-option [value]="null">—</mat-option>
+                <mat-option *ngFor="let u of areaunits" [value]="u">{{u.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Planting Date</mat-label>
+            <input matInput [matDatepicker]="plantdate" formControlName="plantingdate">
+            <mat-datepicker-toggle matSuffix [for]="plantdate"></mat-datepicker-toggle>
+            <mat-datepicker #plantdate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Expected Harvest Date</mat-label>
+            <input matInput [matDatepicker]="harvestdate" formControlName="expectedharvestdate">
+            <mat-datepicker-toggle matSuffix [for]="harvestdate"></mat-datepicker-toggle>
+            <mat-datepicker #harvestdate></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="cultivationstatus">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let s of cultivationstatuses" [value]="s">{{s.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput rows="2" formControlName="remarks"></textarea>
+          </mat-form-field>
+
+          <div id="culbutpanel">
+            <button mat-raised-button (click)="addCultivation()" [disabled]="!enaculadd">
+              <mat-icon>add</mat-icon> Add
+            </button>
+            <button mat-raised-button (click)="updateCultivation()" [disabled]="!enaculupd">
+              <mat-icon>edit</mat-icon> Update
+            </button>
+            <button mat-raised-button (click)="deleteCultivation()" [disabled]="!enaculdel">
+              <mat-icon>delete</mat-icon> Delete
+            </button>
+            <button mat-raised-button (click)="clear()">
+              <mat-icon>clear</mat-icon> Clear
+            </button>
+          </div>
+
+        </mat-form>
+
+        <!-- ══ HARVEST FORM ════════════════════════════════════════════════ -->
+        <mat-divider></mat-divider>
+
+        <mat-form [formGroup]="harform">
+
+          <p class="sectionlabel">
+            Harvest Record
+            <span class="harvest-sub" *ngIf="selectedculrow">
+              — {{cultivation?.cultivationno}}
+            </span>
+          </p>
+
+          <div *ngIf="!selectedculrow" class="harvest-hint">
+            <mat-icon>info</mat-icon>
+            Select a cultivation above to record a harvest.
+          </div>
+
+          <ng-container *ngIf="selectedculrow">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Harvest Date</mat-label>
+              <input matInput [matDatepicker]="hardate" formControlName="harvestdate">
+              <mat-datepicker-toggle matSuffix [for]="hardate"></mat-datepicker-toggle>
+              <mat-datepicker #hardate></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Quantity (kg)</mat-label>
+              <input matInput type="number" formControlName="quantity" placeholder="e.g. 2800">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Quality / Remarks</mat-label>
+              <textarea matInput rows="2" formControlName="qualityremarks"
+                        placeholder="e.g. Good, Grade A, Minor damage..."></textarea>
+            </mat-form-field>
+
+            <div id="harbutpanel">
+              <button mat-raised-button (click)="addHarvest()" [disabled]="!enaharadd">
+                <mat-icon>add</mat-icon> Add
+              </button>
+              <button mat-raised-button (click)="updateHarvest()" [disabled]="!enaharupd">
+                <mat-icon>edit</mat-icon> Update
+              </button>
+              <button mat-raised-button (click)="deleteHarvest()" [disabled]="!enahardel">
+                <mat-icon>delete</mat-icon> Delete
+              </button>
+            </div>
+
+          </ng-container>
+
+        </mat-form>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT TOP — Server-side Search -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="4">
+    <mat-card id="ssearch">
+      <mat-card-header>
+        <mat-card-title>Cultivation Search</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form [formGroup]="sssearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Farmer</mat-label>
+            <mat-select formControlName="sscitizens">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Crop Type</mat-label>
+            <mat-select formControlName="sscroptype">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let t of croptypes" [value]="t.id">{{t.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="ssstatus">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let s of cultivationstatuses" [value]="s.id">{{s.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT MIDDLE — Cultivation Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="9">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Cultivations</mat-card-title>
+        <div id="loading"><img [src]="imageurl" alt="loading"></div>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="culdata">
+
+          <ng-container *ngFor="let col of culcolumns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{culheaders[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col === 'status'; else defaultCulCell">
+                <span class="status-chip"
+                      [ngClass]="element.cultivationstatus?.name?.toLowerCase()">
+                  {{element.cultivationstatus?.name}}
+                </span>
+              </ng-container>
+              <ng-template #defaultCulCell>
+                {{uiassist.getProperty(element, culbinders[i])}}
+              </ng-template>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container *ngFor="let cscol of csculcolumns; let i = index" [matColumnDef]="cscol">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cssearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{csculprompts[i]}}</mat-label>
+                  <input matInput [formControlName]="cscol" (keyup)="filterCultivationTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="culcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="csculcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: culcolumns;"
+                   (click)="fillCulForm(row)"
+                   [ngClass]="{'selected-row': row === selectedculrow}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #culpaginator [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- RIGHT BOTTOM — Harvest Table -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="8" [rowspan]="9">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Harvest Records
+          <span *ngIf="selectedculrow" class="harvest-for">
+            — {{cultivation?.cultivationno}}
+            ({{cultivation?.croptype?.name}})
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div *ngIf="!selectedculrow" class="empty-hint">
+          <mat-icon>agriculture</mat-icon>
+          <p>Select a cultivation to view its harvest records.</p>
+        </div>
+
+        <div *ngIf="selectedculrow && harvests.length === 0" class="empty-hint">
+          <mat-icon>grass</mat-icon>
+          <p>No harvest records yet for this cultivation.</p>
+        </div>
+
+        <mat-table [dataSource]="hardata" *ngIf="harvests.length > 0">
+
+          <ng-container *ngFor="let col of harcolumns; let i = index" [matColumnDef]="col">
+            <mat-header-cell *matHeaderCellDef>{{harheaders[i]}}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, harbinders[i])}}</mat-cell>
+          </ng-container>
+
+          <ng-container *ngFor="let cscol of csharcolumns; let i = index" [matColumnDef]="cscol">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csharform" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>{{csharprompts[i]}}</mat-label>
+                  <input matInput [formControlName]="cscol" (keyup)="filterHarvestTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="harcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="csharcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: harcolumns;"
+                   (click)="fillHarForm(row)"
+                   [ngClass]="{'selected-row': row === selectedharrow}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #harpaginator [pageSize]="5" [pageSizeOptions]="[5,10]"
+                       *ngIf="harvests.length > 0">
+        </mat-paginator>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>
