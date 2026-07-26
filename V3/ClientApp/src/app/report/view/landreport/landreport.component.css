@@ -7,3 +7,6 @@ mat-card-header { background: #000d33; }
 mat-card-header ::ng-deep * {color: #ffffff;}
 
 mat-row.mat-mdc-row:nth-child(even) {background-color: #e3edff !important;}
+
+
+

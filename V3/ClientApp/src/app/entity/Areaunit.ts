@@ -1,4 +1,4 @@
-export class Cultivationstatus {
+export class Areaunit {
   public id!: number;
   public name!: string;
 

@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Croptype} from '../entity/Croptype';
+import {Cultivationstatus} from '../entity/Cultivationstatus';
 
 @Injectable({providedIn: 'root'})
-export class CroptypeService {
-  private readonly url = 'http://localhost:8080/croptypes';
+export class CultivationstatusService {
+  private readonly url = 'http://localhost:8080/cultivationstatuses';
   constructor(private http: HttpClient) {}
 
-  getAll(): Promise<Croptype[]> {
-    return this.http.get<Croptype[]>(this.url).toPromise().then(res => res ?? []);
+  getAll(): Promise<Cultivationstatus[]> {
+    return this.http.get<Cultivationstatus[]>(this.url).toPromise().then(res => res ?? []);
   }
-  getAllList(): Promise<Croptype[]> {
-    return this.http.get<Croptype[]>(this.url + '/list').toPromise().then(res => res ?? []);
+  getAllList(): Promise<Cultivationstatus[]> {
+    return this.http.get<Cultivationstatus[]>(this.url + '/list').toPromise().then(res => res ?? []);
   }
 }

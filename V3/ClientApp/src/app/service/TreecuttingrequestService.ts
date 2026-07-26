@@ -59,4 +59,18 @@ export class TreecuttingrequestService {
       {headers: {'Content-Type': 'application/octet-stream'}}
     ).toPromise();
   }
+
+  downloadPermitPdf(id: number): Promise<ArrayBuffer | undefined> {
+    return this.http.get(
+      `${this.url}/${id}/permitpdf`,
+      { responseType: 'arraybuffer' }
+    ).toPromise();
+  }
+
+  downloadTransportPdf(id: number): Promise<ArrayBuffer | undefined> {
+    return this.http.get(
+      `${this.url}/${id}/transportpdf`,
+      { responseType: 'arraybuffer' }
+    ).toPromise();
+  }
 }

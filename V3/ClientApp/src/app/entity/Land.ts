@@ -8,6 +8,7 @@ import {Userrole} from "./userrole";
 export class Land {
   public id!: number;
   public street!: Street;
+  public deedno!: string;
   public latitude!: number;
   public longitude!: number;
   public size!: number;

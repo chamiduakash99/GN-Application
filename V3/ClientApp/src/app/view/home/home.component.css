@@ -1,81 +1,656 @@
-.main-dashboard {
+/* ── Wrapper ────────────────────────────────────────────────────────────── */
+.dashboard-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f4f5f2;
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+.dash-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #0c1b31;
+  color: #f2f5fd;
+  padding: 18px 24px;
+  border-radius: 10px;
+}
+
+.dash-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.dash-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.dash-logo-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  opacity: 0.8;
+}
+
+/* ── Stat row ───────────────────────────────────────────────────────────── */
+.stat-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 10px;
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+}
+
+.stat-card mat-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  opacity: 0.9;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.78rem;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
+/* Stat card color variants */
+.stat-blue    { background: linear-gradient(135deg, #1e3a5f, #2c5282); }
+.stat-green   { background: linear-gradient(135deg, #2f5233, #4a7856); }
+.stat-purple  { background: linear-gradient(135deg, #3d3d5c, #545478); }
+.stat-amber   { background: linear-gradient(135deg, #92651a, #b8860b); }
+.stat-teal    { background: linear-gradient(135deg, #1f4e4e, #2f6f6f); }
+.stat-red     { background: linear-gradient(135deg, #7a2e2e, #a8433d); }
+
+/* ── Chart grid ─────────────────────────────────────────────────────────────
+   Replaces the old .chart-row (flex, 2-per-row) with a responsive grid.
+   auto-fit + minmax lets cards flow 3-per-row on wide screens, 2 on medium,
+   1 on narrow — no fixed breakpoints, no wasted whitespace. Put every
+   mat-card directly inside a single .chart-grid wrapper (no more pairing
+   them into separate .chart-row divs). */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  border-radius: 10px !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08) !important;
+}
+
+.chart-card-full {
+  grid-column: 1 / -1;
+}
+
+/* Chart container: canvas on top, mini-stat chips below. Fixed height keeps
+   doughnut cards a consistent size within the grid. */
+.chart-container {
+  height: 220px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.chart-container canvas {
+  max-height: 160px !important;
+  width: 100% !important;
+}
+
+/* Charts that don't have mini-stat chips (the two bar charts) keep the
+   original fixed height so their layout stays exactly as before. */
+.chart-container.no-stats {
+  height: 280px;
+}
+
+.chart-canvas-wrap {
+  position: relative;
+  height: 200px;
+}
+
+.chart-container-wide {
+  height: 260px;
+}
+
+/* ── Mini stat chips (status + count under doughnut charts) ──────────────── */
+.mini-stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  padding-top: 4px;
+  border-top: 1px solid #eef0f2;
+}
+
+.mini-stat-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+}
+
+.mini-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mini-label {
+  color: #475569;
+  white-space: nowrap;
+}
+
+.mini-count {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+/* ── Chart card icon colors ──────────────────────────────────────────────── */
+.chart-icon {
+  border-radius: 8px !important;
+  padding: 6px;
+  color: #fff !important;
+  font-size: 1.3rem !important;
+  width: 2rem !important;
+  height: 2rem !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-blue    { background: #2c5282; }
+.icon-indigo  { background: #545478; }
+.icon-amber   { background: #b8860b; }
+.icon-green   { background: #4a7856; }
+.icon-lime    { background: #6b8e4e; }
+.icon-red     { background: #a8433d; }
+
+/* ── Loading placeholder ─────────────────────────────────────────────────── */
+.loading-box {
+  padding: 20px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+.loading-box mat-progress-bar {
+  margin-bottom: 12px;
+}
+
+/* ── Mat card overrides ──────────────────────────────────────────────────── */
+mat-card-header {
+  padding: 16px 16px 0 16px !important;
+}
+
+mat-card-content {
+  padding: 8px 16px 16px 16px !important;
+}
+
+mat-card-title {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+}
+
+mat-card-subtitle {
+  font-size: 0.78rem !important;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .stat-row {
+    flex-direction: column;
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Announcements ───────────────────────────────────────────────────────── */
+.announcement-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: #f2f5fd;
-  padding: 10px;
+  padding: 4px 0;
 }
 
-/* Header */
-.header-card {
-  background-size: cover;
-  background-position: center;
-  height: 100%;
+.announcement-item {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0f4ff;
+  border-left: 4px solid #2c5282;
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.announcement-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #1e3a5f;
+}
+
+.ann-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: #2c5282;
+}
+
+.announcement-meta {
+  font-size: 0.75rem;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-}
-#headImg {
-  width: 100% ;
-  height: auto;
+  padding: 40px 0;
+  color: #9ca3af;
+  gap: 8px;
 }
 
-/* Toolbar */
-.toolbar-middle {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
-.spacer {
-  flex: 1;
+.empty-box mat-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
 }
 
-/* Summary Cards */
-.summary-section {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 20px 0;
-  flex-wrap: wrap;
-}
-.summary-card {
-  flex: 1;
-  text-align: center;
-  background: #0c1b31;
-  color: #f2f5fd;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  min-width: 200px;
-}
-
-/* Lists */
-.activity-list, .event-list {
-  list-style: none;
-  padding: 0;
+.empty-box p {
+  font-size: 0.85rem;
   margin: 0;
 }
-.activity-list li, .event-list li {
-  background: #78b8dd;
-  margin: 8px 0;
-  padding: 8px;
-  border-radius: 6px;
-}
 
-/* Message cards */
-.message-header {
-  background-image: url('/assets/GNL8.png');
-  color: #040610;
-  font-weight: bold;
-  padding: 6px;
-  border-radius: 4px;
-}
+/* ── icon-red for announcements card ────────────────────────────────────── */
+.icon-red { background: #ef4444; }
 
-/* Responsive fix */
-@media (max-width: 900px) {
-  .summary-section {
-    flex-direction: column;
-  }
-  mat-grid-list {
-    grid-template-columns: 1fr !important;
-  }
-}
+/*!* ── Wrapper ────────────────────────────────────────────────────────────── *!*/
+/*.dashboard-wrap {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  gap: 20px;*/
+/*  padding: 20px;*/
+/*  background-color: #f4f5f2;*/
+/*  !*background-color: #f2f5fd;*!*/
+/*  min-height: 100vh;*/
+/*}*/
+
+/*!* ── Header ─────────────────────────────────────────────────────────────── *!*/
+/*.dash-header {*/
+/*  display: flex;*/
+/*  justify-content: space-between;*/
+/*  align-items: center;*/
+/*  background: #0c1b31;*/
+/*  color: #f2f5fd;*/
+/*  padding: 18px 24px;*/
+/*  border-radius: 10px;*/
+/*}*/
+
+/*.dash-header-left {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  gap: 4px;*/
+/*}*/
+
+/*.dash-title {*/
+/*  font-size: 1.5rem;*/
+/*  font-weight: 700;*/
+/*  letter-spacing: 0.5px;*/
+/*}*/
+
+/*.dash-subtitle {*/
+/*  font-size: 0.85rem;*/
+/*  opacity: 0.7;*/
+/*}*/
+
+/*.dash-logo-icon {*/
+/*  font-size: 2.5rem;*/
+/*  width: 2.5rem;*/
+/*  height: 2.5rem;*/
+/*  opacity: 0.8;*/
+/*}*/
+
+/*!* ── Stat row ───────────────────────────────────────────────────────────── *!*/
+/*.stat-row {*/
+/*  display: flex;*/
+/*  gap: 16px;*/
+/*  flex-wrap: wrap;*/
+/*}*/
+
+/*.stat-card {*/
+/*  flex: 1;*/
+/*  min-width: 150px;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  gap: 14px;*/
+/*  padding: 18px 20px;*/
+/*  border-radius: 10px;*/
+/*  color: #fff;*/
+/*  box-shadow: 0 3px 10px rgba(0,0,0,0.12);*/
+/*}*/
+
+/*.stat-card mat-icon {*/
+/*  font-size: 2rem;*/
+/*  width: 2rem;*/
+/*  height: 2rem;*/
+/*  opacity: 0.9;*/
+/*}*/
+
+/*.stat-info {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
+
+/*.stat-value {*/
+/*  font-size: 1.8rem;*/
+/*  font-weight: 700;*/
+/*  line-height: 1;*/
+/*}*/
+
+/*.stat-label {*/
+/*  font-size: 0.78rem;*/
+/*  opacity: 0.85;*/
+/*  margin-top: 4px;*/
+/*}*/
+
+/*!* Stat card color variants *!*/
+/*.stat-blue    { background: linear-gradient(135deg, #1e3a5f, #2c5282); }*/
+/*.stat-green   { background: linear-gradient(135deg, #2f5233, #4a7856); }*/
+/*.stat-purple  { background: linear-gradient(135deg, #3d3d5c, #545478); }*/
+/*.stat-amber   { background: linear-gradient(135deg, #92651a, #b8860b); }*/
+/*.stat-teal    { background: linear-gradient(135deg, #1f4e4e, #2f6f6f); }*/
+/*.stat-red     { background: linear-gradient(135deg, #7a2e2e, #a8433d); }*/
+
+/*!*.stat-blue   { background: linear-gradient(135deg, #2563eb, #3b82f6); }*!*/
+/*!*.stat-green  { background: linear-gradient(135deg, #16a34a, #22c55e); }*!*/
+/*!*.stat-purple { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }*!*/
+/*!*.stat-amber  { background: linear-gradient(135deg, #d97706, #f59e0b); }*!*/
+/*!*.stat-teal   { background: linear-gradient(135deg, #0891b2, #06b6d4); }*!*/
+/*!*.stat-red    { background: linear-gradient(135deg, #dc2626, #ef4444); }*!*/
+
+/*!* ── Chart rows ─────────────────────────────────────────────────────────── *!*/
+/*.chart-row {*/
+/*  display: flex;*/
+/*  gap: 20px;*/
+/*  flex-wrap: wrap;*/
+/*}*/
+
+/*.chart-card {*/
+/*  flex: 1;*/
+/*  min-width: 260px;*/
+/*  max-width: 340px;*/
+/*  border-radius: 10px !important;*/
+/*  box-shadow: 0 3px 10px rgba(0,0,0,0.08) !important;*/
+/*}*/
+/*!*.chart-card {*!*/
+/*!*  flex: 1;*!*/
+/*!*  min-width: 100px;*!*/
+/*!*  border-radius: 20px !important;*!*/
+/*!*  box-shadow: 0 3px 10px rgba(0,0,0,0.08) !important;*!*/
+/*!*}*!*/
+
+/*.chart-card-full {*/
+/*  flex: 2 2 100%;*/
+/*}*/
+
+/*!* Chart container is now a column: canvas wrap on top, mini-stat chips below.*/
+/*   Height is driven by content (canvas-wrap + chips), not a fixed box, so*/
+/*   the doughnut and its chip row never get squeezed together. *!*/
+
+/*.chart-container {*/
+/*  height: 220px;*/
+/*  position: relative;*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  gap: 8px;*/
+/*  padding: 8px 0;*/
+/*}*/
+/*!*.chart-container {*!*/
+/*!*  height: auto;*!*/
+/*!*  display: flex;*!*/
+/*!*  flex-direction: column;*!*/
+/*!*  gap: 10px;*!*/
+/*!*  padding: 8px 0;*!*/
+/*!*}*!*/
+
+/*.chart-container canvas {*/
+/*  max-height: 160px !important;*/
+/*  width: 100% !important;*/
+/*}*/
+
+/*!* Charts that don't have mini-stat chips (the two bar charts) keep the*/
+/*   original fixed height so their layout stays exactly as before. *!*/
+/*.chart-container.no-stats {*/
+/*  height: 280px;*/
+/*}*/
+
+/*.chart-canvas-wrap {*/
+/*  position: relative;*/
+/*  height: 200px;*/
+/*}*/
+
+/*.chart-container-wide {*/
+/*  height: 260px;*/
+/*}*/
+
+/*!* ── Mini stat chips (status + count under doughnut charts) ──────────────── *!*/
+/*.mini-stat-row {*/
+/*  display: flex;*/
+/*  flex-wrap: wrap;*/
+/*  gap: 8px;*/
+/*  justify-content: center;*/
+/*  padding-top: 4px;*/
+/*  border-top: 1px solid #eef0f2;*/
+/*}*/
+
+/*.mini-stat-chip {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  gap: 6px;*/
+/*  background: #f8fafc;*/
+/*  border-radius: 8px;*/
+/*  padding: 4px 10px;*/
+/*  font-size: 0.75rem;*/
+/*  line-height: 1.2;*/
+/*}*/
+
+/*.mini-dot {*/
+/*  width: 8px;*/
+/*  height: 8px;*/
+/*  border-radius: 50%;*/
+/*  flex-shrink: 0;*/
+/*}*/
+
+/*.mini-label {*/
+/*  color: #475569;*/
+/*  white-space: nowrap;*/
+/*}*/
+
+/*.mini-count {*/
+/*  font-weight: 700;*/
+/*  color: #1e293b;*/
+/*}*/
+
+/*!* ── Chart card icon colors ──────────────────────────────────────────────── *!*/
+/*.chart-icon {*/
+/*  border-radius: 8px !important;*/
+/*  padding: 6px;*/
+/*  color: #fff !important;*/
+/*  font-size: 1.3rem !important;*/
+/*  width: 2rem !important;*/
+/*  height: 2rem !important;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*}*/
+
+
+/*.icon-blue    { background: #2c5282; }*/
+/*.icon-indigo  { background: #545478; }*/
+/*.icon-amber   { background: #b8860b; }*/
+/*.icon-green   { background: #4a7856; }*/
+/*.icon-lime    { background: #6b8e4e; }*/
+/*.icon-red     { background: #a8433d; }*/
+/*!*.icon-blue   { background: #3b82f6; }*!*/
+/*!*.icon-indigo { background: #6366f1; }*!*/
+/*!*.icon-amber  { background: #f59e0b; }*!*/
+/*!*.icon-green  { background: #22c55e; }*!*/
+/*!*.icon-lime   { background: #84cc16; }*!*/
+
+/*!* ── Loading placeholder ─────────────────────────────────────────────────── *!*/
+/*.loading-box {*/
+/*  padding: 20px;*/
+/*  text-align: center;*/
+/*  color: #9ca3af;*/
+/*  font-size: 0.9rem;*/
+/*}*/
+
+/*.loading-box mat-progress-bar {*/
+/*  margin-bottom: 12px;*/
+/*}*/
+
+/*!* ── Mat card overrides ──────────────────────────────────────────────────── *!*/
+/*mat-card-header {*/
+/*  padding: 16px 16px 0 16px !important;*/
+/*}*/
+
+/*mat-card-content {*/
+/*  padding: 8px 16px 16px 16px !important;*/
+/*}*/
+
+/*mat-card-title {*/
+/*  font-size: 1rem !important;*/
+/*  font-weight: 600 !important;*/
+/*}*/
+
+/*mat-card-subtitle {*/
+/*  font-size: 0.78rem !important;*/
+/*}*/
+
+/*!* ── Responsive ──────────────────────────────────────────────────────────── *!*/
+/*@media (max-width: 900px) {*/
+/*  .stat-row {*/
+/*    flex-direction: column;*/
+/*  }*/
+
+/*  .chart-row {*/
+/*    flex-direction: column;*/
+/*  }*/
+
+/*  .chart-card {*/
+/*    min-width: unset;*/
+/*  }*/
+/*}*/
+
+/*!* ── Announcements ───────────────────────────────────────────────────────── *!*/
+/*.announcement-list {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  gap: 10px;*/
+/*  padding: 4px 0;*/
+/*}*/
+
+/*.announcement-item {*/
+/*  display: flex;*/
+/*  justify-content: space-between;*/
+/*  align-items: center;*/
+/*  background: #f0f4ff;*/
+/*  border-left: 4px solid #2c5282;*/
+/*  !*border-left: 4px solid #3b82f6;*!*/
+/*  border-radius: 6px;*/
+/*  padding: 10px 14px;*/
+/*}*/
+
+/*.announcement-title {*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  gap: 8px;*/
+/*  font-size: 0.88rem;*/
+/*  font-weight: 500;*/
+/*  color: #1e3a5f;*/
+/*}*/
+
+/*.ann-icon {*/
+/*  font-size: 1rem;*/
+/*  width: 1rem;*/
+/*  height: 1rem;*/
+/*  color: #2c5282;*/
+/*  !*color: #3b82f6;*!*/
+/*}*/
+
+/*.announcement-meta {*/
+/*  font-size: 0.75rem;*/
+/*  color: #6b7280;*/
+/*  white-space: nowrap;*/
+/*}*/
+
+/*!* ── Empty state ─────────────────────────────────────────────────────────── *!*/
+/*.empty-box {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  align-items: center;*/
+/*  justify-content: center;*/
+/*  padding: 40px 0;*/
+/*  color: #9ca3af;*/
+/*  gap: 8px;*/
+/*}*/
+
+/*.empty-box mat-icon {*/
+/*  font-size: 2rem;*/
+/*  width: 2rem;*/
+/*  height: 2rem;*/
+/*}*/
+
+/*.empty-box p {*/
+/*  font-size: 0.85rem;*/
+/*  margin: 0;*/
+/*}*/
+
+/*!* ── icon-red for announcements card ────────────────────────────────────── *!*/
+/*.icon-red { background: #ef4444; }*/

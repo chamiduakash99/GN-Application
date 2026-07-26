@@ -28,6 +28,9 @@ import {IdcardrequestComponent} from "./view/modules/idcardrequest/idcardrequest
 import {HouseholdComponent} from "./view/modules/household/household.component";
 import {TreecuttingrequestComponent} from "./view/modules/treecuttingrequest/treecuttingrequest.component";
 import {VoterregistryComponent} from "./view/modules/voterregistry/voterregistry.component";
+import {CultivationComponent} from "./view/modules/cultivation/cultivation.component";
+import {CitizenskillComponent} from "./view/modules/citizenskill/citizenskill.component";
+import {LandreportComponent} from "./report/view/landreport/landreport.component";
 
 
 const routes: Routes = [
@@ -42,7 +45,6 @@ const routes: Routes = [
       {path: "user", component: UserComponent},
       {path: "privilege", component: PrivilageComponent},
       {path: "operation", component: OperationComponent},
-      {path:"reports", component: CountByStreetMaterialComponent},
       {path:"payments",component:PaymentComponent},
       {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
       {path:"batchregistration",component:BatchregistrationComponent},
@@ -68,7 +70,14 @@ const routes: Routes = [
       { path: "idcardrequest", component: IdcardrequestComponent },
       { path: "household", component: HouseholdComponent },
       { path: "treecuttingrequest", component: TreecuttingrequestComponent },
-      { path: "voterregistry", component: VoterregistryComponent }
+      { path: "voterregistry", component: VoterregistryComponent },
+      { path: "cultivation", component: CultivationComponent },
+      { path: "citizenskill", component: CitizenskillComponent },
+      {path: "reports",
+        children: [
+          { path: "countbystreetmaterial", component: CountByStreetMaterialComponent },
+          { path: "landreport", component: LandreportComponent }
+        ]},
 
     ]
   }];

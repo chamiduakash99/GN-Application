@@ -1,23 +1,16 @@
-import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Croptype} from '../entity/Croptype';
 
-@Injectable()
-export class JwtInterceptor implements HttpInterceptor {
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // Retrieve the JWT token from the Local Storage
-    const jwtToken = localStorage.getItem('Authorization');
+@Injectable({providedIn: 'root'})
+export class CroptypeService {
+  private readonly url = 'http://localhost:8080/croptypes';
+  constructor(private http: HttpClient) {}
 
-    // Add the JWT token to the request headers
-    if (jwtToken) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: jwtToken
-          // Authorization: `Bearer ${jwtToken}`
-        }
-      });
-    }
-
-    return next.handle(request);
+  getAll(): Promise<Croptype[]> {
+    return this.http.get<Croptype[]>(this.url).toPromise().then(res => res ?? []);
+  }
+  getAllList(): Promise<Croptype[]> {
+    return this.http.get<Croptype[]>(this.url + '/list').toPromise().then(res => res ?? []);
   }
 }

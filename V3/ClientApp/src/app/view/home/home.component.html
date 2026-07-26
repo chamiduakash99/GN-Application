@@ -1,108 +1,656 @@
-<div class="main-dashboard">
+<div class="dashboard-wrap">
 
+  <!-- ── HEADER ─────────────────────────────────────────────────────────── -->
+  <div class="dash-header">
+    <div class="dash-header-left">
+      <span class="dash-title">GN Office Dashboard</span>
+      <span class="dash-subtitle">Grama Niladhari Division — Overview</span>
+    </div>
+    <div class="dash-header-right">
+      <mat-icon class="dash-logo-icon">account_balance</mat-icon>
+    </div>
+  </div>
 
-  <!-- Dashboard Container -->
-  <div class="dashboard-container">
+  <!-- ── TOP STAT CARDS ─────────────────────────────────────────────────── -->
+  <div class="stat-row">
 
-    <!-- Toolbar -->
-    <mat-toolbar class="toolbar-middle" color="accent">
-      <span class="logo">GN Dashboard</span>
-      <span class="spacer"></span>
-
-    </mat-toolbar>
-
-    <!-- Summary Stats Section -->
-    <div class="summary-section">
-      <mat-card class="summary-card">
-        <mat-card-title>Population</mat-card-title>
-        <mat-card-content>1,265 Residents</mat-card-content>
-      </mat-card>
-
-      <mat-card class="summary-card">
-        <mat-card-title>Households</mat-card-title>
-        <mat-card-content>310 Families</mat-card-content>
-      </mat-card>
-
-      <mat-card class="summary-card">
-        <mat-card-title>Registered Services</mat-card-title>
-        <mat-card-content>12 Ongoing</mat-card-content>
-      </mat-card>
-
-      <mat-card class="summary-card">
-        <mat-card-title>Pending Requests</mat-card-title>
-        <mat-card-content>5 Applications</mat-card-content>
-      </mat-card>
+    <div class="stat-card stat-blue">
+      <mat-icon>people</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{totalCitizens}}</span>
+        <span class="stat-label">Citizens</span>
+      </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <mat-grid-list cols="4" rowHeight="350px" gutterSize="16px">
+    <div class="stat-card stat-green">
+      <mat-icon>home</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{totalHouseholds}}</span>
+        <span class="stat-label">Households</span>
+      </div>
+    </div>
 
-      <!-- Recent Activities -->
-      <mat-grid-tile [colspan]="3">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Recent Activities</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <ul class="activity-list">
-              <li>✅ New resident registered - <b>John Perera</b></li>
-              <li>🏠 Household record updated - <b>Gamage Family</b></li>
-              <li>📄 Service request approved - <b>Land Certificate</b></li>
-              <li>📢 Public notice posted - <b>Water Supply Disruption</b></li>
-            </ul>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
+    <div class="stat-card stat-purple">
+      <mat-icon>how_to_vote</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{totalVoters}}</span>
+        <span class="stat-label">Registered Voters</span>
+      </div>
+    </div>
 
-      <!-- Upcoming Events -->
-      <mat-grid-tile [colspan]="1">
-        <mat-card>
-          <mat-card-header>
-            <mat-card-title>Upcoming Events</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <ul class="event-list">
-              <li>📅 Community Meeting - 20 Oct</li>
-              <li>🧹 Clean-up Program - 25 Oct</li>
-              <li>🧾 Tax Deadline - 30 Oct</li>
-            </ul>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
+    <div class="stat-card stat-amber">
+      <mat-icon>landscape</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{totalLands}}</span>
+        <span class="stat-label">Land Records</span>
+      </div>
+    </div>
 
-      <!-- User Specific Messages -->
-      <mat-grid-tile [colspan]="2" [rowspan]="4">
-        <mat-card>
-          <mat-card-title class="message-header">User Specific Messages</mat-card-title>
-          <mat-card-content>
-            <mat-list>
-              <mat-list-item *ngFor="let message of userspecmessages">
-                <mat-icon matListItemIcon>email</mat-icon>
-                <div matListItemTitle>{{message.name}}</div>
-                <div matListItemLine>{{message.updated | date}}</div>
-              </mat-list-item>
-            </mat-list>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
+    <div class="stat-card stat-teal">
+      <mat-icon>business</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{totalBuildings}}</span>
+        <span class="stat-label">Buildings</span>
+      </div>
+    </div>
 
-      <!-- General Messages -->
-      <mat-grid-tile [colspan]="2" [rowspan]="4">
-        <mat-card>
-          <mat-card-title class="message-header">General Messages</mat-card-title>
-          <mat-card-content>
-            <mat-list>
-              <mat-list-item *ngFor="let message of generalmessages">
-                <mat-icon matListItemIcon>email</mat-icon>
-                <div matListItemTitle>{{message.name}}</div>
-                <div matListItemLine>{{message.updated | date}}</div>
-              </mat-list-item>
-            </mat-list>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
+    <div class="stat-card stat-red">
+      <mat-icon>campaign</mat-icon>
+      <div class="stat-info">
+        <span class="stat-value">{{totalAnnouncements}}</span>
+        <span class="stat-label">Announcements</span>
+      </div>
+    </div>
 
-    </mat-grid-list>
+  </div>
+
+  <!-- ── CHART GRID: all 6 cards flow responsively, 3-per-row on wide screens ── -->
+  <div class="chart-grid">
+
+    <!-- Active Announcements -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="chart-icon icon-red">campaign</mat-icon>
+        <mat-card-title>Active Announcements</mat-card-title>
+        <mat-card-subtitle>Latest notices</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="announcement-list" *ngIf="announcements.length > 0; else noAnnouncements">
+          <div class="announcement-item" *ngFor="let a of announcements">
+            <div class="announcement-title">
+              <mat-icon class="ann-icon">notifications_active</mat-icon>
+              {{ a.title }}
+            </div>
+            <div class="announcement-meta">
+              {{ a.publishedat | date: 'dd MMM yyyy' }}
+            </div>
+          </div>
+        </div>
+        <ng-template #noAnnouncements>
+          <div class="empty-box">
+            <mat-icon>notifications_off</mat-icon>
+            <p>No active announcements</p>
+          </div>
+        </ng-template>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Certificate Requests Doughnut -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="chart-icon icon-blue">description</mat-icon>
+        <mat-card-title>Certificate Requests</mat-card-title>
+        <mat-card-subtitle>By Status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container" *ngIf="!loadingCertReq; else loadingTpl">
+          <canvas baseChart
+                  [data]="certReqChartData"
+                  [type]="certReqChartType"
+                  [options]="certReqChartOptions">
+          </canvas>
+
+          <div class="mini-stat-row">
+            <div class="mini-stat-chip" *ngFor="let s of certReqStats">
+              <span class="mini-dot" [style.background]="s.color"></span>
+              <span class="mini-label">{{ s.label }}</span>
+              <span class="mini-count">{{ s.count }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Complaints -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="chart-icon icon-indigo">report_problem</mat-icon>
+        <mat-card-title>Complaints</mat-card-title>
+        <mat-card-subtitle>By Status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container no-stats" *ngIf="!loadingComplaints; else loadingTpl">
+          <canvas baseChart
+                  [data]="complaintChartData"
+                  [type]="complaintChartType"
+                  [options]="complaintChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- ID Card Requests -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="chart-icon icon-amber">badge</mat-icon>
+        <mat-card-title>ID Card Requests</mat-card-title>
+        <mat-card-subtitle>By Status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container" *ngIf="!loadingIdCard; else loadingTpl">
+          <canvas baseChart
+                  [data]="idCardChartData"
+                  [type]="idCardChartType"
+                  [options]="idCardChartOptions">
+          </canvas>
+
+          <div class="mini-stat-row">
+            <div class="mini-stat-chip" *ngFor="let s of idCardStats">
+              <span class="mini-dot" [style.background]="s.color"></span>
+              <span class="mini-label">{{ s.label }}</span>
+              <span class="mini-count">{{ s.count }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Tree Cutting Requests -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="chart-icon icon-green">forest</mat-icon>
+        <mat-card-title>Tree Cutting Requests</mat-card-title>
+        <mat-card-subtitle>By Permission Status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container" *ngIf="!loadingTree; else loadingTpl">
+          <canvas baseChart
+                  [data]="treeChartData"
+                  [type]="treeChartType"
+                  [options]="treeChartOptions">
+          </canvas>
+
+          <div class="mini-stat-row">
+            <div class="mini-stat-chip" *ngFor="let s of treeStats">
+              <span class="mini-dot" [style.background]="s.color"></span>
+              <span class="mini-label">{{ s.label }}</span>
+              <span class="mini-count">{{ s.count }}</span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Cultivations -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="chart-icon icon-lime">grass</mat-icon>
+        <mat-card-title>Cultivations</mat-card-title>
+        <mat-card-subtitle>By Status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container no-stats" *ngIf="!loadingCultivation; else loadingTpl">
+          <canvas baseChart
+                  [data]="cultivationChartData"
+                  [type]="cultivationChartType"
+                  [options]="cultivationChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
   </div>
 
 </div>
+
+<!-- ── Loading template ────────────────────────────────────────────────── -->
+<ng-template #loadingTpl>
+  <div class="loading-box">
+    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    <p>Loading data...</p>
+  </div>
+</ng-template>
+
+<!--<div class="dashboard-wrap">-->
+
+<!--  &lt;!&ndash; ── HEADER ─────────────────────────────────────────────────────────── &ndash;&gt;-->
+<!--  <div class="dash-header">-->
+<!--    <div class="dash-header-left">-->
+<!--      <span class="dash-title">GN Office Dashboard</span>-->
+<!--      <span class="dash-subtitle">Grama Niladhari Division — Overview</span>-->
+<!--    </div>-->
+<!--    <div class="dash-header-right">-->
+<!--      <mat-icon class="dash-logo-icon">account_balance</mat-icon>-->
+<!--    </div>-->
+<!--  </div>-->
+
+<!--  &lt;!&ndash; ── TOP STAT CARDS ─────────────────────────────────────────────────── &ndash;&gt;-->
+<!--  <div class="stat-row">-->
+
+<!--    <div class="stat-card stat-blue">-->
+<!--      <mat-icon>people</mat-icon>-->
+<!--      <div class="stat-info">-->
+<!--        <span class="stat-value">{{totalCitizens}}</span>-->
+<!--        <span class="stat-label">Citizens</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="stat-card stat-green">-->
+<!--      <mat-icon>home</mat-icon>-->
+<!--      <div class="stat-info">-->
+<!--        <span class="stat-value">{{totalHouseholds}}</span>-->
+<!--        <span class="stat-label">Households</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="stat-card stat-purple">-->
+<!--      <mat-icon>how_to_vote</mat-icon>-->
+<!--      <div class="stat-info">-->
+<!--        <span class="stat-value">{{totalVoters}}</span>-->
+<!--        <span class="stat-label">Registered Voters</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="stat-card stat-amber">-->
+<!--      <mat-icon>landscape</mat-icon>-->
+<!--      <div class="stat-info">-->
+<!--        <span class="stat-value">{{totalLands}}</span>-->
+<!--        <span class="stat-label">Land Records</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="stat-card stat-teal">-->
+<!--      <mat-icon>business</mat-icon>-->
+<!--      <div class="stat-info">-->
+<!--        <span class="stat-value">{{totalBuildings}}</span>-->
+<!--        <span class="stat-label">Buildings</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--    <div class="stat-card stat-red">-->
+<!--      <mat-icon>campaign</mat-icon>-->
+<!--      <div class="stat-info">-->
+<!--        <span class="stat-value">{{totalAnnouncements}}</span>-->
+<!--        <span class="stat-label">Announcements</span>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--  </div>-->
+
+<!--  &lt;!&ndash; ── ANNOUNCEMENTS + CERT REQUESTS ──────────────────────────────────── &ndash;&gt;-->
+<!--  <div class="chart-row">-->
+
+<!--    &lt;!&ndash; Active Announcements &ndash;&gt;-->
+<!--    <mat-card class="chart-card">-->
+<!--      <mat-card-header>-->
+<!--        <mat-icon mat-card-avatar class="chart-icon icon-red">campaign</mat-icon>-->
+<!--        <mat-card-title>Active Announcements</mat-card-title>-->
+<!--        <mat-card-subtitle>Latest notices</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <div class="announcement-list" *ngIf="announcements.length > 0; else noAnnouncements">-->
+<!--          <div class="announcement-item" *ngFor="let a of announcements">-->
+<!--            <div class="announcement-title">-->
+<!--              <mat-icon class="ann-icon">notifications_active</mat-icon>-->
+<!--              {{ a.title }}-->
+<!--            </div>-->
+<!--            <div class="announcement-meta">-->
+<!--              {{ a.publishedat | date: 'dd MMM yyyy' }}-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <ng-template #noAnnouncements>-->
+<!--          <div class="empty-box">-->
+<!--            <mat-icon>notifications_off</mat-icon>-->
+<!--            <p>No active announcements</p>-->
+<!--          </div>-->
+<!--        </ng-template>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+
+<!--    &lt;!&ndash; Certificate Requests Doughnut &ndash;&gt;-->
+<!--    <mat-card class="chart-card">-->
+<!--      <mat-card-header>-->
+<!--        <mat-icon mat-card-avatar class="chart-icon icon-blue">description</mat-icon>-->
+<!--        <mat-card-title>Certificate Requests</mat-card-title>-->
+<!--        <mat-card-subtitle>By Status</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <div class="chart-container" *ngIf="!loadingCertReq; else loadingTpl">-->
+<!--          <canvas baseChart-->
+<!--                  [data]="certReqChartData"-->
+<!--                  [type]="certReqChartType"-->
+<!--                  [options]="certReqChartOptions">-->
+<!--          </canvas>-->
+
+<!--          <div class="mini-stat-row">-->
+<!--            <div class="mini-stat-chip" *ngFor="let s of certReqStats">-->
+<!--              <span class="mini-dot" [style.background]="s.color"></span>-->
+<!--              <span class="mini-label">{{ s.label }}</span>-->
+<!--              <span class="mini-count">{{ s.count }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+
+<!--  </div>-->
+
+<!--  &lt;!&ndash; ── CHART ROW 2: Complaints + ID Card Requests ─────────────────────── &ndash;&gt;-->
+<!--  <div class="chart-row">-->
+
+<!--    <mat-card class="chart-card">-->
+<!--      <mat-card-header>-->
+<!--        <mat-icon mat-card-avatar class="chart-icon icon-indigo">report_problem</mat-icon>-->
+<!--        <mat-card-title>Complaints</mat-card-title>-->
+<!--        <mat-card-subtitle>By Status</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <div class="chart-container" *ngIf="!loadingComplaints; else loadingTpl">-->
+<!--          <canvas baseChart-->
+<!--                  [data]="complaintChartData"-->
+<!--                  [type]="complaintChartType"-->
+<!--                  [options]="complaintChartOptions">-->
+<!--          </canvas>-->
+<!--        </div>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card class="chart-card">-->
+<!--      <mat-card-header>-->
+<!--        <mat-icon mat-card-avatar class="chart-icon icon-amber">badge</mat-icon>-->
+<!--        <mat-card-title>ID Card Requests</mat-card-title>-->
+<!--        <mat-card-subtitle>By Status</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <div class="chart-container" *ngIf="!loadingIdCard; else loadingTpl">-->
+<!--          <canvas baseChart-->
+<!--                  [data]="idCardChartData"-->
+<!--                  [type]="idCardChartType"-->
+<!--                  [options]="idCardChartOptions">-->
+<!--          </canvas>-->
+
+<!--          <div class="mini-stat-row">-->
+<!--            <div class="mini-stat-chip" *ngFor="let s of idCardStats">-->
+<!--              <span class="mini-dot" [style.background]="s.color"></span>-->
+<!--              <span class="mini-label">{{ s.label }}</span>-->
+<!--              <span class="mini-count">{{ s.count }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+
+<!--  </div>-->
+
+<!--  &lt;!&ndash; ── CHART ROW 3: Tree Cutting + Cultivation ────────────────────────── &ndash;&gt;-->
+<!--  <div class="chart-row">-->
+
+<!--    <mat-card class="chart-card">-->
+<!--      <mat-card-header>-->
+<!--        <mat-icon mat-card-avatar class="chart-icon icon-green">forest</mat-icon>-->
+<!--        <mat-card-title>Tree Cutting Requests</mat-card-title>-->
+<!--        <mat-card-subtitle>By Permission Status</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <div class="chart-container" *ngIf="!loadingTree; else loadingTpl">-->
+<!--          <canvas baseChart-->
+<!--                  [data]="treeChartData"-->
+<!--                  [type]="treeChartType"-->
+<!--                  [options]="treeChartOptions">-->
+<!--          </canvas>-->
+
+<!--          <div class="mini-stat-row">-->
+<!--            <div class="mini-stat-chip" *ngFor="let s of treeStats">-->
+<!--              <span class="mini-dot" [style.background]="s.color"></span>-->
+<!--              <span class="mini-label">{{ s.label }}</span>-->
+<!--              <span class="mini-count">{{ s.count }}</span>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card class="chart-card">-->
+<!--      <mat-card-header>-->
+<!--        <mat-icon mat-card-avatar class="chart-icon icon-lime">grass</mat-icon>-->
+<!--        <mat-card-title>Cultivations</mat-card-title>-->
+<!--        <mat-card-subtitle>By Status</mat-card-subtitle>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <div class="chart-container" *ngIf="!loadingCultivation; else loadingTpl">-->
+<!--          <canvas baseChart-->
+<!--                  [data]="cultivationChartData"-->
+<!--                  [type]="cultivationChartType"-->
+<!--                  [options]="cultivationChartOptions">-->
+<!--          </canvas>-->
+<!--        </div>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+
+<!--  </div>-->
+
+<!--</div>-->
+
+<!--&lt;!&ndash; ── Loading template ────────────────────────────────────────────────── &ndash;&gt;-->
+<!--<ng-template #loadingTpl>-->
+<!--  <div class="loading-box">-->
+<!--    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>-->
+<!--    <p>Loading data...</p>-->
+<!--  </div>-->
+<!--</ng-template>-->
+
+<!--&lt;!&ndash;<div class="dashboard-wrap">&ndash;&gt;-->
+
+<!--&lt;!&ndash;  &lt;!&ndash; ── HEADER ─────────────────────────────────────────────────────────── &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="dash-header">&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="dash-header-left">&ndash;&gt;-->
+<!--&lt;!&ndash;      <span class="dash-title">GN Office Dashboard</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      <span class="dash-subtitle">Grama Niladhari Division — Overview</span>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="dash-header-right">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon class="dash-logo-icon">account_balance</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  &lt;!&ndash; ── TOP STAT CARDS ─────────────────────────────────────────────────── &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="stat-row">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="stat-card stat-blue">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>people</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="stat-info">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-value">{{totalCitizens}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-label">Citizens</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="stat-card stat-green">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>home</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="stat-info">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-value">{{totalHouseholds}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-label">Households</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="stat-card stat-purple">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>how_to_vote</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="stat-info">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-value">{{totalVoters}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-label">Registered Voters</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="stat-card stat-amber">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>landscape</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="stat-info">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-value">{{totalLands}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-label">Land Records</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="stat-card stat-teal">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>business</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="stat-info">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-value">{{totalBuildings}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-label">Buildings</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="stat-card stat-red">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-icon>campaign</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;      <div class="stat-info">&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-value">{{totalAnnouncements}}</span>&ndash;&gt;-->
+<!--&lt;!&ndash;        <span class="stat-label">Announcements</span>&ndash;&gt;-->
+<!--&lt;!&ndash;      </div>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  &lt;!&ndash; ── ANNOUNCEMENTS + CERT REQUESTS ──────────────────────────────────── &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="chart-row">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Active Announcements &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-card class="chart-card">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-icon mat-card-avatar class="chart-icon icon-red">campaign</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-title>Active Announcements</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-subtitle>Latest notices</mat-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="announcement-list" *ngIf="announcements.length > 0; else noAnnouncements">&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="announcement-item" *ngFor="let a of announcements">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="announcement-title">&ndash;&gt;-->
+<!--&lt;!&ndash;              <mat-icon class="ann-icon">notifications_active</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;              {{ a.title }}&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="announcement-meta">&ndash;&gt;-->
+<!--&lt;!&ndash;              {{ a.publishedat | date: 'dd MMM yyyy' }}&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        <ng-template #noAnnouncements>&ndash;&gt;-->
+<!--&lt;!&ndash;          <div class="empty-box">&ndash;&gt;-->
+<!--&lt;!&ndash;            <mat-icon>notifications_off</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>No active announcements</p>&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+<!--&lt;!&ndash;        </ng-template>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-card>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    &lt;!&ndash; Certificate Requests Doughnut &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-card class="chart-card">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-icon mat-card-avatar class="chart-icon icon-blue">description</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-title>Certificate Requests</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-subtitle>By Status</mat-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="chart-container" *ngIf="!loadingCertReq; else loadingTpl">&ndash;&gt;-->
+<!--&lt;!&ndash;          <canvas baseChart&ndash;&gt;-->
+<!--&lt;!&ndash;                  [data]="certReqChartData"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [type]="certReqChartType"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [options]="certReqChartOptions">&ndash;&gt;-->
+<!--&lt;!&ndash;          </canvas>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-card>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  &lt;!&ndash; ── CHART ROW 2: Complaints + ID Card Requests ─────────────────────── &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="chart-row">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <mat-card class="chart-card">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-icon mat-card-avatar class="chart-icon icon-indigo">report_problem</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-title>Complaints</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-subtitle>By Status</mat-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="chart-container" *ngIf="!loadingComplaints; else loadingTpl">&ndash;&gt;-->
+<!--&lt;!&ndash;          <canvas baseChart&ndash;&gt;-->
+<!--&lt;!&ndash;                  [data]="complaintChartData"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [type]="complaintChartType"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [options]="complaintChartOptions">&ndash;&gt;-->
+<!--&lt;!&ndash;          </canvas>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-card>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <mat-card class="chart-card">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-icon mat-card-avatar class="chart-icon icon-amber">badge</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-title>ID Card Requests</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-subtitle>By Status</mat-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="chart-container" *ngIf="!loadingIdCard; else loadingTpl">&ndash;&gt;-->
+<!--&lt;!&ndash;          <canvas baseChart&ndash;&gt;-->
+<!--&lt;!&ndash;                  [data]="idCardChartData"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [type]="idCardChartType"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [options]="idCardChartOptions">&ndash;&gt;-->
+<!--&lt;!&ndash;          </canvas>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-card>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  &lt;!&ndash; ── CHART ROW 3: Tree Cutting + Cultivation ────────────────────────── &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="chart-row">&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <mat-card class="chart-card">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-icon mat-card-avatar class="chart-icon icon-green">forest</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-title>Tree Cutting Requests</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-subtitle>By Permission Status</mat-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="chart-container" *ngIf="!loadingTree; else loadingTpl">&ndash;&gt;-->
+<!--&lt;!&ndash;          <canvas baseChart&ndash;&gt;-->
+<!--&lt;!&ndash;                  [data]="treeChartData"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [type]="treeChartType"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [options]="treeChartOptions">&ndash;&gt;-->
+<!--&lt;!&ndash;          </canvas>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-card>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <mat-card class="chart-card">&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-icon mat-card-avatar class="chart-icon icon-lime">grass</mat-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-title>Cultivations</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;        <mat-card-subtitle>By Status</mat-card-subtitle>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-header>&ndash;&gt;-->
+<!--&lt;!&ndash;      <mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="chart-container" *ngIf="!loadingCultivation; else loadingTpl">&ndash;&gt;-->
+<!--&lt;!&ndash;          <canvas baseChart&ndash;&gt;-->
+<!--&lt;!&ndash;                  [data]="cultivationChartData"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [type]="cultivationChartType"&ndash;&gt;-->
+<!--&lt;!&ndash;                  [options]="cultivationChartOptions">&ndash;&gt;-->
+<!--&lt;!&ndash;          </canvas>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;      </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;    </mat-card>&ndash;&gt;-->
+
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;&lt;!&ndash; ── Loading template ────────────────────────────────────────────────── &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;<ng-template #loadingTpl>&ndash;&gt;-->
+<!--&lt;!&ndash;  <div class="loading-box">&ndash;&gt;-->
+<!--&lt;!&ndash;    <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>&ndash;&gt;-->
+<!--&lt;!&ndash;    <p>Loading data...</p>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--&lt;!&ndash;</ng-template>&ndash;&gt;-->

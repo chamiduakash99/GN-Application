@@ -21,6 +21,8 @@ export class MainwindowComponent {
     'Infrastructure': 'location_city',
     'Reports': 'assessment',
     'Citizen': 'groups',
+    'TreeCuttingRequest': 'forest',
+    'Cultivation': 'agriculture',
     'Announcement': 'campaign',
     'Complaint': 'report_problem',
     'IdCardRequest': 'badge'

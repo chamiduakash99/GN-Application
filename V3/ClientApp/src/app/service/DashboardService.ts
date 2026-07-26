@@ -1,38 +1,43 @@
-import {Announcement} from "../entity/announcement";
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {firstValueFrom} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
+export class DashboardService {
 
-export class AnnouncementService {
+  private readonly base = 'http://localhost:8080/dashboard';
 
-  readonly url = 'http://localhost:8080/announcements';
-  constructor(private http: HttpClient) {  }
+  constructor(private http: HttpClient) {}
 
-  async delete(id: number): Promise<[]|undefined>{
-    // @ts-ignore
-    return this.http.delete('http://localhost:8080/announcements/' + id).toPromise();
+  getSummary(): Promise<any> {
+    return firstValueFrom(this.http.get<any>(`${this.base}/summary`))
+      .catch(() => ({}));
   }
 
-  async update(announcement: Announcement): Promise<[]|undefined>{
-    return this.http.put<[]>('http://localhost:8080/announcements', announcement).toPromise();
+  getCertRequestSummary(): Promise<any[]> {
+    return firstValueFrom(this.http.get<any[]>(`${this.base}/certificaterequests/summary`))
+      .catch(() => []);
   }
 
-  async getAll(query:string): Promise<Array<Announcement>> {
-    const announcements = await this.http.get<Array<Announcement>>('http://localhost:8080/announcements'+query).toPromise();
-    if(announcements == undefined){
-      return [];
-    }
-    return announcements;
+  getComplaintSummary(): Promise<any[]> {
+    return firstValueFrom(this.http.get<any[]>(`${this.base}/complaints/summary`))
+      .catch(() => []);
   }
 
-  async add(announcement: Announcement): Promise<[]|undefined>{
-    return this.http.post<[]>('http://localhost:8080/announcements', announcement).toPromise();
+  getIdCardSummary(): Promise<any[]> {
+    return firstValueFrom(this.http.get<any[]>(`${this.base}/idcardrequests/summary`))
+      .catch(() => []);
   }
 
-  getAllList(): Promise<Announcement[]> {
-    return this.http.get<Announcement[]>(`${this.url}/list`).toPromise() as Promise<Announcement[]>;
+  getTreeCuttingSummary(): Promise<any[]> {
+    return firstValueFrom(this.http.get<any[]>(`${this.base}/treecuttingrequests/summary`))
+      .catch(() => []);
+  }
+
+  getCultivationSummary(): Promise<any[]> {
+    return firstValueFrom(this.http.get<any[]>(`${this.base}/cultivations/summary`))
+      .catch(() => []);
   }
 }

@@ -7,7 +7,7 @@ import { Land } from '../entity/Land';
 })
 export class LandService {
 
-  private baseUrl = 'http://localhost:8080/lands';
+  private baseUrl = 'http://localhost:8080/landdetails';
 
   constructor(private http: HttpClient) { }
 
@@ -36,4 +36,13 @@ export class LandService {
   async getById(id: number): Promise<Land | undefined> {
     return this.http.get<Land>(`${this.baseUrl}/${id}`).toPromise();
   }
+
+  // Get landdetails (with deedno) for Building's dropdown — separate endpoint from /lands
+  async getAllListNameId(): Promise<Array<Land>> {
+    const landdetails = await this.http.get<Array<Land>>('http://localhost:8080/landdetails/list').toPromise();
+    return landdetails ?? [];
+  }
+
+
+
 }

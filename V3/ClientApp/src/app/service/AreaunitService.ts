@@ -1,23 +1,16 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Areaunit} from '../entity/Areaunit';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class DarkModeService {
-  private renderer: Renderer2;
-  private isDarkMode = false;
+@Injectable({providedIn: 'root'})
+export class AreaunitService {
+  private readonly url = 'http://localhost:8080/areaunits';
+  constructor(private http: HttpClient) {}
 
-  constructor(rendererFactory: RendererFactory2) {
-    this.renderer = rendererFactory.createRenderer(null, null);
+  getAll(): Promise<Areaunit[]> {
+    return this.http.get<Areaunit[]>(this.url).toPromise().then(res => res ?? []);
   }
-
-  toggleMode() {
-    this.isDarkMode = !this.isDarkMode;
-
-    if (this.isDarkMode) {
-      this.renderer.addClass(document.documentElement, 'dark-mode');
-    } else {
-      this.renderer.removeClass(document.documentElement, 'dark-mode');
-    }
+  getAllList(): Promise<Areaunit[]> {
+    return this.http.get<Areaunit[]>(this.url + '/list').toPromise().then(res => res ?? []);
   }
 }

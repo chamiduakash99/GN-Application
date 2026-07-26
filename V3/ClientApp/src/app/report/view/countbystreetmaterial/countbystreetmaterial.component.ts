@@ -1,59 +1,52 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ReportService } from '../../reportservice';
 import { CountByStreetMaterial } from '../../entity/countbystreetmaterial';
 import { MatTableDataSource } from '@angular/material/table';
-
-declare var google: any;
+import { Chart } from 'chart.js/auto';
 
 @Component({
-  selector: 'app-countbystreetmaterial',
-  templateUrl: './countbystreetmaterial.component.html',
+  selector: 'app-countbystreetmaterial', templateUrl: './countbystreetmaterial.component.html',
   styleUrls: ['./countbystreetmaterial.component.css']
 })
-export class CountByStreetMaterialComponent implements OnInit {
-
-  countByStreetMaterials!: CountByStreetMaterial[];
+export class CountByStreetMaterialComponent implements OnInit, AfterViewInit {
+  countByStreetMaterials: CountByStreetMaterial[] = [];
   data!: MatTableDataSource<CountByStreetMaterial>;
-
-  columns: string[] = ['streetMaterial', 'count', 'percentage'];
-  headers: string[] = ['Street Material', 'Count', 'Percentage'];
-  binders: string[] = ['streetMaterial', 'count', 'percentage'];
-
+  columns: string[] = ['streetMaterial','percentage', 'count' ];
+  headers: string[] = ['Street Material','Percentage', 'Count' ];
+  binders: string[] = ['streetMaterial','percentage', 'count'];
   ftext = 'Total';
   total: number[] = [];
 
-  @ViewChild('columnchart', { static: false }) columnchart: any;
-  @ViewChild('barchart', { static: false }) barchart!: ElementRef;
-  @ViewChild('piechart', { static: false }) piechart!: ElementRef;
-  @ViewChild('linechart', { static: false }) linechart!: ElementRef;
+  private viewReady = false;
+
+  @ViewChild('columnchart', { static: false }) columnchart!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('piechart', { static: false }) piechart!: ElementRef<HTMLCanvasElement>;
 
   constructor(private rs: ReportService) { }
 
   ngOnInit(): void {
-    // --- Static Mock Data (Like ArrearsByProgram Example) ---
-    let asphalt = new CountByStreetMaterial(1, "Asphalt", 5, 0);
-    let concrete = new CountByStreetMaterial(2, "Concrete", 4, 0);
-    let gravel = new CountByStreetMaterial(3, "Gravel", 4, 0);
-    let tar = new CountByStreetMaterial(4, "Soil", 4, 0);
-    let unpaved = new CountByStreetMaterial(5, "Interlock Blocks", 3, 0);
+    this.loadData();
+  }
 
-    // --- Total Calculation ---
-    let totalCount = asphalt.count + concrete.count + gravel.count + tar.count + unpaved.count;
+  ngAfterViewInit(): void {
+    this.viewReady = true;
+    // if data already arrived before the view was ready, draw now
+    if (this.countByStreetMaterials.length) {
+      this.drawCharts();
+    }
+  }
 
-    // --- Calculate Percentage for Each ---
-    asphalt.percentage = Math.round((asphalt.count / totalCount) * 100);
-    concrete.percentage = Math.round((concrete.count / totalCount) * 100);
-    gravel.percentage = Math.round((gravel.count / totalCount) * 100);
-    tar.percentage = Math.round((tar.count / totalCount) * 100);
-    unpaved.percentage = Math.round((unpaved.count / totalCount) * 100);
+  async loadData(): Promise<void> {
+    const result = await this.rs.countByStreetMaterial();
 
-    // --- Assign Data ---
-    this.total = [totalCount];
-    this.countByStreetMaterials = [asphalt, concrete, gravel, tar, unpaved];
-
-    // --- Load Table and Charts ---
+    this.countByStreetMaterials = result;
+    this.total = [result.reduce((sum, item) => sum + item.count, 0)];
     this.loadTable();
-    this.loadCharts();
+
+    // only draw once the canvases actually exist in the DOM
+    if (this.viewReady) {
+      this.drawCharts();
+    }
   }
 
   calculateTotals(): void {
@@ -65,51 +58,45 @@ export class CountByStreetMaterialComponent implements OnInit {
     this.data = new MatTableDataSource(this.countByStreetMaterials);
   }
 
-
-  loadCharts() : void{
-    google.charts.load('current', { packages: ['corechart'] });
-    google.charts.setOnLoadCallback(this.drawCharts.bind(this));
-  }
-
   drawCharts(): void {
-    const barData = new google.visualization.DataTable();
-    barData.addColumn('string', 'Street Material');
-    barData.addColumn('number', 'Count');
-    barData.addColumn('number', 'Percentage');
+    const labels = this.countByStreetMaterials.map(sm => sm.streetMaterial);
+    const counts = this.countByStreetMaterials.map(sm => sm.count);
+    const percentages = this.countByStreetMaterials.map(sm => sm.percentage);
 
-    const pieData = new google.visualization.DataTable();
-    pieData.addColumn('string', 'Street Material');
-    pieData.addColumn('number', 'Count');
-    pieData.addColumn('number', 'Percentage');
-
-    this.countByStreetMaterials.forEach((sm: CountByStreetMaterial) => {
-      barData.addRow([sm.streetMaterial, sm.count, sm.percentage]);
-      pieData.addRow([sm.streetMaterial, sm.count, sm.percentage]);
+    new Chart(this.columnchart.nativeElement, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Count', data: counts },
+          { label: 'Percentage', data: percentages }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'Street Material Report (Bar Chart)' },
+          legend: { position: 'top' }
+        },
+        scales: {
+          x: { title: { display: true, text: 'Street Material' } },
+          y: { title: { display: true, text: 'Values' }, beginAtZero: true }
+        }
+      }
     });
 
-    const barOptions = {
-      title: 'Street Material Report (Bar Chart)',
-      subtitle: 'Count and Percentage of Streets by Material',
-      bars: 'vertical',
-      height: 400,
-      width: 600,
-      legend: { position: 'top', alignment: 'center' },
-      vAxis: { title: 'Values' },
-      hAxis: { title: 'Street Material' }
-    };
-
-    const pieOptions = {
-      title: 'Street Material Report (Pie Chart)',
-      height: 400,
-      width: 550,
-      pieHole: 0.3
-    };
-
-    const columnChart = new google.visualization.ColumnChart(this.columnchart.nativeElement);
-    columnChart.draw(barData, barOptions);
-
-    const pieChart = new google.visualization.PieChart(this.piechart.nativeElement);
-    pieChart.draw(pieData, pieOptions);
+    new Chart(this.piechart.nativeElement, {
+      type: 'pie',
+      data: {
+        labels,
+        datasets: [{ label: 'Count', data: counts }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          title: { display: true, text: 'Street Material Report (Pie Chart)' }
+        }
+      }
+    });
   }
-
 }

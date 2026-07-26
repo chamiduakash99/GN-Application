@@ -23,9 +23,16 @@ export class CertificateService {
     return this.http.put<[]>(this.url, certificate).toPromise();
   }
 
-  uploadScan(id: number, scannedCopy: Uint8Array): Promise<[] | undefined> {
-    return this.http.put<[]>(`${this.url}/${id}/upload`, scannedCopy).toPromise();
+
+  uploadScan(id: number, scannedcopy: Uint8Array): Promise<[] | undefined> {
+    return this.http.put<[]>(
+      `${this.url}/${id}/upload`, scannedcopy.buffer,
+      { headers: { 'Content-Type': 'application/octet-stream' } }
+    ).toPromise();
   }
+  // uploadScan(id: number, scannedCopy: Uint8Array): Promise<[] | undefined> {
+  //   return this.http.put<[]>(`${this.url}/${id}/upload`, scannedCopy).toPromise();
+  // }
 
   markPickedUp(id: number): Promise<[] | undefined> {
     return this.http.put<[]>(`${this.url}/${id}/pickup`, {}).toPromise();

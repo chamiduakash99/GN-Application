@@ -61,6 +61,11 @@ import { IdcardrequestComponent } from './view/modules/idcardrequest/idcardreque
 import { HouseholdComponent } from './view/modules/household/household.component';
 import { TreecuttingrequestComponent } from './view/modules/treecuttingrequest/treecuttingrequest.component';
 import { VoterregistryComponent } from './view/modules/voterregistry/voterregistry.component';
+import { CultivationComponent } from './view/modules/cultivation/cultivation.component';
+import { CitizenskillComponent } from './view/modules/citizenskill/citizenskill.component';
+import { NgChartsModule } from 'ng2-charts';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { LandreportComponent } from './report/view/landreport/landreport.component';
 
 
 
@@ -96,7 +101,10 @@ import { VoterregistryComponent } from './view/modules/voterregistry/voterregist
     IdcardrequestComponent,
     HouseholdComponent,
     TreecuttingrequestComponent,
-    VoterregistryComponent
+    VoterregistryComponent,
+    CultivationComponent,
+    CitizenskillComponent,
+    LandreportComponent
   ],
   imports: [
     MatDatepickerModule,
@@ -125,7 +133,9 @@ import { VoterregistryComponent } from './view/modules/voterregistry/voterregist
     MatAutocompleteModule,
     AppGroupAutocompleteComponent,
     GetControlPipe,
-    MatStepperModule
+    MatStepperModule,
+    NgChartsModule,
+    MatProgressBarModule
   ],
   providers: [
     OperationComponent,

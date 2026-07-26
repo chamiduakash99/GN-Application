@@ -1,13 +1,23 @@
-export class Croptype {
-  public id!: number;
-  public name!: string;
-  public growthperioddays!: number;
-  public description!: string;
+import {Cultivation} from './Cultivation';
 
-  constructor(id: number, name: string, growthperioddays?: number, description?: string) {
+export class Harvest {
+  public id!: number;
+  public harvestdate!: string;
+  public quantity!: number;
+  public qualityremarks!: string;
+  public cultivation!: Cultivation;
+
+  constructor(
+    id: number,
+    harvestdate: string,
+    quantity: number,
+    qualityremarks: string,
+    cultivation: Cultivation
+  ) {
     this.id = id;
-    this.name = name;
-    this.growthperioddays = growthperioddays ?? 0;
-    this.description = description ?? '';
+    this.harvestdate = harvestdate;
+    this.quantity = quantity;
+    this.qualityremarks = qualityremarks;
+    this.cultivation = cultivation;
   }
 }

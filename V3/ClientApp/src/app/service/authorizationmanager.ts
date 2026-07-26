@@ -3,6 +3,7 @@ import { AuthoritySevice } from './authoritysevice';
 import {UserService} from "./userservice";
 import {jwtDecode} from "jwt-decode";
 import {AnnouncementComponent} from "../view/modules/announcement/announcement.component";
+import {landreport} from "../report/entity/landreport";
 
 @Injectable()
 export class AuthorizationManager {
@@ -14,60 +15,68 @@ export class AuthorizationManager {
   private readonly localStorageInventoryMenus = 'invMenuState';
 
   Admin = [
-    { name: 'Employee', isVisible: false, routerLink: 'employee' },
-    { name: 'User', isVisible: false, routerLink: 'user' },
-    { name: 'Privilege', isVisible: false, routerLink: 'privilege' },
-    { name: 'Operation', isVisible: false, routerLink: 'operation' }
+    { name: 'Employee',displayName: 'Employee', isVisible: false, routerLink: 'employee' },
+    { name: 'User',displayName: 'User', isVisible: false, routerLink: 'user' },
+    { name: 'Privilege',displayName: 'Privilage', isVisible: false, routerLink: 'privilege' },
+    { name: 'Operation',displayName: 'Operation', isVisible: false, routerLink: 'operation' }
   ];
 
   Infrastructure = [
-    {name: 'Street', isVisible: false, routerLink: 'street'},
-    {name: 'Land', isVisible: false, routerLink: 'land'},
-    {name: 'Building', isVisible: false, routerLink: 'building'}
+    {name: 'Street',displayName: 'Street', isVisible: false, routerLink: 'street'},
+    {name: 'Land',displayName: 'Land', isVisible: false, routerLink: 'land'},
+    {name: 'Building',displayName: 'Building', isVisible: false, routerLink: 'building'}
   ]
   Citizen = [
-    {name: 'Citizen', isVisible: false, routerLink: 'citizen'},
-    {name: 'Household', isVisible: false, routerLink: 'household'},
-    {name: 'VoterRegistry', isVisible: false, routerLink: 'voterregistry'}
+    {name: 'Citizen',displayName: 'Citizen', isVisible: false, routerLink: 'citizen'},
+    {name: 'Household',displayName: 'Household', isVisible: false, routerLink: 'household'},
+    {name: 'VoterRegistry',displayName: 'Voter Registry', isVisible: false, routerLink: 'voterregistry'},
+    {name: 'CitizenSkill',displayName: 'Citizen Skill', isVisible: false, routerLink: 'citizenskill'}
   ]
 
   CertificateRequest = [
-    {name: 'Certificate',  isVisible: false, routerLink: 'certificate'},
-    {name: 'CertificateRequest',  isVisible: false, routerLink: 'certificaterequest'}
+    {name: 'Certificate',displayName: 'Certificate',  isVisible: false, routerLink: 'certificate'},
+    {name: 'CertificateRequest',displayName: 'Certificate Request',  isVisible: false, routerLink: 'certificaterequest'}
   ];
 
   TreeCuttingRequest = [
-    {name: 'TreeCuttingRequest',  isVisible: false, routerLink: 'treecuttingrequest'}
+    {name: 'TreeCuttingRequest',displayName: 'Tree Cutting Request',  isVisible: false, routerLink: 'treecuttingrequest'}
   ];
 
+  Cultivation = [
+    {name: 'Cultivation',displayName: 'Cultivation', isVisible: false, routerLink: 'cultivation'}
+  ]
+
   Announcement = [
-    {name: 'Announcement',  isVisible: false, routerLink: 'announcement'}
+    {name: 'Announcement',displayName: 'Announcement',  isVisible: false, routerLink: 'announcement'}
   ];
 
   Complaint = [
-    {name: 'Complaint',  isVisible: false, routerLink: 'complaint'}
+    {name: 'Complaint',displayName: 'Complaint',  isVisible: false, routerLink: 'complaint'}
   ];
 
   IdCardRequest = [
-    {name: 'IdCardRequest',  isVisible: false, routerLink: 'idcardrequest'}
+    {name: 'IdCardRequest',displayName: 'Id Card Request',  isVisible: false, routerLink: 'idcardrequest'}
   ];
 
   Reports = [
-    {name: 'Reports', isVisible: false, routerLink: 'report'}
-  ]
+    {name: 'CountByStreetMaterial', displayName: 'Street Report', isVisible: false, routerLink: 'reports/countbystreetmaterial'},
+    {name: 'landreport', displayName: 'Land Report', isVisible: false, routerLink: 'reports/landreport'},
+  ];
+
 
 
   getNavListItem(){
     return [
-      { Menu : 'Admin' , MenuItems : this.Admin },
-      { Menu : 'Infrastructure' , MenuItems : this.Infrastructure },
-      { Menu : 'Reports' , MenuItems : this.Reports },
-      { Menu : 'Citizen' , MenuItems : this.Citizen },
-      { Menu : 'CertificateRequest' , MenuItems : this.CertificateRequest },
-      { Menu : 'TreeCuttingRequest' , MenuItems : this.TreeCuttingRequest },
-      { Menu : 'Announcement' , MenuItems : this.Announcement },
-      { Menu : 'Complaint' , MenuItems : this.Complaint },
-      { Menu : 'IdCardRequest' , MenuItems : this.IdCardRequest },
+      { Menu : 'Admin' ,displayName: 'Admin', MenuItems : this.Admin, direct:false  },
+      { Menu : 'Infrastructure' ,displayName: 'Infrastructure', MenuItems : this.Infrastructure, direct:false  },
+      { Menu : 'Citizen' ,displayName: 'Citizen', MenuItems : this.Citizen, direct:false  },
+      { Menu : 'CertificateRequest' ,displayName: 'Certificate Request', MenuItems : this.CertificateRequest, direct:false  },
+      { Menu : 'TreeCuttingRequest' ,displayName: 'Tree Cutting Request', MenuItems : this.TreeCuttingRequest, direct:true },
+      { Menu : 'Announcement' ,displayName: 'Announcement', MenuItems : this.Announcement, direct:true },
+      { Menu : 'Complaint' ,displayName: 'Complaint', MenuItems : this.Complaint, direct:true },
+      { Menu : 'IdCardRequest' ,displayName: 'Id Card Request', MenuItems : this.IdCardRequest, direct:true },
+      { Menu : 'Cultivation' ,displayName: 'Cultivation', MenuItems : this.Cultivation, direct:true },
+      { Menu : 'Reports' ,displayName: 'Reports', MenuItems : this.Reports, direct:false  }
 
 
     ]
@@ -76,16 +85,33 @@ export class AuthorizationManager {
 
   constructor(private us:UserService) {}
 
+
+
+  enableMenus(modules: { module: string; operation: string }[]): void {
+    const menus = this.getNavListItem();
+
+    menus.forEach(menuGroup => {
+      menuGroup.MenuItems.forEach(menuItem => {
+        if (menuGroup.Menu === 'Reports') {
+          menuItem.isVisible = true; // reports are read-only, no privilege gating needed
+        } else {
+          menuItem.isVisible = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
+        }
+      });
+    });
+
+    menus.forEach(menuGroup => {
+      // @ts-ignore
+      localStorage.setItem(this["localStorage" + menuGroup.Menu + "Menus"], JSON.stringify(menuGroup));
+    });
+  }
   // enableMenus(modules: { module: string; operation: string }[]): void {
   //
   //   const menus = this.getNavListItem();
   //
   //   menus.forEach(menuGroup => {
   //     menuGroup.MenuItems.forEach(menuItem => {
-  //       menuItem.isVisible =
-  //         modules.some(module =>
-  //           module.module.toLowerCase() === menuItem.toLowerCase()
-  //         );
+  //       menuItem.isVisible = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
   //     });
   //   });
   //
@@ -95,23 +121,6 @@ export class AuthorizationManager {
   //   });
   //
   // }
-
-  enableMenus(modules: { module: string; operation: string }[]): void {
-
-    const menus = this.getNavListItem();
-
-    menus.forEach(menuGroup => {
-      menuGroup.MenuItems.forEach(menuItem => {
-        menuItem.isVisible = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
-      });
-    });
-
-    menus.forEach(menuGroup => {
-      // @ts-ignore
-      localStorage.setItem(this["localStorage" + menuGroup.Menu + "Menus"], JSON.stringify(menuGroup));
-    });
-
-  }
 
   async getAuth(username: string): Promise<void> {
 

@@ -1,0 +1,83 @@
+<mat-grid-list [cols]="1" rowHeight="13rem">
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Land Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="data">
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ headers[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[binders[i]] }}</mat-cell>
+
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ total[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+        </mat-table>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Land Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #columnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Land Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #piechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+  <mat-divider [inset]="true"></mat-divider>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Fence Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="fenceData">
+          <ng-container *ngFor="let column of fenceColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ fenceHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[fenceBinders[i]] }}</mat-cell>
+
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ fenceTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="fenceColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: fenceColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="fenceColumns"></mat-footer-row>
+        </mat-table>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Fence Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #fencecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Fence Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #fencepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>
+
+
+
