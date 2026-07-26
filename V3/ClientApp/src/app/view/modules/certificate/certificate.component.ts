@@ -303,6 +303,18 @@ export class CertificateComponent {
       this.certificate = this.certform.getRawValue();
       this.certificate.certificaterequest = this.certificaterequest;
 
+      // FIX: expirydate comes back as a JS Date object from the datepicker.
+      // java.sql.Date on the server can't deserialize a full ISO datetime string,
+      // so convert to plain yyyy-MM-dd before sending.
+      const expiry: any = this.certificate.expirydate;
+      if (expiry instanceof Date) {
+        this.certificate.expirydate = expiry.toISOString().split('T')[0];
+      }
+
+      // if (this.certificate.expirydate instanceof Date) {
+      //   this.certificate.expirydate = this.certificate.expirydate.toISOString().split('T')[0];
+      // }
+
       let certdata = '<br>Certificate No : ' + this.certificate.certificateno;
       certdata += '<br>Expiry Date : ' + this.certificate.expirydate;
 
@@ -322,6 +334,11 @@ export class CertificateComponent {
               crtstatus = responce['errors'] == '';
               // @ts-ignore
               if (!crtstatus) crtmessage = responce['errors'];
+              else {
+                // FIX: capture the generated ID so uploadScan() has something to target
+                // @ts-ignore
+                this.certificate.id = parseInt(responce['id']);
+              }
             } else {
               crtstatus = false;
               crtmessage = 'Content Not Found';
@@ -343,6 +360,67 @@ export class CertificateComponent {
       });
     }
   }
+  // createCertificate() {
+  //   let errors = this.getCertErrors();
+  //
+  //   if (this.certificaterequest?.requeststatus?.name !== 'Approved') {
+  //     this.dg.open(MessageComponent, {
+  //       width: '400px',
+  //       data: {heading: 'Invalid Action', message: 'Certificate can only be created for Approved requests.'}
+  //     });
+  //     return;
+  //   }
+  //
+  //   if (errors != '') {
+  //     const errmsg = this.dg.open(MessageComponent, {
+  //       width: '500px',
+  //       data: {heading: 'Errors - Create Certificate', message: 'You have following Errors <br>' + errors}
+  //     });
+  //     errmsg.afterClosed().subscribe(async result => { if (!result) return; });
+  //   } else {
+  //     this.certificate = this.certform.getRawValue();
+  //     this.certificate.certificaterequest = this.certificaterequest;
+  //
+  //     let certdata = '<br>Certificate No : ' + this.certificate.certificateno;
+  //     certdata += '<br>Expiry Date : ' + this.certificate.expirydate;
+  //
+  //     const confirm = this.dg.open(ConfirmComponent, {
+  //       width: '500px',
+  //       data: {heading: 'Confirmation - Create Certificate', message: 'Are you sure to Create the following Certificate? <br><br>' + certdata}
+  //     });
+  //
+  //     let crtstatus: boolean = false;
+  //     let crtmessage: string = 'Server Not Found';
+  //
+  //     confirm.afterClosed().subscribe(async result => {
+  //       if (result) {
+  //         this.cs.add(this.certificate).then((responce: [] | undefined) => {
+  //           if (responce != undefined) {
+  //             // @ts-ignore
+  //             crtstatus = responce['errors'] == '';
+  //             // @ts-ignore
+  //             if (!crtstatus) crtmessage = responce['errors'];
+  //           } else {
+  //             crtstatus = false;
+  //             crtmessage = 'Content Not Found';
+  //           }
+  //         }).finally(() => {
+  //           if (crtstatus) {
+  //             crtmessage = 'Certificate Created Successfully';
+  //             this.certform.reset();
+  //             this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
+  //             this.enableCertButtons(false, true, false);
+  //           }
+  //           const stsmsg = this.dg.open(MessageComponent, {
+  //             width: '500px',
+  //             data: {heading: 'Status - Create Certificate', message: crtmessage}
+  //           });
+  //           stsmsg.afterClosed().subscribe(async result => { if (!result) return; });
+  //         });
+  //       }
+  //     });
+  //   }
+  // }
 
   // ── Upload Scan ───────────────────────────────────────────────────────────
   uploadScan() {

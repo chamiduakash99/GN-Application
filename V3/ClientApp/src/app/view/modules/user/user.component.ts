@@ -30,13 +30,12 @@ import {Usrtypeservice} from "../../../service/usrtypeservice";
 })
 export class UserComponent implements OnInit{
 
-  columns: string[] = ['employee', 'username', 'docreated', 'usertype', 'userstatus','role','description','toreated'];
-  headers: string[] = ['Employee', 'Username', 'DoCreated', 'Type', 'Status','Role','Description','To Ceated'];
-  binders: string[] = ['employee.callingname', 'username', 'getDate()','usertype.name', 'userstatus.name','getRole()','description','tocreated'];
+  columns: string[] = ['employee', 'username',   'role','description'];
+  headers: string[] = ['Employee', 'Username',   'Role','Description'];
+  binders: string[] = ['employee.callingname', 'username', 'getRole()','description'];
 
-  cscolumns: string[] = ['csemployee', 'csusername', 'csdocreated', 'csusertype','csuserstatus','csrole','csdescription','cstocreated'];
-  csprompts: string[] = ['Search by Employee', 'Search by Username', 'Search by DoCreated','Search by usertype'
-    ,'Search by User Status','Search by Role','Search by Description','Search by To created'];
+  cscolumns: string[] = ['csemployee', 'csusername','csrole','csdescription'];
+  csprompts: string[] = ['Search by Employee', 'Search by Username','Search by Role','Search by Description'];
 
   public form!: FormGroup;
   public ssearch!: FormGroup;

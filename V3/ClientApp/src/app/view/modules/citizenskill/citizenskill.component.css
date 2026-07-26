@@ -1,0 +1,162 @@
+/* ── Base card ───────────────────────────────────────────────────────────── */
+mat-card {
+  width: 100%;
+  height: 100%;
+  margin: 10px 10px -10px 10px;
+}
+mat-card-content { overflow: auto; height: 100%; }
+mat-card-header {
+  background: #c0c9d9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 16px;
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────────── */
+#loading img { width: 30px; height: 25px; }
+
+/* ── Client search ───────────────────────────────────────────────────────── */
+.csearch { height: 40px; width: 100%; margin-top: 5px; }
+
+/* ── Server-side search ──────────────────────────────────────────────────── */
+#ssearch mat-card-content { padding-top: 20px; }
+#ssearch mat-form-field { padding-left: 12px; width: 165px; }
+#ssearch button { width: 140px; margin-left: 10px; margin-top: 5px; background-color: #3b4e5f; color: white; }
+
+/* ── Citizen subtitle in header ──────────────────────────────────────────── */
+.citizen-sub {
+  font-size: 13px;
+  font-weight: 400;
+  color: #546e7a;
+  margin-left: 6px;
+}
+
+/* ── Count badges ────────────────────────────────────────────────────────── */
+.count-badge {
+  display: inline-block;
+  border-radius: 12px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.skill-badge  { background: #1565c0; color: white; }
+.empty-badge  { background: #eceff1; color: #90a4ae; }
+
+/* ── Income icons ────────────────────────────────────────────────────────── */
+.income-yes { color: #2e7d32; font-size: 20px; }
+.income-no  { color: #c62828; font-size: 20px; }
+
+/* ── Skill form row ──────────────────────────────────────────────────────── */
+.skill-form-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 0 8px 0;
+}
+.skill-profession-field { flex: 2; min-width: 160px; }
+.skill-exp-field        { flex: 1; min-width: 110px; }
+.skill-btn-group {
+  display: flex;
+  gap: 6px;
+  padding-top: 4px;
+  flex-wrap: wrap;
+}
+.skill-btn-group button {
+  background-color: #3b4e5f;
+  color: white;
+  font-size: 12px;
+  min-width: 70px;
+}
+.skill-btn-group button:disabled { opacity: 0.4; }
+
+/* ── Profession chip ─────────────────────────────────────────────────────── */
+.profession-chip {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 12px;
+  padding: 3px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid #a5d6a7;
+}
+
+/* ── Income section ──────────────────────────────────────────────────────── */
+#incomeform { padding-top: 10px; }
+#incomeform mat-form-field { width: 100%; }
+
+.income-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 12px 0;
+  border-left: 5px solid #2e7d32;
+}
+.income-summary.none {
+  background: #fafafa;
+  border-left-color: #9e9e9e;
+}
+.income-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+  color: #2e7d32;
+}
+.none-icon  { color: #9e9e9e; }
+.income-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1b5e20;
+}
+.none-text  { font-size: 16px; color: #9e9e9e; font-weight: 500; }
+.income-source {
+  font-size: 13px;
+  color: #388e3c;
+  font-weight: 500;
+}
+.income-label {
+  font-size: 11px;
+  color: #78909c;
+  margin-top: 2px;
+}
+
+/* ── Income buttons ──────────────────────────────────────────────────────── */
+#incomebutpanel { margin: 16px 0; display: flex; gap: 8px; }
+#incomebutpanel button { flex: 1; background-color: #3b4e5f; color: white; }
+#incomebutpanel button:disabled { opacity: 0.4; }
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+mat-header-cell { background: #3b4e5f; color: white; font-weight: 600; }
+mat-cell { padding: 10px 8px; }
+mat-row  { cursor: pointer; transition: background 0.15s; }
+mat-row:hover { background: #f5f7fa; }
+.selected-row { background-color: #c9e6ff !important; }
+mat-paginator { margin-top: 6px; }
+
+/* ── Empty hints ─────────────────────────────────────────────────────────── */
+.empty-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  color: #90a4ae;
+  text-align: center;
+}
+.empty-hint mat-icon { font-size: 40px; width: 40px; height: 40px; margin-bottom: 10px; opacity: 0.5; }
+.empty-hint p { font-size: 13px; line-height: 1.6; }
+.empty-hint.small { padding: 14px 10px; font-size: 12px; color: #b0bec5; }
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+mat-divider { margin: 12px 0; }
+
+/* ── Form validation ─────────────────────────────────────────────────────── */
+mat-form-field .ng-valid,
+.ng-valid.required  { background-color: lightgreen; }
+mat-form-field .ng-dirty { background-color: gold; }

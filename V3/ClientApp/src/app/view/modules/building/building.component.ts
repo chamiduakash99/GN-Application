@@ -254,12 +254,19 @@ export class BuildingComponent implements OnInit {
         }
       });
     }
-
+    console.log("street", this.building.street);
+    console.log("citizen", this.building.citizen);
+    console.log("usage", this.building.usage);
+    console.log("buildingtype", this.building.buildingtype);
+    console.log("walltype", this.building.walltype);
+    console.log("rooftype", this.building.rooftype);
+    console.log("landdetail", this.building.landdetail);
   }
 
   createView() {
     this.imageurl = 'assets/pending.gif';
     this.loadTable("");
+    this.enableButtons(true, false, false);
   }
 
   enableButtons(add: boolean, upd: boolean, del: boolean): void {
@@ -355,37 +362,53 @@ export class BuildingComponent implements OnInit {
     // ===== LINK DROPDOWNS =====
 
     // @ts-ignore
-    this.building.usage = this.usages.find(u => u.id === this.building.usage.id);
+    this.building.usage = this.usages.find(u => u.id === this.building.usage?.id);
 
     // @ts-ignore
-    this.building.floortype = this.floortypes.find(f => f.id === this.building.floortype.id);
+    this.building.floortype = this.floortypes.find(f => f.id === this.building.floortype?.id);
 
     // @ts-ignore
-    this.building.ownershiptype = this.ownershiptypes.find(o => o.id === this.building.ownershiptype.id);
+    this.building.ownershiptype = this.ownershiptypes.find(o => o.id === this.building.ownershiptype?.id);
 
     // @ts-ignore
-    this.building.street = this.streets.find(s => s.id === this.building.street.id);
+    this.building.street = this.streets.find(s => s.id === this.building.street?.id);
 
     // @ts-ignore
-    this.building.citizen = this.citizens.find(c => c.id === this.building.citizen.id);
+    this.building.citizen = this.citizens.find(c => c.id === this.building.citizen?.id);
 
     //@ts-ignore
-    this.building.buildingtype = findById(this.buildingtypes, this.building.buildingtype);
+    this.building.buildingtype = this.buildingtypes.find(b => b.id === this.building.buildingtype?.id);
 
     //@ts-ignore
-    this.building.walltype     = findById(this.walltypes,     this.building.walltype);
+    this.building.rooftype = this.rooftypes.find(r => r.id === this.building.rooftype?.id);
 
-    // // ===== IMAGE HANDLING =====
-    // if (this.building.image) {
-    //   try {
-    //     this.imageurl = atob(this.building.image as unknown as string);
-    //   } catch (e) {}
-    //   if (this.form.controls['image']) {
-    //     this.form.controls['image'].clearValidators();
-    //   }
-    // } else {
-    //   this.clearImage();
-    // }
+    //@ts-ignore
+    this.building.walltype = this.walltypes.find(w => w.id === this.building.walltype?.id);
+
+    //@ts-ignore
+    this.building.landdetail = this.lands.find(l => l.id === this.building.landdetail?.id);
+
+    // // @ts-ignore
+    // this.building.usage = this.usages.find(u => u.id === this.building.usage.id);
+    //
+    // // @ts-ignore
+    // this.building.floortype = this.floortypes.find(f => f.id === this.building.floortype.id);
+    //
+    // // @ts-ignore
+    // this.building.ownershiptype = this.ownershiptypes.find(o => o.id === this.building.ownershiptype.id);
+    //
+    // // @ts-ignore
+    // this.building.street = this.streets.find(s => s.id === this.building.street.id);
+    //
+    // // @ts-ignore
+    // this.building.citizen = this.citizens.find(c => c.id === this.building.citizen.id);
+    //
+    // //@ts-ignore
+    // this.building.buildingtype = findById(this.buildingtypes, this.building.buildingtype);
+    //
+    // //@ts-ignore
+    // this.building.walltype     = findById(this.walltypes,     this.building.walltype);
+
 
     // ===== PATCH MAIN FORM =====
     // this.form.patchValue(this.building);
@@ -429,6 +452,9 @@ export class BuildingComponent implements OnInit {
     let usageid = ssearchdata.ssusage;
     let floortypeid = ssearchdata.ssfloortype;
     let ownershiptypeid = ssearchdata.ssownershiptype;
+    let walltypeid = ssearchdata.sswalltype;
+    let noval = ssearchdata.ssno;
+    let landid = ssearchdata.ssland;
 
 
     let query = "";
@@ -438,7 +464,9 @@ export class BuildingComponent implements OnInit {
     if (usageid != null && usageid !== "") query = query + "&usage=" + usageid;
     if (floortypeid != null && floortypeid !== "") query = query + "&floortype=" + floortypeid;
     if (ownershiptypeid != null && ownershiptypeid !== "") query = query + "&ownershiptype=" + ownershiptypeid;
-
+    if (walltypeid != null && walltypeid !== "") query = query + "&walltype=" + walltypeid;
+    if (noval != null && noval !== "") query = query + "&no=" + noval;
+    if (landid != null && landid !== "") query = query + "&landdetail=" + landid;
 
     if (query != "") query = query.replace(/^./, "?");
 
@@ -463,7 +491,20 @@ export class BuildingComponent implements OnInit {
 
     } else {
 
-      this.building = this.form.getRawValue();
+      const raw = this.form.getRawValue();
+
+      this.building = {
+        usage: raw.usage,
+        floortype: raw.floorType,
+        ownershiptype: raw.ownershipType,
+        walltype: raw.walltype,
+        buildingtype: raw.buildingType,
+        rooftype: raw.roofType,
+        landdetail: raw.landDetail,
+        no: raw.no,
+      } as any;
+
+      // this.building = this.form.getRawValue();
 
       // Convert image to base64 (Building has only one image)
       if (this.imageurl) {
@@ -602,7 +643,21 @@ export class BuildingComponent implements OnInit {
           if (result) {
 
             // Get form values
-            this.building = this.form.getRawValue();
+            const raw = this.form.getRawValue();
+
+            this.building = {
+              ...this.oldbuilding,
+              usage: raw.usage,
+              floortype: raw.floorType,
+              ownershiptype: raw.ownershipType,
+              walltype: raw.walltype,
+              buildingtype: raw.buildingType,
+              rooftype: raw.roofType,
+              landdetail: raw.landDetail,
+              no: raw.no,
+            };
+
+            // this.building = this.form.getRawValue();
 
             // Handle image (same logic as Land but only one image)
             if (this.form.controls['image'] && this.form.controls['image'].dirty) {
@@ -767,6 +822,7 @@ export class BuildingComponent implements OnInit {
 
         // clear image preview (if you have function)
         this.clearImage();
+        this.enableButtons(true, false, false);
 
         // mark controls clean
         Object.values(this.form.controls).forEach(control => {

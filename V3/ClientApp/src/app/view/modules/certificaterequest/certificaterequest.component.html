@@ -1,32 +1,32 @@
 
 
-<mat-grid-list [cols]="12" rowHeight="4rem">
+<mat-grid-list [cols]="12" rowHeight="2rem">
 
-  <mat-grid-tile [colspan]="12" [rowspan]="4">
-    <div class="status-dashboard">
+<!--  <mat-grid-tile [colspan]="12" [rowspan]="4">-->
+<!--    <div class="status-dashboard">-->
 
-      <div
-        class="status-card"
-        *ngFor="let item of statusSummary"
-        [ngClass]="item.status.toLowerCase().replace(' ', '-')">
+<!--      <div-->
+<!--        class="status-card"-->
+<!--        *ngFor="let item of statusSummary"-->
+<!--        [ngClass]="item.status.toLowerCase().replace(' ', '-')">-->
 
-        <div class="status-title">
-          {{ item.status }}
-        </div>
+<!--        <div class="status-title">-->
+<!--          {{ item.status }}-->
+<!--        </div>-->
 
-        <div class="status-count">
-          {{ item.count }}
-        </div>
+<!--        <div class="status-count">-->
+<!--          {{ item.count }}-->
+<!--        </div>-->
 
-      </div>
+<!--      </div>-->
 
-    </div>
-  </mat-grid-tile>
+<!--    </div>-->
+<!--  </mat-grid-tile>-->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- LEFT PANEL — Tab toggle + Forms                                         -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-  <mat-grid-tile [colspan]="4" [rowspan]="14">
+  <mat-grid-tile [colspan]="4" [rowspan]="18">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Certificate Management</mat-card-title>
@@ -130,7 +130,7 @@
   <!-- RIGHT TOP — Server-side Search                                          -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-  <mat-grid-tile [colspan]="8" [rowspan]="4">
+  <mat-grid-tile [colspan]="8" [rowspan]="6">
     <mat-card id="ssearch">
       <mat-card-header>
         <mat-card-title>Certificate Request Search</mat-card-title>
@@ -183,7 +183,7 @@
   <!-- RIGHT MIDDLE — Certificate Request Table                                -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-  <mat-grid-tile [colspan]="8" [rowspan]="5">
+  <mat-grid-tile [colspan]="8" [rowspan]="10">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Certificate Requests</mat-card-title>
@@ -231,7 +231,7 @@
   <!-- RIGHT BOTTOM — Certificate Table                                         -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
 
-  <mat-grid-tile [colspan]="8" [rowspan]="5">
+  <mat-grid-tile [colspan]="8" [rowspan]="6">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Certificates Issued for Selected Request</mat-card-title>

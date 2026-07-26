@@ -1,0 +1,390 @@
+<mat-grid-list [cols]="12" rowHeight="4rem">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- TOP — Citizen Table (full width) -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="12" [rowspan]="3">
+    <mat-card id="ssearch">
+      <mat-card-header>
+        <mat-card-title>Search Citizens</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form [formGroup]="sssearch">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Citizen</mat-label>
+            <mat-select formControlName="sscitizens">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Profession</mat-label>
+            <mat-select formControlName="ssprofession">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let p of professions" [value]="p.id">{{p.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Income Source</mat-label>
+            <input matInput formControlName="ssincomesrc" placeholder="e.g. Farming">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Min Income (Rs.)</mat-label>
+            <input matInput type="number" formControlName="ssminamount" placeholder="e.g. 20000">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Max Income (Rs.)</mat-label>
+            <input matInput type="number" formControlName="ssmaxamount" placeholder="e.g. 80000">
+          </mat-form-field>
+
+          <div>
+            <button mat-raised-button (click)="btnSearchMc()">
+              <mat-icon>search</mat-icon> Search
+            </button>
+            <button mat-raised-button (click)="btnSearchClearMc()">
+              <mat-icon>reorder</mat-icon> Clear
+            </button>
+            <button mat-raised-button (click)="clear()">
+              <mat-icon>clear</mat-icon> Clear All
+            </button>
+          </div>
+
+        </mat-form>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- CITIZEN TABLE — full width -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="12" [rowspan]="7">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Citizens</mat-card-title>
+        <div id="loading"><img [src]="imageurl" alt="loading"></div>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="citdata">
+
+          <!-- Name -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef>Name</mat-header-cell>
+            <mat-cell *matCellDef="let c"><strong>{{c.name}}</strong></mat-cell>
+          </ng-container>
+
+          <!-- NIC -->
+          <ng-container matColumnDef="nic">
+            <mat-header-cell *matHeaderCellDef>NIC</mat-header-cell>
+            <mat-cell *matCellDef="let c">{{c.nic}}</mat-cell>
+          </ng-container>
+
+          <!-- Mobile -->
+          <ng-container matColumnDef="mobileno">
+            <mat-header-cell *matHeaderCellDef>Mobile</mat-header-cell>
+            <mat-cell *matCellDef="let c">{{c.mobileno}}</mat-cell>
+          </ng-container>
+
+          <!-- Email -->
+          <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef>Email</mat-header-cell>
+            <mat-cell *matCellDef="let c">{{c.email}}</mat-cell>
+          </ng-container>
+
+          <!-- Skill count -->
+          <ng-container matColumnDef="skillcount">
+            <mat-header-cell *matHeaderCellDef>Skills</mat-header-cell>
+            <mat-cell *matCellDef="let c">
+              <span class="count-badge skill-badge"
+                    *ngIf="selectedcitizen?.id === c.id">
+                {{skills.length}}
+              </span>
+              <span class="count-badge empty-badge"
+                    *ngIf="selectedcitizen?.id !== c.id">—</span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Has income -->
+          <ng-container matColumnDef="hasincome">
+            <mat-header-cell *matHeaderCellDef>Income</mat-header-cell>
+            <mat-cell *matCellDef="let c">
+              <mat-icon *ngIf="selectedcitizen?.id === c.id && income"
+                        class="income-yes">check_circle</mat-icon>
+              <mat-icon *ngIf="selectedcitizen?.id === c.id && !income"
+                        class="income-no">cancel</mat-icon>
+              <span *ngIf="selectedcitizen?.id !== c.id" class="count-badge empty-badge">—</span>
+            </mat-cell>
+          </ng-container>
+
+          <!-- Client-side search columns -->
+          <ng-container matColumnDef="csname">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cscitsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search Name</mat-label>
+                  <input matInput formControlName="csname" (keyup)="filterCitizenTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csnic">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cscitsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search NIC</mat-label>
+                  <input matInput formControlName="csnic" (keyup)="filterCitizenTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csmobile">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cscitsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search Mobile</mat-label>
+                  <input matInput formControlName="csmobile" (keyup)="filterCitizenTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csemail">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="cscitsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search Email</mat-label>
+                  <input matInput formControlName="csemail" (keyup)="filterCitizenTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csskills">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csincome">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="citcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="cscitcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: citcolumns;"
+                   (click)="selectCitizen(row)"
+                   [ngClass]="{'selected-row': row === selectedcitizen}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #citpaginator [pageSize]="5" [pageSizeOptions]="[5,10,20]"></mat-paginator>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- BOTTOM LEFT — Skills -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="7" [rowspan]="12">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Professional Skills
+          <span class="citizen-sub" *ngIf="selectedcitizen">
+            — {{selectedcitizen.name}}
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <!-- Skill Form -->
+        <mat-form [formGroup]="skillform" *ngIf="selectedcitizen">
+          <div class="skill-form-row">
+
+            <mat-form-field appearance="outline" class="skill-profession-field">
+              <mat-label>Profession</mat-label>
+              <mat-select formControlName="profession">
+                <mat-option [value]="null">Not Selected</mat-option>
+                <mat-option *ngFor="let p of professions" [value]="p">{{p.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="skill-exp-field">
+              <mat-label>Experience (Years)</mat-label>
+              <input matInput type="number" formControlName="experienceyears"
+                     placeholder="e.g. 5">
+            </mat-form-field>
+
+            <div class="skill-btn-group">
+              <button mat-raised-button (click)="addSkill()" [disabled]="!enaskilladd">
+                <mat-icon>add</mat-icon> Add
+              </button>
+              <button mat-raised-button (click)="updateSkill()" [disabled]="!enaskillupd">
+                <mat-icon>edit</mat-icon> Update
+              </button>
+              <button mat-raised-button (click)="deleteSkill()" [disabled]="!enaskilldel">
+                <mat-icon>delete</mat-icon> Delete
+              </button>
+            </div>
+
+          </div>
+        </mat-form>
+
+        <!-- Empty hint -->
+        <div *ngIf="!selectedcitizen" class="empty-hint">
+          <mat-icon>person_search</mat-icon>
+          <p>Select a citizen from the table above to manage their skills.</p>
+        </div>
+
+        <!-- Skills table -->
+        <mat-table [dataSource]="skilldata" *ngIf="selectedcitizen">
+
+          <ng-container matColumnDef="profession">
+            <mat-header-cell *matHeaderCellDef>Profession</mat-header-cell>
+            <mat-cell *matCellDef="let s">
+              <span class="profession-chip">{{s.profession?.name}}</span>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="experienceyears">
+            <mat-header-cell *matHeaderCellDef>Experience</mat-header-cell>
+            <mat-cell *matCellDef="let s">
+              <strong>{{s.experienceyears}}</strong> yrs
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="skillmodi">
+            <mat-header-cell *matHeaderCellDef>Summary</mat-header-cell>
+            <mat-cell *matCellDef="let s">{{getSkillModi(s)}}</mat-cell>
+          </ng-container>
+
+          <!-- Client-side search -->
+          <ng-container matColumnDef="csprofession">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csskillsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search Profession</mat-label>
+                  <input matInput formControlName="csprofession" (keyup)="filterSkillTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csexperience">
+            <mat-header-cell *matHeaderCellDef>
+              <mat-form [formGroup]="csskillsearch" class="csearch">
+                <mat-form-field appearance="outline">
+                  <mat-label>Search Years</mat-label>
+                  <input matInput formControlName="csexperience" (keyup)="filterSkillTable()">
+                </mat-form-field>
+              </mat-form>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="csskillmodi">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="skillcolumns"></mat-header-row>
+          <mat-header-row *matHeaderRowDef="csskillcolumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: skillcolumns;"
+                   (click)="selectSkill(row)"
+                   [ngClass]="{'selected-row': row === selectedskillrow}">
+          </mat-row>
+
+        </mat-table>
+        <mat-paginator #skillpaginator [pageSize]="5" [pageSizeOptions]="[5,10]"
+                       *ngIf="selectedcitizen && skills.length > 0">
+        </mat-paginator>
+
+        <div *ngIf="selectedcitizen && skills.length === 0" class="empty-hint small">
+          No skills recorded yet. Use the form above to add one.
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!-- BOTTOM RIGHT — Income -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <mat-grid-tile [colspan]="5" [rowspan]="12">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Income Record
+          <span class="citizen-sub" *ngIf="selectedcitizen">
+            — {{selectedcitizen.name}}
+          </span>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content id="incomeform">
+
+        <div *ngIf="!selectedcitizen" class="empty-hint">
+          <mat-icon>account_balance_wallet</mat-icon>
+          <p>Select a citizen to view or update their income.</p>
+        </div>
+
+        <ng-container *ngIf="selectedcitizen">
+
+          <!-- Current income display -->
+          <div class="income-summary" *ngIf="income">
+            <mat-icon class="income-icon">payments</mat-icon>
+            <div>
+              <div class="income-amount">Rs. {{income.monthlyaverageincome | number:'1.2-2'}}</div>
+              <div class="income-source">{{income.incomesource}}</div>
+              <div class="income-label">Monthly Average Income</div>
+            </div>
+          </div>
+
+          <div class="income-summary none" *ngIf="!income">
+            <mat-icon class="income-icon none-icon">money_off</mat-icon>
+            <div>
+              <div class="income-amount none-text">No income record</div>
+              <div class="income-label">Use the form below to add one</div>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <!-- Income form -->
+          <mat-form [formGroup]="incomeform">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Monthly Average Income (Rs.)</mat-label>
+              <input matInput type="number" formControlName="monthlyaverageincome"
+                     placeholder="e.g. 45000">
+              <mat-icon matPrefix>payments</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Income Source</mat-label>
+              <input matInput formControlName="incomesource"
+                     placeholder="e.g. Farming, Government Teaching, Fishing">
+              <mat-icon matPrefix>work</mat-icon>
+            </mat-form-field>
+
+            <div id="incomebutpanel">
+              <button mat-raised-button (click)="addIncome()" [disabled]="!enaincomeadd">
+                <mat-icon>add</mat-icon> Add
+              </button>
+              <button mat-raised-button (click)="updateIncome()" [disabled]="!enaincomeupd">
+                <mat-icon>edit</mat-icon> Update
+              </button>
+              <button mat-raised-button (click)="deleteIncome()" [disabled]="!enaincomedel">
+                <mat-icon>delete</mat-icon> Delete
+              </button>
+            </div>
+
+          </mat-form>
+
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

@@ -357,17 +357,31 @@ export class CitizenComponent implements OnInit {
     //   );
     // }
 
+    this.leftAll();
+
     this.citizen.citizenaidprograms = this.citizen.citizenaidprograms ?? [];
 
     this.citizen.citizenaidprograms.forEach((citizenaidprogram: Citizenaidprogram) => {
-
       if (citizenaidprogram.aidprogram) {
-        this.aidprograms = this.aidprograms.filter(
-          (ap) => ap.id !== citizenaidprogram.aidprogram.id
-        );
+        const fullAidprogram = this.aidprograms.find(ap => ap.id === citizenaidprogram.aidprogram.id);
+        if (fullAidprogram) {
+          citizenaidprogram.aidprogram = fullAidprogram;
+          this.aidprograms = this.aidprograms.filter(ap => ap.id !== fullAidprogram.id);
+          this.citizenaidprograms.push(citizenaidprogram);
+        }
       }
-
     });
+    // this.citizen.citizenaidprograms = this.citizen.citizenaidprograms ?? [];
+    //
+    // this.citizen.citizenaidprograms.forEach((citizenaidprogram: Citizenaidprogram) => {
+    //
+    //   if (citizenaidprogram.aidprogram) {
+    //     this.aidprograms = this.aidprograms.filter(
+    //       (ap) => ap.id !== citizenaidprogram.aidprogram.id
+    //     );
+    //   }
+    //
+    // });
 
     // this.citizen.citizenaidprograms?.forEach((citizenaidprogram: Citizenaidprogram) => {
     //   this.aidprograms = this.aidprograms.filter(
@@ -1105,6 +1119,7 @@ export class CitizenComponent implements OnInit {
     this.form.controls["citizenaidprograms"].clearValidators();
     this.form.controls["citizenaidprograms"].updateValueAndValidity();
   }
+
 
 
   leftAll():void{

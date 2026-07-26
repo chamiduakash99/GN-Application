@@ -1,3 +1,5 @@
+/* Cultivation */
+
 /* Main Grid */
 mat-grid-list {
   width: 100%;
@@ -6,32 +8,41 @@ mat-grid-list {
 
 /* All Cards */
 mat-card {
-  width: 95%;
-  height: 95%;
-  margin: auto;
-  overflow: auto;
+  width: 100%;
+  height: 100%;
+  margin: 10px 10px -10px 10px;
 }
 
+mat-card-content {
+  overflow: auto;
+  height: 100%;
+}
 
 /* Card Headers */
 mat-card-header {
-  background-color: #f5f5f5;
-  margin-bottom: 10px;
-  padding: 8px;
+  background: #0c1b31;
+  color: #f2f5fd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-mat-card-title {
-  font-size: 18px;
-  font-weight: bold;
-}
+/*mat-card-title {*/
+/*  font-size: 18px;*/
+/*  font-weight: bold;*/
+/*}*/
 
 
 /* Form Section Labels */
 .sectionlabel {
-  font-size: 16px;
-  font-weight: bold;
-  color: #3f51b5;
-  margin: 5px 0 15px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f00;
+  margin: 14px 0 6px 0;
+  border-left: 3px solid #3b4e5f;
+  padding-left: 8px;
 }
 
 
@@ -110,19 +121,22 @@ mat-divider {
 
 /* Search Panel */
 #ssearch mat-card-content {
-  display: flex;
-  flex-direction: column;
+  padding-top: 30px;
 }
 
 
 #ssearch mat-form-field {
-  width: 30%;
-  margin-right: 10px;
+  padding-left: 15px;
+  width: 200px;
 }
 
 
 #ssearch button {
-  margin-right: 10px;
+  width: 195px;
+  margin-left: 10px;
+  margin-top: 5px;
+  background-color: #152054;
+  color: #f2f5fd;
 }
 
 
@@ -153,13 +167,15 @@ mat-row:hover {
 
 /* Selected Row */
 .selected-row {
-  background-color: #dce7ff !important;
+  background-color: #78b8dd !important;
 }
 
 
 /* Table Search Row */
 .csearch {
+  height: 40px;
   width: 100%;
+  margin-top: 5px;
 }
 
 
@@ -207,8 +223,10 @@ mat-row:hover {
 
 
 #loading img {
-  width: 35px;
-  height: 35px;
+  width: 30px;
+  height: 25px;
+  margin-left: 200px;
+  filter: saturate(400%);
 }
 
 
@@ -239,3 +257,252 @@ mat-paginator {
   }
 
 }
+
+/*!* Main Grid *!*/
+/*mat-grid-list {*/
+/*  width: 100%;*/
+/*}*/
+
+
+/*!* All Cards *!*/
+/*mat-card {*/
+/*  width: 100%;*/
+/*  height: 100%;*/
+/*  margin: 10px 10px -10px 10px;*/
+/*}*/
+
+/*mat-card-content {*/
+/*  overflow: auto;*/
+/*  height: 100%;*/
+/*}*/
+
+/*!* Card Headers *!*/
+/*mat-card-header {*/
+/*  background: #0c1b31;*/
+/*  color: #f2f5fd;*/
+/*  display: flex;*/
+/*  align-items: center;*/
+/*  justify-content: space-between;*/
+/*  flex-wrap: wrap;*/
+/*  gap: 8px;*/
+/*}*/
+
+/*mat-card-title {*/
+/*  font-size: 18px;*/
+/*  font-weight: bold;*/
+/*}*/
+
+
+/*!* Form Section Labels *!*/
+/*.sectionlabel {*/
+/*  font-size: 16px;*/
+/*  font-weight: bold;*/
+/*  color: #3f51b5;*/
+/*  margin: 5px 0 15px 0;*/
+/*}*/
+
+
+/*!* Form Fields *!*/
+/*mat-form-field {*/
+/*  width: 100%;*/
+/*}*/
+
+
+/*!* Area Row *!*/
+/*.area-row {*/
+/*  display: flex;*/
+/*  gap: 10px;*/
+/*}*/
+
+/*.area-field {*/
+/*  flex: 2;*/
+/*}*/
+
+/*.unit-field {*/
+/*  flex: 1;*/
+/*}*/
+
+
+/*!* Buttons *!*/
+/*#culbutpanel,*/
+/*#harbutpanel {*/
+/*  display: flex;*/
+/*  justify-content: center;*/
+/*  gap: 10px;*/
+/*  margin: 15px 0;*/
+/*}*/
+
+
+/*button {*/
+/*  min-width: 90px;*/
+/*}*/
+
+
+/*!* Divider *!*/
+/*mat-divider {*/
+/*  margin: 15px 0;*/
+/*}*/
+
+
+/*!* Harvest Header *!*/
+/*.harvest-sub {*/
+/*  font-size: 13px;*/
+/*  color: gray;*/
+/*  margin-left: 5px;*/
+/*}*/
+
+
+/*.harvest-for {*/
+/*  font-size: 14px;*/
+/*  color: #666;*/
+/*}*/
+
+
+/*!* Empty Messages *!*/
+/*.harvest-hint,*/
+/*.empty-hint {*/
+/*  text-align: center;*/
+/*  padding: 25px;*/
+/*  color: gray;*/
+/*}*/
+
+
+/*.empty-hint mat-icon,*/
+/*.harvest-hint mat-icon {*/
+/*  font-size: 40px;*/
+/*  height: 40px;*/
+/*  width: 40px;*/
+/*}*/
+
+
+/*!* Search Panel *!*/
+/*#ssearch mat-card-content {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*}*/
+
+
+/*#ssearch mat-form-field {*/
+/*  width: 30%;*/
+/*  margin-right: 10px;*/
+/*}*/
+
+
+/*#ssearch button {*/
+/*  margin-right: 10px;*/
+/*}*/
+
+
+/*!* Tables *!*/
+/*mat-table {*/
+/*  width: 100%;*/
+/*}*/
+
+
+/*mat-header-cell {*/
+/*  font-weight: bold;*/
+/*  font-size: 14px;*/
+/*}*/
+
+
+/*mat-cell,*/
+/*mat-header-cell {*/
+/*  padding: 8px;*/
+/*}*/
+
+
+/*!* Row Hover *!*/
+/*mat-row:hover {*/
+/*  background-color: #eeeeee;*/
+/*  cursor: pointer;*/
+/*}*/
+
+
+/*!* Selected Row *!*/
+/*.selected-row {*/
+/*  background-color: #dce7ff !important;*/
+/*}*/
+
+
+/*!* Table Search Row *!*/
+/*.csearch {*/
+/*  width: 100%;*/
+/*}*/
+
+
+/*.csearch mat-form-field {*/
+/*  width: 100%;*/
+/*  margin: 0;*/
+/*}*/
+
+
+/*!* Status Chips *!*/
+
+/*.status-chip {*/
+/*  padding: 5px 12px;*/
+/*  border-radius: 15px;*/
+/*  font-size: 12px;*/
+/*  color: white;*/
+/*  display: inline-block;*/
+/*  text-align: center;*/
+/*}*/
+
+
+/*!* Active *!*/
+/*.status-chip.active {*/
+/*  background-color: #4caf50;*/
+/*}*/
+
+
+/*!* Harvested *!*/
+/*.status-chip.harvested {*/
+/*  background-color: #2196f3;*/
+/*}*/
+
+
+/*!* Abandoned *!*/
+/*.status-chip.abandoned {*/
+/*  background-color: #f44336;*/
+/*}*/
+
+
+/*!* Loading Image *!*/
+/*#loading {*/
+/*  margin-left: auto;*/
+/*  margin-right: 15px;*/
+/*}*/
+
+
+/*#loading img {*/
+/*  width: 35px;*/
+/*  height: 35px;*/
+/*}*/
+
+
+/*!* Pagination *!*/
+/*mat-paginator {*/
+/*  margin-top: 5px;*/
+/*}*/
+
+
+/*!* Responsive *!*/
+/*@media screen and (max-width: 900px) {*/
+
+/*  .area-row {*/
+/*    display: block;*/
+/*  }*/
+
+/*  #ssearch mat-form-field {*/
+/*    width: 100%;*/
+/*  }*/
+
+/*  #culbutpanel,*/
+/*  #harbutpanel {*/
+/*    flex-direction: column;*/
+/*  }*/
+
+/*  button {*/
+/*    width: 100%;*/
+/*  }*/
+
+/*}*/
