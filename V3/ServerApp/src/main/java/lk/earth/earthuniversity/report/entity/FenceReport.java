@@ -1,19 +1,16 @@
 package lk.earth.earthuniversity.report.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
-public class LandReport {
+public class FenceReport {
 
     private Integer id;
-    private String landtype;
+    private String fencetype;
     private Long count;
     private double percentage;
 
-    public LandReport() { }
+    public FenceReport() { }
 
-    public LandReport(String landtype, Long count) {
-        this.landtype = landtype;
+    public FenceReport(String fencetype, Long count) {
+        this.fencetype = fencetype;
         this.count = count;
     }
 
@@ -25,12 +22,12 @@ public class LandReport {
         this.id = id;
     }
 
-    public String getlandtype() {
-        return landtype;
+    public String getFencetype() {
+        return fencetype;
     }
 
-    public void setlandtype(String landtype) {
-        this.landtype = landtype;
+    public void setFencetype(String fencetype) {
+        this.fencetype = fencetype;
     }
 
     public Long getCount() {

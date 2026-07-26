@@ -3,17 +3,17 @@ package lk.earth.earthuniversity.report.entity;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-public class CountByStreetMaterial {
+public class LandReport {
 
     private Integer id;
-    private String streetMaterial;
+    private String landtype;
     private Long count;
     private double percentage;
 
-    public CountByStreetMaterial() { }
+    public LandReport() { }
 
-    public CountByStreetMaterial(String streetMaterial, Long count) {
-        this.streetMaterial = streetMaterial;
+    public LandReport(String landtype, Long count) {
+        this.landtype = landtype;
         this.count = count;
     }
 
@@ -25,12 +25,12 @@ public class CountByStreetMaterial {
         this.id = id;
     }
 
-    public String getStreetMaterial() {
-        return streetMaterial;
+    public String getlandtype() {
+        return landtype;
     }
 
-    public void setStreetMaterial(String streetMaterial) {
-        this.streetMaterial = streetMaterial;
+    public void setlandtype(String landtype) {
+        this.landtype = landtype;
     }
 
     public Long getCount() {
