@@ -10,4 +10,7 @@ public interface IdcardrequestDao extends JpaRepository<Idcardrequest, Integer> 
 
     @Query("select r from Idcardrequest r where r.citizen.id = :citizenId")
     List<Idcardrequest> findByCitizenId(Integer citizenId);
+
+    @Query("SELECT i.idcardrequeststatus.name, COUNT(i) FROM Idcardrequest i GROUP BY i.idcardrequeststatus.name")
+    List<Object[]> getStatusSummary();
 }

@@ -25,9 +25,13 @@ public class Household {
     @Basic
     @Column(name = "headcitizen_id")
     private Integer headcitizenId;
-    @JsonIgnore
+
     @OneToMany(mappedBy = "household")
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("household")
     private Collection<Citizen> citizensById;
+    //    @JsonIgnore
+//    @OneToMany(mappedBy = "household")
+//    private Collection<Citizen> citizensById;
 
     public Household() {
     }

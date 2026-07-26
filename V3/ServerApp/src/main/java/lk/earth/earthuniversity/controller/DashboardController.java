@@ -1,169 +1,114 @@
 package lk.earth.earthuniversity.controller;
 
-import lk.earth.earthuniversity.dao.AnnouncementDao;
-import lk.earth.earthuniversity.entity.Announcement;
-import lk.earth.earthuniversity.entity.Employee;
+import lk.earth.earthuniversity.dao.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import lk.earth.earthuniversity.dao.UserDao;
-import lk.earth.earthuniversity.entity.User;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+/**
+ * Single controller that aggregates count/summary data for the Home Dashboard.
+ * All endpoints are read-only (GET). No existing controllers were modified.
+ */
 @CrossOrigin
 @RestController
-@RequestMapping("/announcements")
-public class AnnouncementController {
+@RequestMapping("/dashboard")
+public class DashboardController {
 
-    @Autowired
-    private AnnouncementDao announcementDao;
+    @Autowired private CitizenDao citizenDao;
+    @Autowired private HouseholdDao householdDao;
+    @Autowired private CertificaterequestDao certificaterequestDao;
+    @Autowired private ComplaintDao complaintDao;
+    @Autowired private IdcardrequestDao idcardrequestDao;
+    @Autowired private TreecuttingrequestDao treecuttingrequestDao;
+    @Autowired private CultivationDao cultivationDao;
+    @Autowired private VoterregistryDao voterregistryDao;
+    @Autowired private LanddetailDao landdetailDao;
+    @Autowired private BuildingDao buildingDao;
+    @Autowired private AnnouncementDao announcementDao;
 
-    @Autowired
-    private UserDao userDao;
-
-    // 1) VIEW LIST (SIMPLE)
-    @GetMapping(path = "/list", produces = "application/json")
-    public List<Announcement> getList() {
-        return announcementDao.findAll();
+    // ── Top summary counts ────────────────────────────────────────────────────
+    @GetMapping("/summary")
+    public HashMap<String, Object> getSummary() {
+        HashMap<String, Object> summary = new HashMap<>();
+        summary.put("totalCitizens",       citizenDao.count());
+        summary.put("totalHouseholds",     householdDao.count());
+        summary.put("totalVoters",         voterregistryDao.count());
+        summary.put("totalLands",          landdetailDao.count());
+        summary.put("totalBuildings",      buildingDao.count());
+        summary.put("totalAnnouncements",  announcementDao.count());
+        return summary;
     }
 
-    // 2) VIEW ALL + FILTER
-    @GetMapping(produces = "application/json")
-    public List<Announcement> get(@RequestParam HashMap<String, String> params) {
-
-        List<Announcement> announcements = announcementDao.findAll();
-
-        if (params.isEmpty()) return announcements;
-
-        String title = params.get("title");
-        String isactive = params.get("isactive");
-
-        Stream<Announcement> stream = announcements.stream();
-
-        if (title != null) {
-            stream = stream.filter(a ->
-                    a.getTitle() != null &&
-                            a.getTitle().equalsIgnoreCase(title)
-            );
+    // ── Certificate Request status breakdown ──────────────────────────────────
+    @GetMapping("/certificaterequests/summary")
+    public List<HashMap<String, Object>> getCertRequestSummary() {
+        List<Object[]> result = certificaterequestDao.getStatusSummary();
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        for (Object[] row : result) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("status", row[0]);
+            map.put("count",  row[1]);
+            list.add(map);
         }
-
-        if (isactive != null) {
-            stream = stream.filter(a ->
-                    a.getIsactive() != null &&
-                            a.getIsactive().toString().equals(isactive)
-            );
-        }
-
-        return stream.collect(Collectors.toList());
+        return list;
     }
 
-
-    // 3) SAVE
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String, String> save(@RequestBody Announcement announcement) {
-
-        HashMap<String, String> response = new HashMap<>();
-        String errors = "";
-
-        if (announcement.getTitle() == null || announcement.getTitle().isEmpty()) {
-            errors = errors + "Title is required <br>";
+    // ── Complaint status breakdown ────────────────────────────────────────────
+    @GetMapping("/complaints/summary")
+    public List<HashMap<String, Object>> getComplaintSummary() {
+        List<Object[]> result = complaintDao.getStatusSummary();
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        for (Object[] row : result) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("status", row[0]);
+            map.put("count",  row[1]);
+            list.add(map);
         }
-
-        if (errors.equals("")) {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-            String username = auth.getName();
-
-            if (username == null || username.equals("anonymousUser")) {
-                errors = "User not authenticated";
-            } else {
-
-                User user = userDao.findByUsername(username);
-
-                if (user == null || user.getEmployee() == null) {
-                    errors = "Employee not linked to logged user";
-                } else {
-
-                    Employee employee = user.getEmployee();
-                    announcement.setEmployee(employee);
-
-                    announcementDao.save(announcement);
-                }
-            }
-
-        } else {
-            errors = "Server Validation Errors : <br>" + errors;
-        }
-
-        response.put("id", String.valueOf(announcement.getId()));
-        response.put("url", "/announcements/post");
-        response.put("errors", errors);
-
-        return response;
+        return list;
     }
 
-
-
-    // 4) UPDATE
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String, String> update(@RequestBody Announcement announcement) {
-        HashMap<String, String> response = new HashMap<>();
-        String errors = "";
-
-        Optional<Announcement> ext = announcementDao.findById(announcement.getId());
-
-        if (ext.isEmpty()) {
-            errors = errors + "Announcement not found <br>";
+    // ── ID Card Request status breakdown ──────────────────────────────────────
+    @GetMapping("/idcardrequests/summary")
+    public List<HashMap<String, Object>> getIdCardSummary() {
+        List<Object[]> result = idcardrequestDao.getStatusSummary();
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        for (Object[] row : result) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("status", row[0]);
+            map.put("count",  row[1]);
+            list.add(map);
         }
-
-        if (errors.equals("")) {
-            // Fetch fresh from DB using custom query to get employee
-            Announcement existing = announcementDao.findByMyId(announcement.getId());
-            Employee employee = existing.getEmployee();
-
-            announcement.setEmployee(employee);
-            announcementDao.save(announcement);
-        } else {
-            errors = "Server Validation Errors : <br>" + errors;
-        }
-
-        response.put("id", String.valueOf(announcement.getId()));
-        response.put("url", "/announcements/put");
-        response.put("errors", errors);
-        return response;
+        return list;
     }
 
-
-    // 5) DELETE
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String, String> delete(@PathVariable Integer id) {
-
-        HashMap<String, String> response = new HashMap<>();
-        String errors = "";
-
-        Optional<Announcement> announcement = announcementDao.findById(id);
-
-        if (announcement.isEmpty()) {
-            errors = "Announcement not found";
+    // ── Tree Cutting Request status breakdown ─────────────────────────────────
+    @GetMapping("/treecuttingrequests/summary")
+    public List<HashMap<String, Object>> getTreeCuttingSummary() {
+        List<Object[]> result = treecuttingrequestDao.getStatusSummary();
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        for (Object[] row : result) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("status", row[0]);
+            map.put("count",  row[1]);
+            list.add(map);
         }
+        return list;
+    }
 
-        if (errors.equals("")) {
-            announcementDao.delete(announcement.get());
-        } else {
-            errors = "Server Validation Errors : <br>" + errors;
+    // ── Cultivation status breakdown ──────────────────────────────────────────
+    @GetMapping("/cultivations/summary")
+    public List<HashMap<String, Object>> getCultivationSummary() {
+        List<Object[]> result = cultivationDao.getStatusSummary();
+        List<HashMap<String, Object>> list = new ArrayList<>();
+        for (Object[] row : result) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("status", row[0]);
+            map.put("count",  row[1]);
+            list.add(map);
         }
-
-        response.put("url", "/announcements/delete");
-        response.put("errors", errors);
-
-        return response;
+        return list;
     }
 }

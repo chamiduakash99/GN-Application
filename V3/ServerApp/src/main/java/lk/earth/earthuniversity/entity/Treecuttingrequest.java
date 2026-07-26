@@ -50,11 +50,13 @@ public class Treecuttingrequest {
     private String rejectreason;
 
 
+    @JsonIgnore
     @Lob
     @Column(name = "permitpdf")
     private byte[] permitpdf;
 
 
+    @JsonIgnore
     @Lob
     @Column(name = "transportpdf")
     private byte[] transportpdf;

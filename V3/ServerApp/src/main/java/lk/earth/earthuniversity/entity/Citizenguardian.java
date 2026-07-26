@@ -1,6 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -21,6 +22,8 @@ public class Citizenguardian {
 
     @ManyToOne
     @JoinColumn(name = "citizenparent", referencedColumnName = "id", nullable = false)
+    @JsonIgnoreProperties({"citizenaidprograms", "citizenguardians", "citizenguardianparents",
+            "lands", "landdetails", "certificaterequests", "complaints", "idcardrequests"})
     private Citizen citizenparent;
 
     public Integer getId() {

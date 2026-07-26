@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/treecuttingrequests")
@@ -221,5 +225,33 @@ public class TreecuttingrequestController {
 
         response.put("errors", errors);
         return response;
+    }
+
+    // ── GET permit PDF — citizen downloads once Permit Issued ──────────────────
+    @GetMapping("/{id}/permitpdf")
+    public ResponseEntity<byte[]> getPermitPdf(@PathVariable Integer id) {
+        Treecuttingrequest request = treecuttingrequestdao.findById(id).orElse(null);
+        if (request == null || request.getPermitpdf() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"permit_" + id + ".pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(request.getPermitpdf());
+    }
+
+    // ── GET transport PDF — citizen downloads if transport was requested ───────
+    @GetMapping("/{id}/transportpdf")
+    public ResponseEntity<byte[]> getTransportPdf(@PathVariable Integer id) {
+        Treecuttingrequest request = treecuttingrequestdao.findById(id).orElse(null);
+        if (request == null || request.getTransportpdf() == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"transport_permit_" + id + ".pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(request.getTransportpdf());
     }
 }

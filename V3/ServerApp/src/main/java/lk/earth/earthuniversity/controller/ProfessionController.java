@@ -1,30 +1,27 @@
 package lk.earth.earthuniversity.controller;
 
-import lk.earth.earthuniversity.dao.BrandDao;
-import lk.earth.earthuniversity.entity.Brand;
+import lk.earth.earthuniversity.dao.ProfessionDao;
+import lk.earth.earthuniversity.entity.Profession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/brands")
+@RequestMapping("/professions")
 public class ProfessionController {
 
     @Autowired
-    private BrandDao brandDao;
+    private ProfessionDao professiondao;
 
     @GetMapping(produces = "application/json")
-    public List<Brand> get() {
-
-        return brandDao.findAll();
-
+    public List<Profession> get() {
+        return professiondao.findAll();
     }
 
+    @GetMapping(path = "/list", produces = "application/json")
+    public List<Profession> getList() {
+        return professiondao.findAllNameId();
+    }
 }
-
-

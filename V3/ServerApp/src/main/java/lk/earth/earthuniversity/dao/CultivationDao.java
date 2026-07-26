@@ -16,4 +16,7 @@ public interface CultivationDao extends JpaRepository<Cultivation, Integer> {
 
     @Query("select c from Cultivation c where c.landdetail.id = :landdetailId")
     List<Cultivation> findByLanddetailId(Integer landdetailId);
+
+    @Query("SELECT c.cultivationstatus.name, COUNT(c) FROM Cultivation c GROUP BY c.cultivationstatus.name")
+    List<Object[]> getStatusSummary();
 }

@@ -19,4 +19,6 @@ public interface ComplaintDao extends JpaRepository<Complaint, Integer> {
             "FROM Complaint c " +
             "GROUP BY c.complaintstatus.name")
     List<Object[]> getStatusSummary();
+
+
 }

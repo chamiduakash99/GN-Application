@@ -1,6 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -61,15 +62,24 @@ public class Citizen {
     @JoinColumn(name = "gender_id", referencedColumnName = "id", nullable = false)
     private Gender gender;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "citizen", cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "citizen", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("citizen")
     private Collection<Citizenaidprogram> citizenaidprograms;
-    @JsonIgnore
-    @OneToMany(mappedBy = "citizen", cascade = CascadeType.ALL,orphanRemoval = true)
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "citizen", cascade = CascadeType.ALL,orphanRemoval = true)
+//    private Collection<Citizenaidprogram> citizenaidprograms;
+
+    @OneToMany(mappedBy = "citizen", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("citizen")
     private Collection<Citizenguardian> citizenguardians;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "citizen", cascade = CascadeType.ALL,orphanRemoval = true)
+//    private Collection<Citizenguardian> citizenguardians;
+
     @JsonIgnore
     @OneToMany(mappedBy = "citizenparent")
     private Collection<Citizenguardian> citizenguardianparents;
+
     @Basic
     @Column(name = "birthcetificateno")
     private String birthcetificateno;

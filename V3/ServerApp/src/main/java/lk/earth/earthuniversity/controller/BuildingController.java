@@ -51,31 +51,56 @@ public class    BuildingController {
         String walltype = param.get("walltype");
         String floortype = param.get("floortype");
         String rooftype = param.get("rooftype");
+        String landdetail = param.get("landdetail");
 
         Stream<Building> buildingStream = buildings.stream();
 
-
-        if (no != null){
-            buildingStream = buildingStream.filter(b -> b.getNo().equalsIgnoreCase(no));
+        if (usage != null){
+            buildingStream = buildingStream.filter(b -> b.getUsage().getId().toString().equals(usage));
         }
         if (ownershiptype != null){
-            buildingStream = buildingStream.filter(b -> b.getOwnershiptype().getName().equals(ownershiptype));
-        }
-        if (usage != null){
-            buildingStream = buildingStream.filter(b -> b.getUsage().getName().equals(usage));
+            buildingStream = buildingStream.filter(b -> b.getOwnershiptype().getId().toString().equals(ownershiptype));
         }
         if (buildingtype != null){
-            buildingStream = buildingStream.filter(b -> b.getBuildingtype().getName().equals(buildingtype));
+            buildingStream = buildingStream.filter(b -> b.getBuildingtype().getId().toString().equals(buildingtype));
         }
         if (walltype != null){
-            buildingStream = buildingStream.filter(b -> b.getWalltype().getName().equals(walltype));
+            buildingStream = buildingStream.filter(b -> b.getWalltype().getId().toString().equals(walltype));
         }
         if (floortype != null){
-            buildingStream = buildingStream.filter(b -> b.getFloortype().getName().equals(floortype));
+            buildingStream = buildingStream.filter(b -> b.getFloortype().getId().toString().equals(floortype));
         }
         if (rooftype != null){
-            buildingStream = buildingStream.filter(b -> b.getRooftype().getName().equals(rooftype));
+            buildingStream = buildingStream.filter(b -> b.getRooftype().getId().toString().equals(rooftype));
         }
+        if (landdetail != null){
+            buildingStream = buildingStream.filter(b -> b.getLanddetail().getId().toString().equals(landdetail));
+        }
+
+//        if (no != null){
+//            buildingStream = buildingStream.filter(b -> b.getNo().equalsIgnoreCase(no));
+//        }
+//        if (ownershiptype != null){
+//            buildingStream = buildingStream.filter(b -> b.getOwnershiptype().getName().equals(ownershiptype));
+//        }
+//        if (usage != null){
+//            buildingStream = buildingStream.filter(b -> b.getUsage().getName().equals(usage));
+//        }
+//        if (buildingtype != null){
+//            buildingStream = buildingStream.filter(b -> b.getBuildingtype().getName().equals(buildingtype));
+//        }
+//        if (walltype != null){
+//            buildingStream = buildingStream.filter(b -> b.getWalltype().getName().equals(walltype));
+//        }
+//        if (floortype != null){
+//            buildingStream = buildingStream.filter(b -> b.getFloortype().getName().equals(floortype));
+//        }
+//        if (rooftype != null){
+//            buildingStream = buildingStream.filter(b -> b.getRooftype().getName().equals(rooftype));
+//        }
+//        if (landdetail != null){
+//            buildingStream = buildingStream.filter(b -> b.getLanddetail().getDeedno().equalsIgnoreCase(landdetail));
+//        }
 
         return buildingStream.collect(Collectors.toList());
     }
