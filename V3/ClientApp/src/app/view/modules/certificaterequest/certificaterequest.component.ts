@@ -4,15 +4,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatDialog} from '@angular/material/dialog';
 import {Certificaterequest} from '../../../entity/certificaterequest';
-import {Certificate} from '../../../entity/certificate';
 import {Certificatetype} from '../../../entity/Certificatetype';
 import {Requeststatus} from '../../../entity/Requeststatus';
 import {CertificaterequestService} from '../../../service/certificaterequestservice';
-import {CertificateService} from '../../../service/certificateservice';
 import {CertificateTypeService} from '../../../service/certificatetypeservice';
 import {RequestStatusService} from '../../../service/requeststatusservice';
-import {EmployeeService} from '../../../service/employeeservice';
-import {Employee} from '../../../entity/employee';
 import {CitizenService} from '../../../service/CitizenService';
 import {Citizen} from '../../../entity/Citizen';
 import {UiAssist} from '../../../util/ui/ui.assist';
@@ -20,128 +16,84 @@ import {MessageComponent} from '../../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
 import {AuthorizationManager} from '../../../service/authorizationmanager';
 
+// NOTE:
+// The "Issue Certificate" panel and the "Certificates Issued for Selected Request"
+// table have been REMOVED from this component on purpose — they now live in the
+// Certificate module (certificate.component.ts) as requested. This component is
+// only responsible for reviewing (Approve / Reject) certificate requests.
+
 @Component({
   selector: 'app-certificaterequest',
   templateUrl: './certificaterequest.component.html',
   styleUrls: ['./certificaterequest.component.css']
 })
 export class CertificaterequestComponent implements OnInit {
-
   // ── Request table ─────────────────────────────────────────────────────────
   reqcolumns: string[] = ['citizen', 'certificateType', 'requestStatus', 'requestedDate', 'purpose', 'modi'];
   reqheaders: string[] = ['Citizen', 'Type', 'Status', 'Requested Date', 'Purpose', 'Modification'];
   reqbinders: string[] = ['citizen.name', 'certificatetype.name', 'requeststatus.name', 'requesteddate', 'purpose', 'getModi()'];
-
   csreqcolumns: string[] = ['cscitizen', 'cstype', 'csstatus', 'csdate', 'cspurpose', 'csmodi'];
   csreqprompts: string[] = ['Search Citizen', 'Search Type', 'Search Status', 'Search Date', 'Search Purpose', 'Search Modi'];
-
-  // ── Certificate table ─────────────────────────────────────────────────────
-  certcolumns: string[] = ['certificateNo', 'issuedDate', 'expiryDate', 'hardCopyPicked', 'pickedDate', 'certmodi'];
-  certheaders: string[] = ['Certificate No', 'Issued Date', 'Expiry Date', 'Hard Copy Picked', 'Picked Date', 'Modification'];
-  certbinders: string[] = ['certificateno', 'issueddate', 'expirydate', 'hardcopypicked', 'pickeddate', 'getCertModi()'];
-
-  cscertcolumns: string[] = ['cscertno', 'cscertissued', 'cscertpicked'];
-  cscertprompts: string[] = ['Search Cert No', 'Search Issued Date', 'Search Picked'];
 
   // ── Forms ─────────────────────────────────────────────────────────────────
   csreqsearch!: FormGroup;
   ssreqsearch!: FormGroup;
   reqform!: FormGroup;
-  cscertsearch!: FormGroup;
-  certform!: FormGroup;
 
   // ── Data ──────────────────────────────────────────────────────────────────
-  certificaterequest: Certificaterequest = {} as Certificaterequest; // FIX: no-arg constructor
+  certificaterequest: Certificaterequest = {} as Certificaterequest;
   oldcertificaterequest: Certificaterequest = {} as Certificaterequest;
-
-  certificate: Certificate = {} as Certificate; // FIX: no-arg constructor
-  oldcertificate: Certificate = {} as Certificate;
-
   selectedreqrow: any;
-  selectedcertrow: any;
-
   certificaterequests: Array<Certificaterequest> = [];
   reqdata!: MatTableDataSource<Certificaterequest>;
-
-  certificates: Array<Certificate> = [];
-  certdata!: MatTableDataSource<Certificate>;
-
   certificatetypes: Array<Certificatetype> = [];
   requeststatuses: Array<Requeststatus> = [];
-  employees: Array<Employee> = [];
   citizens: Array<Citizen> = [];
   statusSummary: any[] = [];
-
   imageurl: string = '';
-  scannedimageurl: string = 'assets/default.png';
 
   @ViewChild('reqpaginator') reqpaginator!: MatPaginator;
-  @ViewChild('certpaginator') certpaginator!: MatPaginator;
 
   // ── Button states ─────────────────────────────────────────────────────────
   enaapprove: boolean = false;
-  enareject:  boolean = false;
-  enacreate:  boolean = false;
-  enaupload:  boolean = false;
-  enapickup:  boolean = false;
-  certFormEnabled: boolean = false;
+  enareject: boolean = false;
 
   uiassist: UiAssist;
 
   constructor(
-    private crs: CertificaterequestService, // FIX: lowercase r
-    private cs:  CertificateService,
+    private crs: CertificaterequestService,
     private cts: CertificateTypeService,
     private rss: RequestStatusService,
-    private es:  EmployeeService,
-    private fb:  FormBuilder,
-    private dg:  MatDialog,
-    public  authService: AuthorizationManager,
+    private fb: FormBuilder,
+    private dg: MatDialog,
+    public authService: AuthorizationManager,
     private cs2: CitizenService,
   ) {
     this.uiassist = new UiAssist(this);
 
     this.csreqsearch = this.fb.group({
       'cscitizen': new FormControl(),
-      'cstype':    new FormControl(),
-      'csstatus':  new FormControl(),
-      'csdate':    new FormControl(),
+      'cstype': new FormControl(),
+      'csstatus': new FormControl(),
+      'csdate': new FormControl(),
       'cspurpose': new FormControl(),
-      'csmodi':    new FormControl(),
+      'csmodi': new FormControl(),
     });
 
     this.ssreqsearch = this.fb.group({
       'sscitizens': new FormControl(),
-      'sstype':     new FormControl(),
-      'ssstatus':   new FormControl(),
-      'sspurpose':  new FormControl(),
+      'sstype': new FormControl(),
+      'ssstatus': new FormControl(),
     });
 
     this.reqform = this.fb.group({
-      'citizen':         new FormControl('', [Validators.required]),
+      'citizen': new FormControl('', [Validators.required]),
       'certificatetype': new FormControl('', [Validators.required]),
-      'purpose':         new FormControl('', [Validators.required]),
-      'rejectreason':    new FormControl(''),
-      'requeststatus':   new FormControl(''),
-      'requesteddate':   new FormControl(''),
-      'updateddate':     new FormControl(''),
-    }, {updateOn: 'change'});
-
-    this.cscertsearch = this.fb.group({
-      'cscertno':     new FormControl(),
-      'cscertissued': new FormControl(),
-      'cscertpicked': new FormControl(),
-    });
-
-    this.certform = this.fb.group({
-      'certificateno':      new FormControl('', [Validators.required]),
-      'issueddate':         new FormControl(''),
-      'expirydate':         new FormControl('', [Validators.required]),
-      'scannedcopy':        new FormControl(''),
-      'hardcopypicked':     new FormControl(false),
-      'pickeddate':         new FormControl(''),
-      'employee':           new FormControl('', [Validators.required]),
-      'certificaterequest': new FormControl(''),
+      'purpose': new FormControl('', [Validators.required]),
+      'rejectreason': new FormControl(''),
+      'requeststatus': new FormControl(''),
+      'requesteddate': new FormControl(''),
+      'updateddate': new FormControl(''),
     }, {updateOn: 'change'});
   }
 
@@ -152,35 +104,24 @@ export class CertificaterequestComponent implements OnInit {
 
   initialize() {
     this.createView();
-
     this.cts.getAllList().then((types: Certificatetype[]) => {
       this.certificatetypes = types;
     });
-
     this.rss.getAllList().then((statuses: Requeststatus[]) => {
       this.requeststatuses = statuses;
     });
-
-    this.es.getAllList().then((emps: Employee[]) => {
-      this.employees = emps;
-    });
-
     this.cs2.getAllListNameId().then((citizens: Citizen[]) => {
       this.citizens = citizens;
     });
-
-    this.enableCertButtons(false, false, false);
-    this.toggleCertFormState();
     this.loadStatusSummary();
   }
 
   createView() {
     this.imageurl = 'assets/pending.gif';
     this.loadRequestTable('');
-    this.loadCertificateTable('');
   }
 
-  // ── Table loaders ─────────────────────────────────────────────────────────
+  // ── Table loader ──────────────────────────────────────────────────────────
   loadRequestTable(query: string) {
     this.crs.getAll(query)
       .then((reqs: Certificaterequest[]) => {
@@ -197,76 +138,34 @@ export class CertificaterequestComponent implements OnInit {
       });
   }
 
-  loadCertificateTable(query: string) {
-    this.cs.getAll(query)
-      .then((certs: Certificate[]) => {
-        this.certificates = certs;
-      })
-      .catch((error: any) => {
-        console.log(error);
-      })
-      .finally(() => {
-        this.certdata = new MatTableDataSource(this.certificates);
-        this.certdata.paginator = this.certpaginator;
-      });
-  }
-
   loadStatusSummary() {
     this.crs.getStatusSummary()
       .then((data: any) => { this.statusSummary = data; })
       .catch((error: any) => { console.log(error); });
   }
 
-  // ── Button helpers ────────────────────────────────────────────────────────
-  enableCertButtons(create: boolean, upload: boolean, pickup: boolean): void {
-    this.enacreate = create;
-    this.enaupload = upload;
-    this.enapickup = pickup;
-  }
-
+  // ── Button state helpers ──────────────────────────────────────────────────
   enableApproveReject(approve: boolean, reject: boolean): void {
     this.enaapprove = approve;
-    this.enareject  = reject;
+    this.enareject = reject;
   }
 
-  toggleCertFormState(): void {
-    if (this.certFormEnabled) {
-      this.certform.enable();
-    } else {
-      this.certform.disable();
-    }
-  }
-
-  // ── Table helpers ─────────────────────────────────────────────────────────
+  // ── Table helper ──────────────────────────────────────────────────────────
   getModi(element: Certificaterequest) {
     return element.citizen?.name + ' (' + element.certificatetype?.name + ')';
   }
 
-  getCertModi(element: Certificate) {
-    return element.certificateno + ' (' + (element.hardcopypicked ? 'Picked' : 'Not Picked') + ')';
-  }
-
-  // ── Client-side filters ───────────────────────────────────────────────────
+  // ── Client-side filter ────────────────────────────────────────────────────
   filterRequestTable(): void {
     const cs = this.csreqsearch.getRawValue();
     this.reqdata.filterPredicate = (req: Certificaterequest, filter: string) => {
       return (cs.cscitizen == null || req.citizen?.name.toLowerCase().includes(cs.cscitizen)) &&
-        (cs.cstype    == null || req.certificatetype?.name.toLowerCase().includes(cs.cstype)) &&
-        (cs.csstatus  == null || req.requeststatus?.name.toLowerCase().includes(cs.csstatus)) &&
-        (cs.csdate    == null || req.requesteddate?.includes(cs.csdate)) &&
+        (cs.cstype == null || req.certificatetype?.name.toLowerCase().includes(cs.cstype)) &&
+        (cs.csstatus == null || req.requeststatus?.name.toLowerCase().includes(cs.csstatus)) &&
+        (cs.csdate == null || req.requesteddate?.includes(cs.csdate)) &&
         (cs.cspurpose == null || req.purpose?.toLowerCase().includes(cs.cspurpose));
     };
     this.reqdata.filter = 'xx';
-  }
-
-  filterCertTable(): void {
-    const cs = this.cscertsearch.getRawValue();
-    this.certdata.filterPredicate = (cert: Certificate, filter: string) => {
-      return (cs.cscertno     == null || cert.certificateno?.toLowerCase().includes(cs.cscertno)) &&
-        (cs.cscertissued == null || cert.issueddate?.includes(cs.cscertissued)) &&
-        (cs.cscertpicked == null || String(cert.hardcopypicked).includes(cs.cscertpicked));
-    };
-    this.certdata.filter = 'xx';
   }
 
   // ── Server-side search ────────────────────────────────────────────────────
@@ -274,8 +173,8 @@ export class CertificaterequestComponent implements OnInit {
     const ss = this.ssreqsearch.getRawValue();
     let query = '';
     if (ss.sscitizens != null) query += '&citizenid=' + ss.sscitizens;
-    if (ss.sstype     != null) query += '&certificatetypeid=' + ss.sstype;
-    if (ss.ssstatus   != null) query += '&requeststatusid=' + ss.ssstatus;
+    if (ss.sstype != null) query += '&certificatetypeid=' + ss.sstype;
+    if (ss.ssstatus != null) query += '&requeststatusid=' + ss.ssstatus;
     if (query != '') query = query.replace(/^./, '?');
     this.loadRequestTable(query);
   }
@@ -296,51 +195,18 @@ export class CertificaterequestComponent implements OnInit {
   // ── Fill form from request table row ─────────────────────────────────────
   fillReqForm(req: Certificaterequest) {
     const status = req.requeststatus?.name;
-
     this.enableApproveReject(status === 'Pending', status === 'Pending');
-
     this.selectedreqrow = req;
-    this.certificaterequest     = JSON.parse(JSON.stringify(req));
-    this.oldcertificaterequest  = JSON.parse(JSON.stringify(req));
-
+    this.certificaterequest = JSON.parse(JSON.stringify(req));
+    this.oldcertificaterequest = JSON.parse(JSON.stringify(req));
     // @ts-ignore
     this.certificaterequest.citizen = this.citizens.find(c => c.id === this.certificaterequest.citizen.id);
     // @ts-ignore
     this.certificaterequest.certificatetype = this.certificatetypes.find(t => t.id === this.certificaterequest.certificatetype.id);
     // @ts-ignore
     this.certificaterequest.requeststatus = this.requeststatuses.find(s => s.id === this.certificaterequest.requeststatus.id);
-
     this.reqform.patchValue(this.certificaterequest);
     this.reqform.markAsPristine();
-
-    // FIX: also enable for Certificate Ready so officer can upload/pickup
-    this.certFormEnabled = (status === 'Approved' || status === 'Certificate Ready');
-    this.toggleCertFormState();
-
-    this.loadCertificateTable('?requestId=' + req.id);
-    this.enableCertButtons(status === 'Approved', false, false);
-  }
-
-  // ── Fill form from certificate table row ──────────────────────────────────
-  fillCertForm(cert: Certificate) {
-    this.selectedcertrow = cert;
-    this.certificate    = JSON.parse(JSON.stringify(cert));
-    this.oldcertificate = JSON.parse(JSON.stringify(cert));
-
-    if (this.certificate.scannedcopy != null) {
-      this.scannedimageurl = atob(this.certificate.scannedcopy as any);
-      this.certform.controls['scannedcopy'].clearValidators();
-    } else {
-      this.scannedimageurl = 'assets/default.png';
-    }
-
-    // @ts-ignore
-    this.certificate.employee = this.employees.find(e => e.id === this.certificate.employee.id);
-
-    this.certform.patchValue(this.certificate);
-    this.certform.markAsPristine();
-
-    this.enableCertButtons(false, true, !cert.hardcopypicked);
   }
 
   // ── Validation helpers ────────────────────────────────────────────────────
@@ -362,32 +228,6 @@ export class CertificaterequestComponent implements OnInit {
     return errors;
   }
 
-  getCertErrors(): string {
-    let errors = '';
-    for (const controlName in this.certform.controls) {
-      if (this.certform.controls[controlName].errors)
-        errors += '<br>Invalid ' + controlName.charAt(0).toUpperCase() + controlName.slice(1);
-    }
-    return errors;
-  }
-
-  // ── Scan image ────────────────────────────────────────────────────────────
-  selectScan(e: any): void {
-    if (e.target.files) {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (event: any) => {
-        this.scannedimageurl = event.target.result;
-        this.certform.controls['scannedcopy'].clearValidators(); // FIX: was 'scannedCopy'
-      };
-    }
-  }
-
-  clearScan(): void {
-    this.scannedimageurl = 'assets/default.png';
-    this.certform.controls['scannedcopy'].setErrors({'required': true});
-  }
-
   // ── Clear form ────────────────────────────────────────────────────────────
   clear(): void {
     const confirm = this.dg.open(ConfirmComponent, {
@@ -397,16 +237,9 @@ export class CertificaterequestComponent implements OnInit {
     confirm.afterClosed().subscribe(async (result: boolean) => {
       if (result) {
         this.reqform.reset();
-        this.certform.reset();
-        this.selectedreqrow  = null;
-        this.selectedcertrow = null;
-        this.enableCertButtons(false, false, false);
+        this.selectedreqrow = null;
         this.enableApproveReject(false, false);
-        this.certFormEnabled = false;
-        this.toggleCertFormState();
-        this.clearScan();
         this.loadRequestTable('');
-        this.loadCertificateTable('');
       }
     });
   }
@@ -417,22 +250,18 @@ export class CertificaterequestComponent implements OnInit {
   approve() {
     if (this.certificaterequest.requeststatus?.name !== 'Pending') {
       this.dg.open(MessageComponent, {
-        width: '400px',
-        data: {heading: 'Invalid Action', message: 'Only Pending requests can be approved.'}
+        width: '400px', data: {heading: 'Invalid Action', message: 'Only Pending requests can be approved.'}
       });
       return;
     }
-
     const confirm = this.dg.open(ConfirmComponent, {
       width: '500px',
       data: {heading: 'Confirmation - Approve Request', message: 'Are you sure to Approve this Certificate Request?'}
     });
-
     confirm.afterClosed().subscribe(async (result: boolean) => {
       if (result) {
         let appstatus: boolean = false;
         let appmessage: string = 'Server Not Found';
-
         this.crs.approve(this.certificaterequest.id).then((responce: [] | undefined) => {
           if (responce != undefined) {
             // @ts-ignore
@@ -449,7 +278,6 @@ export class CertificaterequestComponent implements OnInit {
             this.loadRequestTable('');
             this.loadStatusSummary();
             this.enableApproveReject(false, false);
-            this.enableCertButtons(true, false, false);
           }
           const stsmsg = this.dg.open(MessageComponent, {
             width: '500px',
@@ -466,7 +294,6 @@ export class CertificaterequestComponent implements OnInit {
   // ════════════════════════════════════════════════════════════════════════════
   reject() {
     const rejectReason = this.reqform.controls['rejectreason'].value;
-
     if (this.certificaterequest.requeststatus?.name !== 'Pending') {
       this.dg.open(MessageComponent, {
         width: '400px',
@@ -474,7 +301,6 @@ export class CertificaterequestComponent implements OnInit {
       });
       return;
     }
-
     if (!rejectReason || rejectReason.trim() == '') {
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
@@ -483,17 +309,14 @@ export class CertificaterequestComponent implements OnInit {
       errmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
       return;
     }
-
     const confirm = this.dg.open(ConfirmComponent, {
       width: '500px',
       data: {heading: 'Confirmation - Reject Request', message: 'Are you sure to Reject this Request? <br><br>Reason: ' + rejectReason}
     });
-
     confirm.afterClosed().subscribe(async (result: boolean) => {
       if (result) {
         let rejstatus: boolean = false;
         let rejmessage: string = 'Server Not Found';
-
         this.crs.reject(this.certificaterequest.id, rejectReason).then((responce: [] | undefined) => {
           if (responce != undefined) {
             // @ts-ignore
@@ -514,176 +337,6 @@ export class CertificaterequestComponent implements OnInit {
           const stsmsg = this.dg.open(MessageComponent, {
             width: '500px',
             data: {heading: 'Status - Reject Request', message: rejmessage}
-          });
-          stsmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
-        });
-      }
-    });
-  }
-
-  // ════════════════════════════════════════════════════════════════════════════
-  // CREATE CERTIFICATE
-  // ════════════════════════════════════════════════════════════════════════════
-  createCertificate() {
-    const errors = this.getCertErrors();
-
-    if (this.certificaterequest.requeststatus?.name !== 'Approved') {
-      this.dg.open(MessageComponent, {
-        width: '400px',
-        data: {heading: 'Invalid Action', message: 'Certificate can only be created for Approved requests.'}
-      });
-      return;
-    }
-
-    if (errors != '') {
-      const errmsg = this.dg.open(MessageComponent, {
-        width: '500px',
-        data: {heading: 'Errors - Create Certificate', message: 'You have following Errors <br>' + errors}
-      });
-      errmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
-      return;
-    }
-
-    this.certificate = this.certform.getRawValue();
-    // FIX: link request so it saves to DB with correct FK
-    this.certificate.certificaterequest = this.certificaterequest;
-
-    let certdata = '<br>Certificate No : ' + this.certificate.certificateno;
-    certdata += '<br>Expiry Date : '        + this.certificate.expirydate;
-    certdata += '<br>GN Officer : '         + this.certificate.employee?.callingname;
-
-    const confirm = this.dg.open(ConfirmComponent, {
-      width: '500px',
-      data: {heading: 'Confirmation - Create Certificate', message: 'Are you sure to Create the following Certificate? <br><br>' + certdata}
-    });
-
-    let crtstatus: boolean = false;
-    let crtmessage: string = 'Server Not Found';
-
-    confirm.afterClosed().subscribe(async (result: boolean) => {
-      if (result) {
-        this.cs.add(this.certificate).then((responce: [] | undefined) => {
-          if (responce != undefined) {
-            // @ts-ignore
-            crtstatus = responce['errors'] == '';
-            // @ts-ignore
-            if (!crtstatus) crtmessage = responce['errors'];
-            else {
-              // FIX: capture the generated ID so upload works immediately after
-              // @ts-ignore
-              this.certificate.id = parseInt(responce['id']);
-            }
-          } else {
-            crtstatus  = false;
-            crtmessage = 'Content Not Found';
-          }
-        }).finally(() => {
-          if (crtstatus) {
-            crtmessage = 'Certificate Created Successfully';
-            this.certform.reset();
-            this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
-            this.enableCertButtons(false, true, false);
-          }
-          const stsmsg = this.dg.open(MessageComponent, {
-            width: '500px',
-            data: {heading: 'Status - Create Certificate', message: crtmessage}
-          });
-          stsmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
-        });
-      }
-    });
-  }
-
-  // ════════════════════════════════════════════════════════════════════════════
-  // UPLOAD SCAN
-  // ════════════════════════════════════════════════════════════════════════════
-  uploadScan() {
-    if (this.scannedimageurl === 'assets/default.png') {
-      const errmsg = this.dg.open(MessageComponent, {
-        width: '500px',
-        data: {heading: 'Errors - Upload Scan', message: 'Please select a scanned certificate image first.'}
-      });
-      errmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
-      return;
-    }
-
-    const confirm = this.dg.open(ConfirmComponent, {
-      width: '500px',
-      data: {heading: 'Confirmation - Upload Scan', message: 'Are you sure to Upload the Scanned Certificate?'}
-    });
-
-    confirm.afterClosed().subscribe(async (result: boolean) => {
-      if (result) {
-        let uplstatus: boolean = false;
-        let uplmessage: string = 'Server Not Found';
-
-        const byteCharacters = atob(this.scannedimageurl.split(',')[1]);
-        const byteArray = new Uint8Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteArray[i] = byteCharacters.charCodeAt(i);
-        }
-
-        this.cs.uploadScan(this.certificate.id, byteArray).then((responce: [] | undefined) => {
-          if (responce != undefined) {
-            // @ts-ignore
-            uplstatus = responce['errors'] == '';
-            // @ts-ignore
-            if (!uplstatus) uplmessage = responce['errors'];
-          } else {
-            uplstatus  = false;
-            uplmessage = 'Content Not Found';
-          }
-        }).finally(() => {
-          if (uplstatus) {
-            uplmessage = 'Scanned Copy Uploaded — Status changed to Certificate Ready';
-            this.loadRequestTable('');
-            this.loadStatusSummary();
-            this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
-            this.enableCertButtons(false, true, true);
-          }
-          const stsmsg = this.dg.open(MessageComponent, {
-            width: '500px',
-            data: {heading: 'Status - Upload Scan', message: uplmessage}
-          });
-          stsmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
-        });
-      }
-    });
-  }
-
-  // ════════════════════════════════════════════════════════════════════════════
-  // MARK PICKED UP
-  // ════════════════════════════════════════════════════════════════════════════
-  markPickedUp() {
-    const confirm = this.dg.open(ConfirmComponent, {
-      width: '500px',
-      data: {heading: 'Confirmation - Mark Picked Up', message: 'Are you sure to Mark this Certificate as Picked Up?'}
-    });
-
-    confirm.afterClosed().subscribe(async (result: boolean) => {
-      if (result) {
-        let pkpstatus: boolean = false;
-        let pkpmessage: string = 'Server Not Found';
-
-        this.cs.markPickedUp(this.certificate.id).then((responce: [] | undefined) => {
-          if (responce != undefined) {
-            // @ts-ignore
-            pkpstatus = responce['errors'] == '';
-            // @ts-ignore
-            if (!pkpstatus) pkpmessage = responce['errors'];
-          } else {
-            pkpstatus  = false;
-            pkpmessage = 'Content Not Found';
-          }
-        }).finally(() => {
-          if (pkpstatus) {
-            pkpmessage = 'Certificate Marked as Picked Up';
-            this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
-            this.enableCertButtons(false, true, false);
-          }
-          const stsmsg = this.dg.open(MessageComponent, {
-            width: '500px',
-            data: {heading: 'Status - Mark Picked Up', message: pkpmessage}
           });
           stsmsg.afterClosed().subscribe(async (result: boolean) => { if (!result) return; });
         });

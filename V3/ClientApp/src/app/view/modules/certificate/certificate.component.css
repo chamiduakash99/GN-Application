@@ -137,9 +137,18 @@ mat-card-header {
   padding-top: 10px;
 }
 
+/* ── Scan panel — flexbox layout. Image left, buttons stacked right.
+   IMPORTANT: there must be no other rule anywhere in this file that sets
+   margin-top on #scanselectbutton (the old hack) — that was the entire
+   bug: it was silently overriding the "margin: 0" below because it
+   appeared later in the cascade. There is now only ONE rule for each
+   of these selectors. */
+
 #scanpanel {
-  height: 100px;
-  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
 #scanpanel img {
@@ -148,14 +157,19 @@ mat-card-header {
   object-fit: cover;
   border: 1px solid #f2f5fd;
   border-radius: 4px;
+  flex-shrink: 0;
+}
+
+#scanbuttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 #scanselectbutton,
 #scanclearbutton {
-  width: 150px;
-  display: block;
-  margin-left: 110px;
-  margin-bottom: 5px;
+  width: 130px;
+  margin: 0;
   background-color: #152054;
   color: #f2f5fd;
   padding: 8px;
@@ -163,10 +177,6 @@ mat-card-header {
   text-align: center;
   cursor: pointer;
   font-size: 13px;
-}
-
-#scanselectbutton {
-  margin-top: -100px;
 }
 
 #certbutpanel {
@@ -274,4 +284,22 @@ mat-divider {
 .status-count {
   font-size: 28px;
   margin-top: 5px;
+}
+
+#officerbadge {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+#selectedreqbadge {
+  background-color: #cff4fc;
+  color: #055160;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 14px;
 }
