@@ -9,12 +9,14 @@ import java.util.List;
 
 public interface CertificateDao extends JpaRepository<Certificate, Integer> {
 
-    Certificate findByCetificateno(String cetificateno);
+    // NOTE: renamed from findByCetificateno — Spring Data derives this query
+    // from the entity property name, which is now "certificateno".
+    Certificate findByCertificateno(String certificateno);
 
     @Query("select c from Certificate c where c.id = :id")
     Certificate findByMyId(@Param("id") Integer id);
 
-    @Query("SELECT NEW Certificate(c.id, c.cetificateno) FROM Certificate c")
+    @Query("SELECT NEW Certificate(c.id, c.certificateno) FROM Certificate c")
     List<Certificate> findAllNameId();
 
     // Find all certificates linked to a given certificate request
@@ -30,7 +32,7 @@ public interface CertificateDao extends JpaRepository<Certificate, Integer> {
 //
 //import java.util.List;
 //
-//public interface CertificateDao extends JpaRepository<Certificate,Integer> {
+//public interface CertificateDao extends JpaRepository<Certificate, Integer> {
 //
 //    Certificate findByCetificateno(String cetificateno);
 //
@@ -40,4 +42,7 @@ public interface CertificateDao extends JpaRepository<Certificate, Integer> {
 //    @Query("SELECT NEW Certificate(c.id, c.cetificateno) FROM Certificate c")
 //    List<Certificate> findAllNameId();
 //
+//    // Find all certificates linked to a given certificate request
+//    List<Certificate> findByCertificaterequest_Id(Integer certificaterequestId);
 //}
+//
