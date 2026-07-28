@@ -15,8 +15,8 @@
 
 .left-panel {
   flex: 1;
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
+  background: linear-gradient(135deg, #083d77, #081f5b);
+  color: #f0f3f7;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,7 +38,7 @@
   position: absolute;
   width: 300px;
   height: 300px;
-  background: rgba(56,189,248,0.2);
+  background: rgba(0, 71, 255, 0.2);
   border-radius: 50%;
   animation: float 6s infinite ease-in-out;
 }
@@ -57,7 +57,7 @@
 
 .login-card {
   width: 420px;
-  background: white;
+  background: #f0f3f7;
   padding: 30px;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -70,7 +70,7 @@ h2 {
 
 .subtitle {
   font-size: 13px;
-  color: #666;
+  color: #f0f3f7;
   margin-bottom: 20px;
 }
 
@@ -91,8 +91,8 @@ h2 {
   cursor: pointer;
   transition: all 0.3s ease;
 
-  background: #ffffff;
-  border: 2px solid #e5e7eb;
+  background: #f0f3f7;
+  border: 2px solid #f0f3f7;
 
   position: relative;
   overflow: hidden;
@@ -115,7 +115,7 @@ h2 {
 
 .type-card.active {
   border-color: #38bdf8;
-  background: #e0f2fe;
+  background: #f0f3f7;
   transform: scale(1.05);
 }
 
@@ -123,7 +123,7 @@ h2 {
   transform: translateY(-3px);
 }
 .type-card:nth-child(1) mat-icon {
-  color: #2563eb;
+  color: #083d77;
 }
 
 .type-card:nth-child(1):hover {
@@ -151,7 +151,7 @@ h2 {
 .type-card.active h3,
 .type-card.active p,
 .type-card.active mat-icon {
-  color: white !important;
+  color: #f0f3f7 !important;
 }
 /* =========================
    FORM
@@ -240,6 +240,6 @@ mat-form-field {
 .footer-text {
   margin-top: 15px;
   font-size: 12px;
-  color: #888;
+  color: #808080;
   text-align: center;
 }

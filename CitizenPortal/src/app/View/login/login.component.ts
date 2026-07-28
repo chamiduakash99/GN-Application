@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit{
         hasBackdrop: false,
         disableClose: true
       });
-      this.router.navigate(['/main/certificate']);
+      this.router.navigate(['/main/home']);
 
     } else {
 
@@ -125,7 +125,7 @@ export class LoginComponent implements OnInit{
         hasBackdrop: false,
         disableClose: true
       });
-      this.router.navigate(['/main/certificate']);
+      this.router.navigate(['/main/home']);
     }
 
     // 🔥 Here you will later call backend API

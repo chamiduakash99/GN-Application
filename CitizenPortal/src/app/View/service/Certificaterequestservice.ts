@@ -1,8 +1,6 @@
-import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {Certificaterequest} from '../entity/certificaterequest';
-import { firstValueFrom } from 'rxjs';
-
 
 @Injectable({
   providedIn: 'root'
@@ -14,41 +12,18 @@ export class CertificateRequestService {
   constructor(private http: HttpClient) {}
 
   getAll(query: string): Promise<Certificaterequest[]> {
-
-    // const finalUrl =
-    //   query && query.trim() !== ''
-    //     ? this.url + query
-    //     : this.url + '/certificaterequests';
-    // console.log(finalUrl)
-
-
-
-    console.log(`${this.url}${query}`);
-
-    return this.http.get<Certificaterequest[]>(`${this.url}${query}`)
+    const finalUrl = (query && query.trim() !== '') ? this.url + query : this.url;
+    return this.http.get<Certificaterequest[]>(finalUrl)
       .toPromise()
       .then(res => res ?? []);
   }
 
-  getStatusSummary(): Promise<any[]> {
-    return firstValueFrom(
-      this.http.get<any[]>('http://localhost:8080/certificaterequests/status-summary')
-    ).then(res => res ?? []);
+  add(certificaterequest: Certificaterequest): Promise<[] | undefined> {
+    return this.http.post<[]>(this.url, certificaterequest).toPromise();
   }
 
-
-  add(certificateRequest: Certificaterequest): Promise<[] | undefined> {
-    return this.http.post<[]>(this.url, certificateRequest).toPromise().catch((error) => {
-      console.log('Add Error:', error);
-      return undefined;
-    });
-  }
-  // add(certificateRequest: Certificaterequest): Promise<[] | undefined> {
-  //   return this.http.post<[]>(this.url, certificateRequest).toPromise();
-  // }
-
-  update(certificateRequest: Certificaterequest): Promise<[] | undefined> {
-    return this.http.put<[]>(this.url, certificateRequest).toPromise();
+  update(certificaterequest: Certificaterequest): Promise<[] | undefined> {
+    return this.http.put<[]>(this.url + '/' + certificaterequest.id, certificaterequest).toPromise();
   }
 
   approve(id: number): Promise<[] | undefined> {
@@ -56,84 +31,161 @@ export class CertificateRequestService {
   }
 
   reject(id: number, rejectReason: string): Promise<[] | undefined> {
-    return this.http.put<[]>(`${this.url}/${id}/reject?rejectReason=${encodeURIComponent(rejectReason)}`, {}).toPromise();
+    return this.http.put<[]>(
+      `${this.url}/${id}/reject?rejectReason=${encodeURIComponent(rejectReason)}`, {}
+    ).toPromise();
+  }
+
+  // Called after citizen downloads PDF — changes status to Completed (5)
+  complete(id: number): Promise<[] | undefined> {
+    return this.http.put<[]>(`${this.url}/${id}/complete`, {}).toPromise();
   }
 
   delete(id: number): Promise<[] | undefined> {
-    return this.http.delete<[]>(`${this.url}/${id}`).toPromise();
+    return this.http.delete<[]>(this.url + '/' + id).toPromise();
+  }
+
+  getStatusSummary(): Promise<any[] | undefined> {
+    return this.http.get<any[]>(this.url + '/statussummary').toPromise();
   }
 }
 
-// import {Injectable} from "@angular/core";
-// import {HttpClient} from "@angular/common/http";
+// import {Injectable} from '@angular/core';
+// import {HttpClient} from '@angular/common/http';
+// import {Certificaterequest} from '../entity/certificaterequest';
+// import { firstValueFrom } from 'rxjs';
 //
-// import {Certificaterequest} from "../entity/certificaterequest";
 //
 // @Injectable({
 //   providedIn: 'root'
 // })
+// export class CertificateRequestService {
 //
-// export class CertificaterequestService {
+//   private readonly url = 'http://localhost:8080/certificaterequests';
 //
-//   constructor(private http: HttpClient) { }
+//   constructor(private http: HttpClient) {}
 //
-//   async delete(id: number): Promise<[] | undefined> {
+//   getAll(query: string): Promise<Certificaterequest[]> {
 //
-//     // @ts-ignore
-//     return this.http.delete(
-//       'http://localhost:8080/certificaterequests/' + id
-//     ).toPromise();
+//     // const finalUrl =
+//     //   query && query.trim() !== ''
+//     //     ? this.url + query
+//     //     : this.url + '/certificaterequests';
+//     // console.log(finalUrl)
 //
+//
+//
+//     console.log(`${this.url}${query}`);
+//
+//     return this.http.get<Certificaterequest[]>(`${this.url}${query}`)
+//       .toPromise()
+//       .then(res => res ?? []);
+//   }
+//
+//   getStatusSummary(): Promise<any[]> {
+//     return firstValueFrom(
+//       this.http.get<any[]>('http://localhost:8080/certificaterequests/status-summary')
+//     ).then(res => res ?? []);
 //   }
 //
 //
-//   async update(certificaterequest: Certificaterequest): Promise<[] | undefined> {
+//   add(certificateRequest: Certificaterequest): Promise<[] | undefined> {
+//     return this.http.post<[]>(this.url, certificateRequest).toPromise().catch((error) => {
+//       console.log('Add Error:', error);
+//       return undefined;
+//     });
+//   }
+//   // add(certificateRequest: Certificaterequest): Promise<[] | undefined> {
+//   //   return this.http.post<[]>(this.url, certificateRequest).toPromise();
+//   // }
 //
-//     return this.http.put<[]>(
-//       'http://localhost:8080/certificaterequests',
-//       certificaterequest
-//     ).toPromise();
-//
+//   update(certificateRequest: Certificaterequest): Promise<[] | undefined> {
+//     return this.http.put<[]>(this.url, certificateRequest).toPromise();
 //   }
 //
-//
-//   async getAll(query:string): Promise<Array<Certificaterequest>> {
-//
-//     const requests = await this.http.get<Array<Certificaterequest>>(
-//       'http://localhost:8080/certificaterequests' + query
-//     ).toPromise();
-//
-//     if(requests == undefined){
-//       return [];
-//     }
-//
-//     return requests;
-//
+//   approve(id: number): Promise<[] | undefined> {
+//     return this.http.put<[]>(`${this.url}/${id}/approve`, {}).toPromise();
 //   }
 //
-//
-//   async getAllListNameId(): Promise<Array<Certificaterequest>> {
-//
-//     const requests = await this.http.get<Array<Certificaterequest>>(
-//       'http://localhost:8080/certificaterequests/list'
-//     ).toPromise();
-//
-//     if(requests == undefined){
-//       return [];
-//     }
-//
-//     return requests;
-//
+//   reject(id: number, rejectReason: string): Promise<[] | undefined> {
+//     return this.http.put<[]>(`${this.url}/${id}/reject?rejectReason=${encodeURIComponent(rejectReason)}`, {}).toPromise();
 //   }
 //
-//
-//   async add(certificaterequest: Certificaterequest): Promise<[] | undefined> {
-//
-//     return this.http.post<[]>(
-//       'http://localhost:8080/certificaterequests',
-//       certificaterequest
-//     ).toPromise();
-//
+//   delete(id: number): Promise<[] | undefined> {
+//     return this.http.delete<[]>(`${this.url}/${id}`).toPromise();
 //   }
-//
 // }
+//
+// // import {Injectable} from "@angular/core";
+// // import {HttpClient} from "@angular/common/http";
+// //
+// // import {Certificaterequest} from "../entity/certificaterequest";
+// //
+// // @Injectable({
+// //   providedIn: 'root'
+// // })
+// //
+// // export class CertificaterequestService {
+// //
+// //   constructor(private http: HttpClient) { }
+// //
+// //   async delete(id: number): Promise<[] | undefined> {
+// //
+// //     // @ts-ignore
+// //     return this.http.delete(
+// //       'http://localhost:8080/certificaterequests/' + id
+// //     ).toPromise();
+// //
+// //   }
+// //
+// //
+// //   async update(certificaterequest: Certificaterequest): Promise<[] | undefined> {
+// //
+// //     return this.http.put<[]>(
+// //       'http://localhost:8080/certificaterequests',
+// //       certificaterequest
+// //     ).toPromise();
+// //
+// //   }
+// //
+// //
+// //   async getAll(query:string): Promise<Array<Certificaterequest>> {
+// //
+// //     const requests = await this.http.get<Array<Certificaterequest>>(
+// //       'http://localhost:8080/certificaterequests' + query
+// //     ).toPromise();
+// //
+// //     if(requests == undefined){
+// //       return [];
+// //     }
+// //
+// //     return requests;
+// //
+// //   }
+// //
+// //
+// //   async getAllListNameId(): Promise<Array<Certificaterequest>> {
+// //
+// //     const requests = await this.http.get<Array<Certificaterequest>>(
+// //       'http://localhost:8080/certificaterequests/list'
+// //     ).toPromise();
+// //
+// //     if(requests == undefined){
+// //       return [];
+// //     }
+// //
+// //     return requests;
+// //
+// //   }
+// //
+// //
+// //   async add(certificaterequest: Certificaterequest): Promise<[] | undefined> {
+// //
+// //     return this.http.post<[]>(
+// //       'http://localhost:8080/certificaterequests',
+// //       certificaterequest
+// //     ).toPromise();
+// //
+// //   }
+// //
+// // }

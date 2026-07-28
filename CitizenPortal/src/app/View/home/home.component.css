@@ -19,16 +19,23 @@
 
 .hero-content {
   position: relative;
-  text-align: center;
-  color: white;
-  max-width: 800px;
+  color: #f0f3f7;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .hero-title {
   font-size: 48px;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 10px;
+  line-height: 1.2;
 }
 
 .hero-subtitle {
@@ -62,7 +69,7 @@
 
 .services-section {
   padding: 40px 20px;
-  background: #f8fafc;
+  background: #f0f3f7;
 }
 
 .services-grid {
@@ -95,7 +102,7 @@
   justify-content: center;
   margin: auto;
   margin-bottom: 10px;
-  color: white;
+  color: #f0f3f7;
   font-size: 28px;
 }
 
@@ -112,8 +119,8 @@
 .stats-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  background: #0f172a;
-  color: white;
+  background: #083d77;
+  color: #f0f3f7;
   padding: 60px 20px;
   text-align: center;
 }
@@ -141,7 +148,7 @@
 .about-content {
   display: flex;
   gap: 40px;
-  align-items: center;
+  align-items: stretch;
   flex-wrap: wrap;
 }
 
@@ -156,7 +163,7 @@
 
 .about-text p {
   margin-bottom: 15px;
-  color: #555;
+  color: #808080;
 }
 
 .about-text ul {
@@ -169,7 +176,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 10px;
-  color: #333;
+  color: #083d77;
 }
 
 .about-image {
@@ -188,8 +195,8 @@
 ========================= */
 
 .footer-section {
-  background: #111827;
-  color: white;
+  background: #071f5b;
+  color: #f0f3f7;
   text-align: center;
   padding: 40px 20px;
   margin-top: 50px;
@@ -211,3 +218,20 @@
 .footer-links span:hover {
   text-decoration: underline;
 }
+
+.about-video {
+  flex: 1;
+  min-width: 300px;
+}
+
+.about-video video {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  object-fit: cover;
+  display: block;
+}
+
+

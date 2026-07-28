@@ -1,61 +1,25 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Certificatetype} from '../entity/Certificatetype';
+import {Treetype} from '../entity/Treetype';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CertificateTypeService {
+export class TreetypeService {
 
-  readonly url = 'http://localhost:8080/certificatetypes';
+  private readonly url = 'http://localhost:8080/treetypes';
 
   constructor(private http: HttpClient) {}
 
-  getAllList(): Promise<Certificatetype[]> {
-    return this.http.get<Certificatetype[]>(`${this.url}/list`).toPromise() as Promise<Certificatetype[]>;
+  getAll(): Promise<Treetype[]> {
+    return this.http.get<Treetype[]>(this.url)
+      .toPromise()
+      .then(res => res ?? []);
+  }
+
+  getAllList(): Promise<Treetype[]> {
+    return this.http.get<Treetype[]>(this.url + '/list')
+      .toPromise()
+      .then(res => res ?? []);
   }
 }
-
-
-// import {Injectable} from "@angular/core";
-// import {HttpClient} from "@angular/common/http";
-//
-// import {Certificatetype} from "../entity/Certificatetype";
-//
-// @Injectable({
-//   providedIn: 'root'
-// })
-//
-// export class CertificatetypeService {
-//
-//   constructor(private http: HttpClient) { }
-//
-//   async getAll(): Promise<Array<Certificatetype>> {
-//
-//     const certificatetypes = await this.http.get<Array<Certificatetype>>(
-//       'http://localhost:8080/certificatetypes'
-//     ).toPromise();
-//
-//     if(certificatetypes == undefined){
-//       return [];
-//     }
-//
-//     return certificatetypes;
-//
-//   }
-//
-//   async getAllList(): Promise<Array<Certificatetype>> {
-//
-//     const certificatetypes = await this.http.get<Array<Certificatetype>>(
-//       'http://localhost:8080/certificatetypes/list'
-//     ).toPromise();
-//
-//     if(certificatetypes == undefined){
-//       return [];
-//     }
-//
-//     return certificatetypes;
-//
-//   }
-//
-// }

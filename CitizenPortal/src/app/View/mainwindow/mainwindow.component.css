@@ -4,10 +4,10 @@
   z-index: 1000;
 
   height: 75px;
-  padding: 0 25px;
+  padding: 0 32px;
 
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
+  background: linear-gradient(135deg, #083d77, #081f5b);
+  color: #f0f3f7;
 
   box-shadow: 0 4px 20px rgba(0,0,0,0.25);
 }
@@ -15,16 +15,16 @@
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
 }
 
 .logo-icon {
-  font-size: 30px;
+  font-size: 24px;
   color: #38bdf8;
 }
 
 .system-title {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   letter-spacing: 1px;
 }
@@ -35,7 +35,7 @@
 
 .nav-buttons {
   display: flex;
-  gap: 10px;
+  gap: 6px;
 }
 
 .nav-buttons button {
@@ -44,24 +44,24 @@
 
   border-radius: 12px;
 
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 500;
 
   transition: all 0.3s ease;
 }
 
 .nav-buttons button mat-icon {
-  margin-right: 6px;
+  margin-right: 4px;
 }
 
 .nav-buttons button:hover {
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.12);
   transform: translateY(-2px);
 }
 
 .active-link {
   background: #38bdf8 !important;
-  color: #0f172a !important;
+  color: #083d77 !important;
   font-weight: 700;
 }
 
@@ -86,8 +86,8 @@ app-announcement-board {
   min-width: 280px;
   height: 100%;
   overflow-y: auto;
-  border-left: 1px solid #e2e8f0;
-  background: #f1f5f9;
+  border-left: 1px solid #f0f3f7;
+  background: #f0f3f7;
   box-shadow: -4px 0 12px rgba(0,0,0,0.06);
   box-sizing: border-box;
 }

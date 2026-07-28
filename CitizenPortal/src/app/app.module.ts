@@ -38,6 +38,8 @@ import { LoginComponent } from './View/login/login.component';
 import { AnnouncementBoardComponent } from './View/module/announcement-board/announcement-board.component';
 import {ComplaintComponent} from "./View/module/complaintportal/complaintportal.component";
 import { IdcardrequestPortalComponent } from './View/module/idcardrequest-portal/idcardrequest-portal.component';
+import { TreecuttingPortalComponent } from './View/module/treecutting-portal/treecutting-portal.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 // import { ComplaintportalComponent } from './View/module/complaintportal/complaintportal.component';
 
 @NgModule({
@@ -50,40 +52,44 @@ import { IdcardrequestPortalComponent } from './View/module/idcardrequest-portal
     AnnouncementBoardComponent,
     ComplaintComponent,
     IdcardrequestPortalComponent,
+    TreecuttingPortalComponent,
 
 
   ],
-  imports: [
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatGridListModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatDialogModule,
-    HttpClientModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    MatSlideToggleModule,
-    MatAutocompleteModule,
-    AppGroupAutocompleteComponent,
-    GetControlPipe,
-    MatStepperModule,
-    CommonModule,
+    imports: [
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        MatTableModule,
+        MatPaginatorModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatGridListModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatDialogModule,
+        HttpClientModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
+        MatAutocompleteModule,
+        AppGroupAutocompleteComponent,
+        GetControlPipe,
+        MatStepperModule,
+        CommonModule,
+        MatCheckboxModule,
+        MatDatepickerModule,
+        MatNativeDateModule
 
-  ],
+    ],
   providers: [
     DatePipe,
     AuthorizationManager,

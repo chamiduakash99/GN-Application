@@ -1,24 +1,24 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Treetype} from '../entity/Treetype';
+import {Treepermissionstatus} from '../entity/Treepermissionstatus';
 
 @Injectable({
   providedIn: 'root'
 })
-export class TreetypeService {
+export class TreepermissionstatusService {
 
-  private readonly url = 'http://localhost:8080/treetypes';
+  private readonly url = 'http://localhost:8080/treepermissionstatuses';
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Promise<Treetype[]> {
-    return this.http.get<Treetype[]>(this.url)
+  getAll(): Promise<Treepermissionstatus[]> {
+    return this.http.get<Treepermissionstatus[]>(this.url)
       .toPromise()
       .then(res => res ?? []);
   }
 
-  getAllList(): Promise<Treetype[]> {
-    return this.http.get<Treetype[]>(this.url + '/list')
+  getAllList(): Promise<Treepermissionstatus[]> {
+    return this.http.get<Treepermissionstatus[]>(this.url + '/list')
       .toPromise()
       .then(res => res ?? []);
   }

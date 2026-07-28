@@ -20,6 +20,10 @@ import {AuthorizationManager} from '../../service/authorizationmanager';
 import {UiAssist} from '../../util/ui/ui.assist';
 import {MessageComponent} from '../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../util/dialog/confirm/confirm.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-treecutting-portal',
@@ -29,8 +33,11 @@ import {ConfirmComponent} from '../../util/dialog/confirm/confirm.component';
 export class TreecuttingPortalComponent implements OnInit {
 
   // ── Table ──────────────────────────────────────────────────────────────────
-  columns: string[] = ['treetype', 'status', 'deedno', 'treecount', 'requesteddate', 'transport'];
-  headers: string[] = ['Tree Type', 'Status', 'Deed No', 'Trees', 'Requested Date', 'Transport'];
+  // columns: string[] = ['treetype', 'status', 'deedno', 'treecount', 'requesteddate', 'transport'];
+  // headers: string[] = ['Tree Type', 'Status', 'Deed No', 'Trees', 'Requested Date', 'Transport'];
+
+  columns: string[] = ['treetype', 'status', 'deedno', 'treecount', 'requesteddate', 'transport', 'downloadpermit', 'downloadtransport'];
+  headers: string[] = ['Tree Type', 'Status', 'Deed No', 'Trees', 'Requested Date', 'Transport', 'Permit PDF', 'Transport PDF'];
   binders: string[] = ['treetype.name', 'treepermissionstatus.name', 'deedno', 'treecount', 'requesteddate', 'needstransport'];
 
   requests: Treecuttingrequest[] = [];
@@ -66,13 +73,13 @@ export class TreecuttingPortalComponent implements OnInit {
     this.uiassist = new UiAssist(this);
 
     this.form = this.fb.group({
-      citizen:              new FormControl('', [Validators.required]),
-      employee:             new FormControl('', [Validators.required]),
-      treetype:             new FormControl('', [Validators.required]),
+      citizen:              new FormControl('', []),
+      employee:             new FormControl('', []),
+      treetype:             new FormControl('', []),
       treepermissionstatus: new FormControl(''),
-      deedno:               new FormControl('', [Validators.required]),
-      treecount:            new FormControl('', [Validators.required]),
-      reasonforcutting:     new FormControl('', [Validators.required]),
+      deedno:               new FormControl('', []),
+      treecount:            new FormControl('', []),
+      reasonforcutting:     new FormControl('', []),
       requesteddate:        new FormControl(''),
       rejectreason:         new FormControl(''),
       // Transport fields
@@ -269,5 +276,79 @@ export class TreecuttingPortalComponent implements OnInit {
     this.form.reset();
     this.onTransportToggle(false);
     this.selectedRow = null;
+  }
+
+  // ── Guards ─────────────────────────────────────────────────────────────────
+  canDownloadPermit(req: Treecuttingrequest): boolean {
+    return req.treepermissionstatus?.name === 'Permit Issued';
+  }
+
+  canDownloadTransport(req: Treecuttingrequest): boolean {
+    return req.treepermissionstatus?.name === 'Permit Issued' && !!req.needstransport;
+  }
+
+// ── Downloads ────────────────────────────────────────────────────────────
+  downloadPermit(req: Treecuttingrequest): void {
+    if (!this.canDownloadPermit(req)) {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Not Ready', message: 'Permit is not ready for download yet.'}
+      });
+      return;
+    }
+
+    this.tcrs.downloadPermitPdf(req.id).then((buffer: ArrayBuffer | undefined) => {
+      if (!buffer) {
+        this.dg.open(MessageComponent, {
+          width: '400px',
+          data: {heading: 'Not Available', message: 'Permit file not available. Please contact the GN officer.'}
+        });
+        return;
+      }
+      const blob = new Blob([buffer], {type: 'application/pdf'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `permit_${req.id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }).catch(() => {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Error', message: 'Permit download failed. Please try again.'}
+      });
+    });
+  }
+
+  downloadTransport(req: Treecuttingrequest): void {
+    if (!this.canDownloadTransport(req)) {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Not Ready', message: 'Transport permit is not ready for download yet.'}
+      });
+      return;
+    }
+
+    this.tcrs.downloadTransportPdf(req.id).then((buffer: ArrayBuffer | undefined) => {
+      if (!buffer) {
+        this.dg.open(MessageComponent, {
+          width: '400px',
+          data: {heading: 'Not Available', message: 'Transport permit file not available. Please contact the GN officer.'}
+        });
+        return;
+      }
+      const blob = new Blob([buffer], {type: 'application/pdf'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `transport_permit_${req.id}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }).catch(() => {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Error', message: 'Transport permit download failed. Please try again.'}
+      });
+    });
   }
 }

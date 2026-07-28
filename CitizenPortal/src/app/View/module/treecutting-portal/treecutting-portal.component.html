@@ -29,15 +29,15 @@
 
           <!-- Employee -->
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>GN Officer</mat-label>
-            <mat-select formControlName="employee">
-              <mat-option *ngFor="let e of employees"
-                          [value]="e">
-                {{e.fullname}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline" class="full-width">-->
+<!--            <mat-label>GN Officer</mat-label>-->
+<!--            <mat-select formControlName="employee">-->
+<!--              <mat-option *ngFor="let e of employees"-->
+<!--                          [value]="e">-->
+<!--                {{e.fullname}}-->
+<!--              </mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
 
           <!-- Tree Type -->
@@ -122,15 +122,28 @@
                      formControlName="vehiclenumber">
             </mat-form-field>
 
-            <mat-form-field appearance="outline"
-                            class="full-width">
-              <mat-label>
-                Transport Date
-              </mat-label>
-              <input matInput
-                     formControlName="transportdate">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Transport Date</mat-label>
+
+              <input
+                matInput
+                [matDatepicker]="picker"
+                formControlName="transportdate">
+
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
+<!--            <mat-form-field appearance="outline"-->
+<!--                            class="full-width">-->
+<!--              <mat-label>-->
+<!--                Transport Date-->
+<!--              </mat-label>-->
+<!--              <input matInput-->
+<!--                     formControlName="transportdate">-->
+<!--            </mat-form-field>-->
           </div>
+
+
 
           <!-- Status -->
 
@@ -284,6 +297,31 @@ Request Rejected
               </mat-icon>
             </td>
           </ng-container>
+          <!-- Download Permit -->
+          <ng-container matColumnDef="downloadpermit">
+            <th mat-header-cell *matHeaderCellDef>Permit PDF</th>
+            <td mat-cell *matCellDef="let req">
+              <button mat-icon-button color="primary"
+                      title="Download Permit"
+                      [disabled]="!canDownloadPermit(req)"
+                      (click)="downloadPermit(req)">
+                <mat-icon>download</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Download Transport Permit -->
+          <ng-container matColumnDef="downloadtransport">
+            <th mat-header-cell *matHeaderCellDef>Transport PDF</th>
+            <td mat-cell *matCellDef="let req">
+              <button mat-icon-button color="primary"
+                      title="Download Transport Permit"
+                      [disabled]="!canDownloadTransport(req)"
+                      (click)="downloadTransport(req)">
+                <mat-icon>download</mat-icon>
+              </button>
+            </td>
+          </ng-container>
           <tr mat-header-row
               *matHeaderRowDef="columns">
           </tr>
@@ -295,7 +333,7 @@ Request Rejected
         </table>
         <mat-paginator
           [pageSizeOptions]="[5,10,20]"
-          showFirstLastButtons>
+          [showFirstLastButtons]="true">
         </mat-paginator>
       </mat-card-content>
     </mat-card>

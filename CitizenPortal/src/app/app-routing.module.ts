@@ -6,6 +6,7 @@ import {CertificateRequestComponent} from "./View/module/certificate-request/cer
 import {LoginComponent} from "./View/login/login.component";
 import {ComplaintComponent} from "./View/module/complaintportal/complaintportal.component";
 import {IdcardrequestPortalComponent} from "./View/module/idcardrequest-portal/idcardrequest-portal.component";
+import {TreecuttingPortalComponent} from "./View/module/treecutting-portal/treecutting-portal.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'main/home', pathMatch: 'full' },
@@ -15,7 +16,8 @@ const routes: Routes = [
       {path: 'citizen', component: LoginComponent},
       {path: 'certificate', component: CertificateRequestComponent},
       {path: 'complaint', component: ComplaintComponent},
-      { path: "idcardrequest", component: IdcardrequestPortalComponent }
+      {path: "idcardrequest", component: IdcardrequestPortalComponent },
+      {path: "treecuttingrequest", component: TreecuttingPortalComponent }
 
 
     ]}

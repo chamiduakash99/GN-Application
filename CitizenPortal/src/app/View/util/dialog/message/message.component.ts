@@ -2,6 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from "@angular/material/dialog";
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dialog',
@@ -10,7 +11,8 @@ import {MatButtonModule} from "@angular/material/button";
   imports: [
     MatCardModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    CommonModule,
   ],
   styleUrls: ['./message.component.css']
 })
