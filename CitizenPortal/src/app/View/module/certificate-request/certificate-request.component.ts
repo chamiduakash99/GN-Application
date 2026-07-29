@@ -16,6 +16,7 @@ import {UiAssist} from "../../util/ui/ui.assist";
 import {ConfirmComponent} from "../../util/dialog/confirm/confirm.component";
 import {MessageComponent} from "../../util/dialog/message/message.component";
 import {Certificaterequest} from '../../entity/certificaterequest';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-certificate-request',
@@ -29,14 +30,7 @@ export class CertificateRequestComponent implements OnInit {
   // ─────────────────────────────────────────────
   columns: string[] = ['citizen', 'type', 'status', 'date', 'purpose', 'download', 'modi'];
   headers: string[] = ['Citizen', 'Type', 'Status', 'Requested Date', 'Purpose', 'Download', 'Action'];
-  binders: string[] = [
-    'citizen.name',
-    'certificatetype.name',
-    'requeststatus.name',
-    'requesteddate',
-    'purpose',
-    'getModi()'
-  ];
+  binders: string[] = ['citizen.name', 'certificatetype.name', 'requeststatus.name', 'requesteddate', 'purpose', 'getModi()'];
 
   requests: Certificaterequest[] = [];
   data!: MatTableDataSource<Certificaterequest>;
@@ -44,6 +38,7 @@ export class CertificateRequestComponent implements OnInit {
   selectedRow: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('stepper') stepper?: MatStepper;
 
   // ─────────────────────────────────────────────
   // FORMS
@@ -460,6 +455,7 @@ export class CertificateRequestComponent implements OnInit {
     this.selectedRow = req;
     this.certificaterequest = JSON.parse(JSON.stringify(req));
     this.oldcertificaterequest = JSON.parse(JSON.stringify(req));
+    this.stepper?.reset();
 
     const selectedCitizen = this.citizens.find(c => c.id === this.certificaterequest.citizen?.id);
     const selectedType    = this.certificatetypes.find(t => t.id === this.certificaterequest.certificatetype?.id);

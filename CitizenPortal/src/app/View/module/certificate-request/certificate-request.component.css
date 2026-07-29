@@ -1,277 +1,33 @@
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.page-container {
+  display: flex;
+  gap: 16px;
+  padding: 15px;
+  align-items: flex-start;
+  background: #f0f3f7;
+}
 
+.left-panel {
+  flex: 0 0 380px;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
 
 /* ── Base card ───────────────────────────────────────────────────────────── */
-mat-card {
-  width: 100%;
-  height: 100%;
-  margin: 10px 10px -10px 10px;
-}
-
-mat-card-content {
-  overflow: auto;
-  height: 100%;
-}
-
-mat-card-header {
-  background: #f0f3f7;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* ── Loading image ────────────────────────────────────────────────────────── */
-#loading img {
-  width: 30px;
-  height: 25px;
-  margin-left: 200px;
-}
-
-/* ── Client-side search row ──────────────────────────────────────────────── */
-.csearch {
-  height: 40px;
-  width: 100%;
-  margin-top: 5px;
-}
-
-/* ── Server-side search card ─────────────────────────────────────────────── */
-#ssearch mat-card-content {
-  padding-top: 30px;
-}
-
-#ssearch mat-form-field {
-  padding-left: 15px;
-  width: 200px;
-}
-
-#ssearch button {
-  width: 195px;
-  margin-left: 10px;
-  margin-top: 5px;
-  background-color: #083d77;
-  color: #f0f3f7;
-}
-
-/* ── Tab toggle ──────────────────────────────────────────────────────────── */
-#tabtoggle {
-  display: flex;
-  gap: 6px;
-  margin-left: auto;
-  padding: 4px;
-}
-
-#tabtoggle button {
-  width: 100px;
-  background-color: #f0f3f7;
-  color: #083d77;
-  font-size: 12px;
-}
-
-#tabtoggle button.activetab {
-  background-color: #083d77;
-  color: #f0f3f7;
-}
-
-/* ── Certificate request form ────────────────────────────────────────────── */
-#certreqform {
-  padding-top: 20px;
-}
-
-#certreqform mat-form-field {
-  width: 100%;
-}
-
-/* ── Status badge ────────────────────────────────────────────────────────── */
-#statusbadge {
-  margin-bottom: 14px;
-  text-align: center;
-}
-
-#statusbadge span {
-  display: inline-block;
-  padding: 5px 18px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-.badge-pending   { background-color: #fff3cd; color: #856404; }
-.badge-approved  { background-color: #d1e7dd; color: #0f5132; }
-.badge-rejected  { background-color: #f8d7da; color: #842029; }
-.badge-ready     { background-color: #cff4fc; color: #055160; }
-.badge-completed { background-color: #d3d3d3; color: #333333; }
-
-/* ── Section labels ──────────────────────────────────────────────────────── */
-.sectionlabel {
-  font-size: 13px;
-  font-weight: 500;
-  color: #083d77;
-  margin: 12px 0 8px 0;
-  border-left: 3px solid #081f5b;
-  padding-left: 8px;
-}
-
-/* ── Approve / Reject decision panel ─────────────────────────────────────── */
-#approvepanel {
-  padding: 10px 0;
-}
-
-#decisionpanel {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-}
-
-#approvebtn {
-  flex: 1;
-  background-color: #2e7d32;
-  color: white;
-}
-
-#rejectbtn {
-  flex: 1;
-  background-color: #c62828;
-  color: white;
-}
-
-#approvebtn:disabled,
-#rejectbtn:disabled {
-  opacity: 0.4;
-}
-
-/* ── Certificate create panel ────────────────────────────────────────────── */
-#certpanel {
-  padding-top: 10px;
-}
-
-/* ── Scan image panel ────────────────────────────────────────────────────── */
-#scanpanel {
-  height: 100px;
-  margin-bottom: 30px;
-}
-
-#scanpanel img {
-  height: 100px;
-  width: 100px;
-  object-fit: cover;
-  border: 1px solid #f0f3f7;
-  border-radius: 4px;
-}
-
-#scanselectbutton,
-#scanclearbutton {
-  width: 150px;
-  display: block;
-  margin-left: 110px;
-  margin-bottom: 5px;
-  background-color: #081f5b;
-  color: #f0f3f7;
-  padding: 8px;
-  border-radius: 5px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-#scanselectbutton {
-  margin-top: -100px;
-}
-
-/* ── Certificate button panel ────────────────────────────────────────────── */
-#certbutpanel {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-#certbutpanel button {
-  flex: 1;
-  min-width: 100px;
-  background-color: #081f5b;
-  color: #f0f3f7;
-  font-size: 12px;
-}
-
-#certbutpanel button:disabled {
-  opacity: 0.4;
-}
-
-/* ── Citizen tab button panel ────────────────────────────────────────────── */
-#butpanel {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-#butpanel button {
-  width: 82px;
-  margin: 3px;
-  background-color: #081f5b;
-  color: #f0f3f7;
-}
-
-/* ── Table row states ────────────────────────────────────────────────────── */
-.selected-row {
-  background-color: #081f5b !important;
-}
-
-.mat-row:hover {
-  background-color: inherit !important;
-}
-
-button:disabled {
-  opacity: 0.5;
-}
-
-/* ── Form validation colours (same as employee) ──────────────────────────── */
-#certreqform mat-form-field .ng-valid,
-.ng-valid.required {
-  background-color: #5681f5;
-  border-radius: 4px;
-}
-
-#certreqform mat-form-field .ng-dirty {
-  background-color: #ffd600;
-}
-
-/* ── Divider spacing ─────────────────────────────────────────────────────── */
-mat-divider {
-  margin: 10px 0;
-}
-
-mat-horizontal-stepper {
-  margin-top: 20px;
-}
-
-.reject-box {
-  margin-top: 20px;
-  padding: 15px;
-  border-radius: 10px;
-  background: #ffebee;
-  color: #c62828;
-}
-/* =========================
-   GLOBAL GRID LAYOUT
-========================= */
-
-mat-grid-list {
-  padding: 15px;
-  background: #f0f3f7;
-}
-
-/* =========================
-   MAT CARD GLOBAL STYLE
-========================= */
-
 mat-card {
   border-radius: 16px !important;
   box-shadow: 0 8px 25px rgba(0,0,0,0.08) !important;
   transition: 0.3s ease;
-  height: 100%;
+  margin-bottom: 16px;
 }
 
 mat-card:hover {
@@ -279,80 +35,83 @@ mat-card:hover {
   box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
 }
 
-mat-card-header {
-  background: linear-gradient(135deg, #081f5b, #083d77);
-  color: white;
-  padding: 12px 16px;
-  border-radius: 16px 16px 0 0;
-}
-
 mat-card-title {
+  background: linear-gradient(135deg, #081f5b, #083d77);
+  color: #f0f3f7;
+  padding: 12px 16px;
+  margin: 0;
+  border-radius: 16px 16px 0 0;
   font-size: 18px;
   font-weight: 600;
+  display: block;
 }
 
-/* =========================
-   FORM SECTION (LEFT PANEL)
-========================= */
-
-#certreqform {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 15px;
+mat-card-content {
+  padding: 16px;
 }
 
-mat-form-field {
-  width: 100%;
+mat-card-actions {
+  padding: 0 16px 16px 16px;
 }
 
 textarea {
   resize: none;
 }
 
-/* =========================
-   BUTTON PANEL
-========================= */
+/* ── Form ────────────────────────────────────────────────────────────────── */
+.form-card mat-form-field {
+  width: 100%;
+}
 
-/*#butpanel {*/
-/*  display: grid;*/
-/*  grid-template-columns: repeat(2, 1fr);*/
-/*  gap: 10px;*/
-/*  margin-top: 10px;*/
-/*}*/
-
-#butpanel button {
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+mat-card-actions button {
   border-radius: 10px;
   font-weight: 500;
   transition: 0.3s ease;
+  margin-left: 6px;
 }
 
-#butpanel button:hover {
+mat-card-actions button:hover {
   transform: scale(1.03);
 }
 
-/* =========================
-   STEP PROGRESS (RIGHT TOP)
-========================= */
-
-mat-horizontal-stepper {
-  background: transparent;
-  padding: 10px;
+button:disabled {
+  opacity: 0.4;
 }
 
-::ng-deep .mat-step-header {
-  border-radius: 10px;
+/* ── Status badge (table) ────────────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-pending   { background-color: #fff3cd; color: #856404; }
+.status-badge.status-approved  { background-color: #d1e7dd; color: #0f5132; }
+.status-badge.status-rejected  { background-color: #f8d7da; color: #842029; }
+.status-badge.status-certready { background-color: #cff4fc; color: #055160; }
+.status-badge.status-completed { background-color: #d3d3d3; color: #333333; }
+
+/* ── Stepper ─────────────────────────────────────────────────────────────── */
+mat-horizontal-stepper,
+mat-stepper {
+  background: transparent;
+  margin-top: 10px;
 }
 
 ::ng-deep .mat-step-header.mat-active {
   background: #f0f3f7;
+  border-radius: 10px;
 }
 
-/* =========================
-   REJECT BOX
-========================= */
-
-.reject-box {
+/* ── Rejected notice ─────────────────────────────────────────────────────── */
+.rejected-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-top: 15px;
   padding: 15px;
   border-radius: 12px;
@@ -362,61 +121,52 @@ mat-horizontal-stepper {
   animation: fadeIn 0.4s ease-in-out;
 }
 
-.reject-box h3 {
-  margin: 0 0 5px;
-}
-
-/* =========================
-   TABLE STYLING
-========================= */
-
+/* ── Table ───────────────────────────────────────────────────────────────── */
+table.full-width,
 mat-table {
   border-radius: 12px;
   overflow: hidden;
 }
 
+th.mat-header-cell,
 mat-header-cell {
   background: #081f5b;
-  color: black;
+  color: white;
   font-weight: 600;
 }
 
+td.mat-cell,
 mat-cell {
   padding: 12px;
 }
 
+tr.mat-row,
 mat-row {
   transition: 0.2s;
   cursor: pointer;
 }
 
+tr.mat-row:hover,
 mat-row:hover {
-  background: #f1f5f9;
+  background: #f0f3f7;
 }
 
 .selected-row {
-  background: #dbeafe !important;
+  background: #c6d2ec !important;
 }
-
-/* =========================
-   PAGINATOR
-========================= */
 
 mat-paginator {
   margin-top: 10px;
 }
 
-/* =========================
-   ANIMATION
-========================= */
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-navy {
+  background-color: #081f5b;
+  color: #f0f3f7;
+}
 
+/* ── Animation ───────────────────────────────────────────────────────────── */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

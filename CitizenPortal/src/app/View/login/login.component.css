@@ -9,6 +9,11 @@
   font-family: Arial, sans-serif;
 }
 
+.login-btn{
+  background: linear-gradient(135deg, #081f5b, #083d77);
+  color: #f0f3f7;
+}
+
 /* =========================
    LEFT PANEL
 ========================= */
@@ -57,7 +62,7 @@
 
 .login-card {
   width: 420px;
-  background: #f0f3f7;
+  background: #dde6f1;
   padding: 30px;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -70,7 +75,7 @@ h2 {
 
 .subtitle {
   font-size: 13px;
-  color: #f0f3f7;
+  color: #000000;
   margin-bottom: 20px;
 }
 

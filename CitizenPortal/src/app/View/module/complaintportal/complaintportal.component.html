@@ -71,7 +71,7 @@
 
           <!-- Buttons -->
           <div id="butpanel">
-            <button mat-raised-button color="primary"
+            <button mat-raised-button class="btn-navy"
                     (click)="add()" [disabled]="!canSubmit()">
               Submit
             </button>
@@ -101,7 +101,7 @@
 
         <!-- Status stepper (shown when a row is selected) -->
         <div *ngIf="selectedRow; else noSelection">
-          <mat-horizontal-stepper
+          <mat-horizontal-stepper #stepper
             [selectedIndex]="
               complaint?.complaintstatus?.name === 'Pending'       ? 0 :
               complaint?.complaintstatus?.name === 'Investigating' ? 1 :
@@ -148,7 +148,12 @@
 
           <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
             <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, binders[i])}}</mat-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col === 'date'; else defaultCell">
+                {{ uiassist.getProperty(element, binders[i]) | date:'yyyy-MM-dd' }}
+              </ng-container>
+              <ng-template #defaultCell>{{ uiassist.getProperty(element, binders[i]) }}</ng-template>
+            </mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="columns"></mat-header-row>

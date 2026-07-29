@@ -18,6 +18,7 @@ import {AuthorizationManager} from '../../service/authorizationmanager';
 import {UiAssist} from '../../util/ui/ui.assist';
 import {MessageComponent} from '../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../util/dialog/confirm/confirm.component';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-citizen-complaint',
@@ -36,6 +37,7 @@ export class ComplaintComponent implements OnInit {
   selectedRow: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('stepper') stepper?: MatStepper;
 
   // ── Forms ──────────────────────────────────────────────────────────────────
   form!: FormGroup;
@@ -111,6 +113,7 @@ export class ComplaintComponent implements OnInit {
     this.selectedRow = c;
     this.complaint    = JSON.parse(JSON.stringify(c));
     this.oldcomplaint = JSON.parse(JSON.stringify(c));
+    this.stepper?.reset();
 
     const selectedCitizen = this.citizens.find(x => x.id === this.complaint.citizen?.id);
     const selectedEmployee = this.employees.find(x => x.id === this.complaint.employee?.id);

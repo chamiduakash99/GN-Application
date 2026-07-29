@@ -20,6 +20,7 @@ import {AuthorizationManager} from '../../service/authorizationmanager';
 import {UiAssist} from '../../util/ui/ui.assist';
 import {MessageComponent} from '../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../util/dialog/confirm/confirm.component';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-idcardrequest-portal',
@@ -38,6 +39,7 @@ export class IdcardrequestPortalComponent implements OnInit {
   selectedRow: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('stepper') stepper?: MatStepper;
 
   // ── Forms ──────────────────────────────────────────────────────────────────
   form!: FormGroup;
@@ -178,6 +180,7 @@ export class IdcardrequestPortalComponent implements OnInit {
     this.selectedRow      = r;
     this.idcardrequest    = JSON.parse(JSON.stringify(r));
     this.oldidcardrequest = JSON.parse(JSON.stringify(r));
+    this.stepper?.reset();
 
     const selectedCitizen  = this.citizens.find(x => x.id === this.idcardrequest.citizen?.id);
     const selectedEmployee = this.employees.find(x => x.id === this.idcardrequest.employee?.id);

@@ -73,13 +73,13 @@ export class TreecuttingPortalComponent implements OnInit {
     this.uiassist = new UiAssist(this);
 
     this.form = this.fb.group({
-      citizen:              new FormControl('', []),
-      employee:             new FormControl('', []),
+      citizen:              new FormControl('', [Validators.required]),
+      employee:             new FormControl('', [Validators.required]),
       treetype:             new FormControl('', []),
       treepermissionstatus: new FormControl(''),
-      deedno:               new FormControl('', []),
-      treecount:            new FormControl('', []),
-      reasonforcutting:     new FormControl('', []),
+      deedno:               new FormControl('', [Validators.required]),
+      treecount:            new FormControl('', [Validators.required]),
+      reasonforcutting:     new FormControl('', [Validators.required]),
       requesteddate:        new FormControl(''),
       rejectreason:         new FormControl(''),
       // Transport fields

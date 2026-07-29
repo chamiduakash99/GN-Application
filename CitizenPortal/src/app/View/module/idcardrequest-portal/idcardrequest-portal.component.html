@@ -36,7 +36,6 @@
               <mat-option [value]="null">Not Selected</mat-option>
               <mat-option *ngFor="let r of reasons" [value]="r">{{r.name}}</mat-option>
             </mat-select>
-            <mat-hint>Select a reason to see what information is needed</mat-hint>
           </mat-form-field>
 
           <!-- ── FIRST TIME FIELDS ──────────────────────────────────── -->
@@ -47,7 +46,6 @@
               <mat-label>BC Number or ID Number <span class="req">*</span></mat-label>
               <input matInput formControlName="bcnooridno"
                      placeholder="Enter your birth certificate number">
-              <mat-hint>Mandatory for first-time ID card applications</mat-hint>
             </mat-form-field>
           </ng-container>
 
@@ -72,7 +70,6 @@
               <mat-label>Police Reference No <span class="req">*</span></mat-label>
               <input matInput formControlName="complaintno"
                      placeholder="e.g. CMP-7788">
-              <mat-hint>Reference number from the police station</mat-hint>
             </mat-form-field>
           </ng-container>
 
@@ -97,7 +94,7 @@
 
           <!-- Buttons -->
           <div id="butpanel">
-            <button mat-raised-button color="primary"
+            <button mat-raised-button class="btn-navy"
                     (click)="add()" [disabled]="!canSubmit()">
               Submit
             </button>
@@ -118,7 +115,7 @@
   <!-- ═════════════════════════════════════════════════════════════ -->
   <!-- RIGHT TOP — Status Progress -->
   <!-- ═════════════════════════════════════════════════════════════ -->
-  <mat-grid-tile [colspan]="8" [rowspan]="4">
+  <mat-grid-tile [colspan]="8" [rowspan]="5">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Request Progress</mat-card-title>
@@ -126,7 +123,7 @@
       <mat-card-content>
 
         <div *ngIf="selectedRow; else noSelection">
-          <mat-horizontal-stepper [selectedIndex]="progressIndex">
+          <mat-horizontal-stepper #stepper [selectedIndex]="progressIndex">
             <mat-step label="Pending Review"></mat-step>
             <mat-step label="Approved"></mat-step>
             <mat-step label="Sent to Authorities"></mat-step>
@@ -181,7 +178,12 @@
 
           <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
             <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, binders[i])}}</mat-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col === 'applieddate'; else defaultCell">
+                {{ uiassist.getProperty(element, binders[i]) | date:'yyyy-MM-dd' }}
+              </ng-container>
+              <ng-template #defaultCell>{{ uiassist.getProperty(element, binders[i]) }}</ng-template>
+            </mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="columns"></mat-header-row>

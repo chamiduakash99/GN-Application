@@ -1,0 +1,189 @@
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.page-container {
+  display: flex;
+  gap: 16px;
+  padding: 15px;
+  align-items: flex-start;
+  background: #f0f3f7;
+}
+
+.left-panel {
+  flex: 0 0 380px;
+}
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* ── Base card ───────────────────────────────────────────────────────────── */
+mat-card {
+  border-radius: 16px !important;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08) !important;
+  transition: 0.3s ease;
+  margin-bottom: 16px;
+}
+
+mat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12) !important;
+}
+
+mat-card-title {
+  background: linear-gradient(135deg, #081f5b, #083d77);
+  color: #f0f3f7;
+  padding: 12px 16px;
+  margin: 0;
+  border-radius: 16px 16px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+  display: block;
+}
+
+mat-card-content {
+  padding: 16px;
+}
+
+mat-card-actions {
+  padding: 0 16px 16px 16px;
+}
+
+textarea {
+  resize: none;
+}
+
+/* ── Form ────────────────────────────────────────────────────────────────── */
+.form-card mat-form-field {
+  width: 100%;
+}
+
+.form-card mat-checkbox {
+  display: block;
+  margin: 10px 0 16px 0;
+}
+
+.form-card h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #081f5b;
+  margin: 14px 0 6px 0;
+  padding: 8px 10px;
+  background: #eff6ff;
+  border-left: 4px solid #3b82f6;
+  border-radius: 0 6px 6px 0;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+mat-card-actions button {
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.3s ease;
+  margin-left: 6px;
+}
+
+mat-card-actions button:hover {
+  transform: scale(1.03);
+}
+
+button:disabled {
+  opacity: 0.4;
+}
+
+/* ── Status badge ────────────────────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  background-color: #cff4fc;
+  color: #055160;
+}
+
+/* ── Stepper ─────────────────────────────────────────────────────────────── */
+mat-horizontal-stepper,
+mat-stepper {
+  background: transparent;
+  margin-top: 10px;
+}
+
+::ng-deep .mat-step-header.mat-active {
+  background: #f0f3f7;
+  border-radius: 10px;
+}
+
+/* ── Rejected notice ─────────────────────────────────────────────────────── */
+.rejected-notice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #fee2e2;
+  border-left: 5px solid #ef4444;
+  color: #991b1b;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.rejected-notice p {
+  width: 100%;
+  margin: 6px 0 0 0;
+}
+
+/* ── Table ───────────────────────────────────────────────────────────────── */
+table.full-width,
+mat-table {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th.mat-header-cell,
+mat-header-cell {
+  background: #081f5b;
+  color: white;
+  font-weight: 600;
+}
+
+td.mat-cell,
+mat-cell {
+  padding: 12px;
+}
+
+tr.mat-row,
+mat-row {
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+tr.mat-row:hover,
+mat-row:hover {
+  background: #f0f3f7;
+}
+
+.selected-row {
+  background: #c6d2ec !important;
+}
+
+mat-paginator {
+  margin-top: 10px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-navy {
+  background-color: #081f5b;
+  color: #f0f3f7;
+}
+
+/* ── Animation ───────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

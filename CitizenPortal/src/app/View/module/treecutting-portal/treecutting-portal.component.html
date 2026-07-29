@@ -22,9 +22,7 @@
                 {{c.name}}
               </mat-option>
             </mat-select>
-            <mat-error>
-              Citizen is required
-            </mat-error>
+
           </mat-form-field>
 
           <!-- Employee -->
@@ -171,7 +169,7 @@
       <mat-card-actions align="end">
 
         <button mat-raised-button
-                color="primary"
+                class="btn-navy"
                 (click)="add()"
                 [disabled]="!canSubmit()">Submit
         </button>

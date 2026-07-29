@@ -39,7 +39,12 @@ textarea {
   resize: none;
 }
 
-/* ── Button panel ────────────────────────────────────────────────────────── */
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-navy {
+  background-color: #081f5b;
+  color: #f0f3f7;
+}
+
 #butpanel {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -111,7 +116,7 @@ mat-table {
 }
 mat-header-cell {
   background: #081f5b;
-  color: #f0f3f7;
+  color: black;
   font-weight: 600;
 }
 mat-cell {
@@ -125,19 +130,10 @@ mat-row:hover {
   background: #f0f3f7;
 }
 .selected-row {
-  background: #081f5b !important;
+  background: #c6d2ec !important;
 }
 mat-paginator {
   margin-top: 10px;
-}
-
-/* ── Form validation colours ─────────────────────────────────────────────── */
-#complaintform mat-form-field .ng-valid,
-.ng-valid.required {
-  background-color: #5681f5;
-}
-#complaintform mat-form-field .ng-dirty {
-  background-color: #ffd600;
 }
 
 /* ── Animation ───────────────────────────────────────────────────────────── */
