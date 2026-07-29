@@ -53,6 +53,7 @@ export class TreecuttingrequestComponent implements OnInit {
   treepermissionstatuses: Treepermissionstatus[] = [];
   citizens: Citizen[] = [];
   employees: Employee[] = [];
+  statusSummary: any[] = [];
 
   imageurl: string = '';
   permitimageurl: string  = 'assets/default.png';
@@ -101,7 +102,6 @@ export class TreecuttingrequestComponent implements OnInit {
       'citizen':               new FormControl('', [Validators.required]),
       'employee':              new FormControl('', [Validators.required]),
       'treetype':              new FormControl('', [Validators.required]),
-      'treepermissionstatus':  new FormControl(''),
       'deedno':                new FormControl('', [Validators.required]),
       'treecount':             new FormControl('', [Validators.required]),
       'reasonforcutting':      new FormControl('', [Validators.required]),
@@ -132,6 +132,18 @@ export class TreecuttingrequestComponent implements OnInit {
     this.tpss.getAllList().then(res => this.treepermissionstatuses = res);
     this.cits.getAllListNameId().then(res => this.citizens = res);
     this.es.getAllList().then(res => this.employees = res);
+    this.loadStatusSummary();
+  }
+
+  loadStatusSummary(): void {
+    this.tcrs.getStatusSummary()
+      .then((data: any[] | undefined) => {
+        this.statusSummary = (data || []).map((row: any) => ({
+          status: row[0],
+          count: row[1]
+        }));
+      })
+      .catch((error: any) => { console.log(error); });
   }
 
   // ── Transport toggle validators ────────────────────────────────────────────
@@ -297,6 +309,7 @@ export class TreecuttingrequestComponent implements OnInit {
           if (appstatus) {
             appmessage = 'Request Approved Successfully';
             this.loadTable('');
+            this.loadStatusSummary();
             this.enaapprove = false; this.enareject = false;
             this.enauploadpermit = true;
             this.enauploadtransport = this.treecuttingrequest.needstransport;
@@ -336,6 +349,7 @@ export class TreecuttingrequestComponent implements OnInit {
           if (rejstatus) {
             rejmessage = 'Request Rejected Successfully';
             this.loadTable('');
+            this.loadStatusSummary();
             this.enaapprove = false; this.enareject = false;
           }
           this.dg.open(MessageComponent, {width: '500px', data: {heading: 'Status - Reject', message: rejmessage}});
@@ -379,6 +393,7 @@ export class TreecuttingrequestComponent implements OnInit {
           if (uplstatus) {
             uplmessage = 'Permit PDF Uploaded Successfully — Status set to Permit Issued';
             this.loadTable('');
+            this.loadStatusSummary();
             this.enauploadpermit = false;
           }
           this.dg.open(MessageComponent, {width: '500px', data: {heading: 'Status - Upload Permit', message: uplmessage}});

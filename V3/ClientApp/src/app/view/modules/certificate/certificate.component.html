@@ -118,11 +118,11 @@
             <mat-label>Expiry Date</mat-label>
             <input matInput formControlName="sscertexpiry">
           </mat-form-field>
-          <div>
-            <button mat-raised-button color="primary" (click)="btnSearchCert()">
+          <div class="certsearchbuttons">
+            <button mat-raised-button (click)="btnSearchCert()">
               <mat-icon>search</mat-icon> Search
             </button>
-            <button mat-raised-button color="primary" (click)="btnSearchClearCert()">
+            <button mat-raised-button (click)="btnSearchClearCert()">
               <mat-icon>reorder</mat-icon> Clear Search
             </button>
           </div>

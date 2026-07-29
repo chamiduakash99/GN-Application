@@ -40,9 +40,9 @@ export class CertificateComponent implements OnInit {
   @ViewChild('reqpaginator') reqpaginator!: MatPaginator;
 
   // ── Certificate table (issued certificates for the selected request) ──────
-  certcolumns: string[] = ['certificateNo', 'issuedDate', 'expiryDate', 'hardCopyPicked', 'pickedDate', 'certpick'];
-  certheaders: string[] = ['Certificate No', 'Issued Date', 'Expiry Date', 'Hard Copy Picked', 'Picked Date', 'Mark Picked'];
-  certbinders: string[] = ['certificateno', 'issueddate', 'expirydate', 'hardcopypicked', 'pickeddate', ''];
+  certcolumns: string[] = ['certificateNo', 'issuedDate', 'expiryDate',  'certpick'];
+  certheaders: string[] = ['Certificate No', 'Issued Date', 'Expiry Date',  'Mark Picked'];
+  certbinders: string[] = ['certificateno', 'issueddate', 'expirydate',  ''];
   cscertcolumns: string[] = ['cscertno', 'cscertissued', 'cscertexpiry', 'cscertpicked'];
   cscertprompts: string[] = ['Search Cert No', 'Search Issued Date', 'Search Expiry Date', 'Search Picked'];
 

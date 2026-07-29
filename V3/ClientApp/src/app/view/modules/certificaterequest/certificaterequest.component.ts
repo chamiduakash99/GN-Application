@@ -29,11 +29,11 @@ import {AuthorizationManager} from '../../../service/authorizationmanager';
 })
 export class CertificaterequestComponent implements OnInit {
   // ── Request table ─────────────────────────────────────────────────────────
-  reqcolumns: string[] = ['citizen', 'certificateType', 'requestStatus', 'requestedDate', 'purpose', 'modi'];
-  reqheaders: string[] = ['Citizen', 'Type', 'Status', 'Requested Date', 'Purpose', 'Modification'];
-  reqbinders: string[] = ['citizen.name', 'certificatetype.name', 'requeststatus.name', 'requesteddate', 'purpose', 'getModi()'];
-  csreqcolumns: string[] = ['cscitizen', 'cstype', 'csstatus', 'csdate', 'cspurpose', 'csmodi'];
-  csreqprompts: string[] = ['Search Citizen', 'Search Type', 'Search Status', 'Search Date', 'Search Purpose', 'Search Modi'];
+  reqcolumns: string[] = ['citizen', 'certificateType', 'requestStatus', 'requestedDate', 'purpose'];
+  reqheaders: string[] = ['Citizen', 'Type', 'Status', 'Requested Date', 'Purpose'];
+  reqbinders: string[] = ['citizen.name', 'certificatetype.name', 'requeststatus.name', 'requesteddate', 'purpose'];
+  csreqcolumns: string[] = ['cscitizen', 'cstype', 'csstatus', 'csdate', 'cspurpose'];
+  csreqprompts: string[] = ['Search Citizen', 'Search Type', 'Search Status', 'Search Date', 'Search Purpose'];
 
   // ── Forms ─────────────────────────────────────────────────────────────────
   csreqsearch!: FormGroup;
@@ -140,9 +140,19 @@ export class CertificaterequestComponent implements OnInit {
 
   loadStatusSummary() {
     this.crs.getStatusSummary()
-      .then((data: any) => { this.statusSummary = data; })
+      .then((data: any[] | undefined) => {
+        this.statusSummary = (data || []).map((row: any) => ({
+          status: row[0],
+          count: row[1]
+        }));
+      })
       .catch((error: any) => { console.log(error); });
   }
+  // loadStatusSummary() {
+  //   this.crs.getStatusSummary()
+  //     .then((data: any) => { this.statusSummary = data; })
+  //     .catch((error: any) => { console.log(error); });
+  // }
 
   // ── Button state helpers ──────────────────────────────────────────────────
   enableApproveReject(approve: boolean, reject: boolean): void {

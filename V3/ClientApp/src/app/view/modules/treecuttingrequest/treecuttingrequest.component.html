@@ -1,5 +1,16 @@
 <mat-grid-list [cols]="12" rowHeight="4rem">
 
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
+    <div class="status-dashboard">
+      <div class="status-card"
+           *ngFor="let item of statusSummary"
+           [ngClass]="item.status.toLowerCase().replace(' ', '-')">
+        <div class="status-title">{{ item.status }}</div>
+        <div class="status-count">{{ item.count }}</div>
+      </div>
+    </div>
+  </mat-grid-tile>
+
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- LEFT PANEL — Form -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -58,13 +69,6 @@
           <mat-divider></mat-divider>
           <p class="sectionlabel">Review Decision</p>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="treepermissionstatus">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let s of treepermissionstatuses" [value]="s">{{s.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
 
           <div class="status-box" *ngIf="selectedrow">
             Current: {{ treecuttingrequest?.treepermissionstatus?.name }}

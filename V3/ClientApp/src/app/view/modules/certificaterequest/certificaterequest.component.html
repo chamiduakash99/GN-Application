@@ -1,4 +1,24 @@
 <mat-grid-list [cols]="12" rowHeight="2rem">
+  <mat-grid-tile [colspan]="12" [rowspan]="4">
+    <div class="status-dashboard">
+
+      <div
+        class="status-card"
+        *ngFor="let item of statusSummary"
+        [ngClass]="item.status.toLowerCase().replace(' ', '-')">
+
+        <div class="status-title">
+          {{ item.status }}
+        </div>
+
+        <div class="status-count">
+          {{ item.count }}
+        </div>
+
+      </div>
+
+    </div>
+  </mat-grid-tile>
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- LEFT PANEL — Review Decision only (Issue Certificate moved to Certificate module) -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->

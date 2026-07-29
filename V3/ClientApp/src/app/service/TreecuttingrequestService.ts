@@ -73,4 +73,8 @@ export class TreecuttingrequestService {
       { responseType: 'arraybuffer' }
     ).toPromise();
   }
+
+  getStatusSummary(): Promise<any[] | undefined> {
+    return this.http.get<any[]>(this.url + '/statussummary').toPromise();
+  }
 }

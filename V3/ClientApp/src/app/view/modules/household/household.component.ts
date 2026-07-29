@@ -26,12 +26,12 @@ import {Citizenstatus} from "../../../entity/citizenstatus";
 export class HouseholdComponent implements OnInit {
 
   // ── Household table ────────────────────────────────────────────────────────
-  hhcolumns: string[] = ['householdno', 'address', 'registrationdate', 'headcitizenId', 'membercount', 'modi'];
-  hhheaders: string[] = ['Household No', 'Address', 'Registered', 'Head Citizen ID', 'Members', 'Modification'];
-  hhbinders: string[] = ['householdno', 'address', 'registrationdate', 'headcitizenId', 'getMemberCount()', 'getModi()'];
+  hhcolumns: string[] = ['householdno', 'address', 'registrationdate', 'headcitizenId', 'membercount'];
+  hhheaders: string[] = ['Household No', 'Address', 'Registered', 'Head Citizen ID', 'Members'];
+  hhbinders: string[] = ['householdno', 'address', 'registrationdate', 'headcitizenId', 'getMemberCount()'];
 
-  cshhcolumns: string[] = ['cshhno', 'csaddr', 'csdate', 'cshead', 'csmembers', 'csmodi'];
-  cshhprompts: string[] = ['Search No', 'Search Address', 'Search Date', 'Search Head ID', 'Search Members', 'Search'];
+  cshhcolumns: string[] = ['cshhno', 'csaddr', 'csdate'];
+  cshhprompts: string[] = ['Search No', 'Search Address'];
 
   // ── Members table ──────────────────────────────────────────────────────────
   memcolumns: string[] = ['name', 'nic', 'dateofbirth', 'mobileno', 'citizenstatus'];

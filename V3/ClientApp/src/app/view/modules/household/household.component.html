@@ -81,42 +81,42 @@
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- RIGHT TOP — Server-side Search -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <mat-grid-tile [colspan]="8" [rowspan]="3">
-    <mat-card id="ssearch">
-      <mat-card-header>
-        <mat-card-title>Household Search</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form [formGroup]="sssearch">
+<!--  <mat-grid-tile [colspan]="8" [rowspan]="3">-->
+<!--    <mat-card id="ssearch">-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Household Search</mat-card-title>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <mat-form [formGroup]="sssearch">-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Household No</mat-label>
-            <input matInput formControlName="sshouseholdno" placeholder="e.g. HH001">
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Household No</mat-label>-->
+<!--            <input matInput formControlName="sshouseholdno" placeholder="e.g. HH001">-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Address</mat-label>
-            <input matInput formControlName="ssaddress" placeholder="e.g. Ward 1">
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Address</mat-label>-->
+<!--            <input matInput formControlName="ssaddress" placeholder="e.g. Ward 1">-->
+<!--          </mat-form-field>-->
 
-          <div>
-            <button mat-raised-button (click)="btnSearchMc()">
-              <mat-icon>search</mat-icon> Search
-            </button>
-            <button mat-raised-button (click)="btnSearchClearMc()">
-              <mat-icon>reorder</mat-icon> Clear
-            </button>
-          </div>
+<!--          <div>-->
+<!--            <button mat-raised-button (click)="btnSearchMc()">-->
+<!--              <mat-icon>search</mat-icon> Search-->
+<!--            </button>-->
+<!--            <button mat-raised-button (click)="btnSearchClearMc()">-->
+<!--              <mat-icon>reorder</mat-icon> Clear-->
+<!--            </button>-->
+<!--          </div>-->
 
-        </mat-form>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
+<!--        </mat-form>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
 
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- RIGHT MIDDLE — Household Table -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <mat-grid-tile [colspan]="8" [rowspan]="8">
+  <mat-grid-tile [colspan]="8" [rowspan]="7">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Households</mat-card-title>

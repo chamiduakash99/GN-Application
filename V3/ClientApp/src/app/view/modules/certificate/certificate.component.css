@@ -303,3 +303,10 @@ mat-divider {
   font-size: 13px;
   margin-bottom: 14px;
 }
+
+.certsearchbuttons button {
+  margin-right: 8px;
+  margin-top: 5px;
+  background-color: #152054;
+  color: #f2f5fd;
+}
