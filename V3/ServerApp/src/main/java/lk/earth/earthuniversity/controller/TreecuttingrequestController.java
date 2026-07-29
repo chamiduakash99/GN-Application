@@ -254,4 +254,9 @@ public class TreecuttingrequestController {
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(request.getTransportpdf());
     }
+
+    @GetMapping("/statussummary")
+    public List<Object[]> getStatusSummary() {
+        return treecuttingrequestdao.getStatusSummary();
+    }
 }
