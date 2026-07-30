@@ -30,7 +30,7 @@ export class HouseholdComponent implements OnInit {
   hhheaders: string[] = ['Household No', 'Address', 'Registered', 'Head Citizen ID', 'Members'];
   hhbinders: string[] = ['householdno', 'address', 'registrationdate', 'headcitizenId', 'getMemberCount()'];
 
-  cshhcolumns: string[] = ['cshhno', 'csaddr', 'csdate'];
+  cshhcolumns: string[] = ['cshhno', 'csaddr'];
   cshhprompts: string[] = ['Search No', 'Search Address'];
 
   // ── Members table ──────────────────────────────────────────────────────────

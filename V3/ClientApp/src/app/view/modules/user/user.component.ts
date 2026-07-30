@@ -129,7 +129,9 @@ export class UserComponent implements OnInit{
 
   }
 
-
+  resetTimeCreated(): void {
+    this.form.controls['tocreated'].setValue(this.dp.transform(Date.now(), 'hh:mm:ss'));
+  }
   async ngOnInit(): Promise<void> {
     this.initialize();
   }
@@ -463,11 +465,18 @@ export class UserComponent implements OnInit{
               addstatus = false;
               addmessage = "Content Not Found"
             }
-          }).finally(() => {
+          }).catch((err) => {
+            console.error(err);
+            addstatus = false;
+            addmessage = err?.error?.message || err?.error?.errors || ("Server Error: " + (err?.status ?? "unknown"));
+          })
+            .finally(() => {
 
             if (addstatus) {
               addmessage = "Successfully Saved";
               this.form.reset();
+              this.form.reset();
+              this.resetTimeCreated()
               this.userroles = [];
               Object.values(this.form.controls).forEach(control => {
                 control.markAsTouched();
@@ -585,10 +594,17 @@ export class UserComponent implements OnInit{
                 updstatus = false;
                 updmessage = "Content Not Found"
               }
-            } ).finally(() => {
+            } )
+              .catch((err) => {
+                console.error(err);
+                updstatus = false;
+                updmessage = err?.error?.message || "Server Error: " + (err?.status ?? "unknown");
+              }).finally(() => {
               if (updstatus) {
                 updmessage = "Successfully Updated";
                 this.form.reset();
+                this.form.reset();
+                this.resetTimeCreated()
                 this.leftAll();
                 Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
                 this.loadTable("");
@@ -616,6 +632,33 @@ export class UserComponent implements OnInit{
     }
   }
 
+  clear(): void {
+
+    const confirm = this.dg.open(ConfirmComponent, {
+      width: '500px',
+      data: {heading: "Clear Form", message: "Are you sure to Clear the Form?"}
+    });
+
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        this.form.reset();
+        this.form.reset();
+        this.resetTimeCreated()
+        this.leftAll();
+        this.roles = Array.from(this.oldroles);
+        this.userroles = [];
+        this.selectedrow = null;
+        this.olduser = undefined as any;
+
+        Object.values(this.form.controls).forEach(control => {
+          control.markAsTouched();
+          control.markAsPristine();
+        });
+
+        this.enableButtons(true, false, false);
+      }
+    });
+  }
 
   delete() : void {
 
@@ -643,10 +686,17 @@ export class UserComponent implements OnInit{
             delstatus = false;
             delmessage = "Content Not Found"
           }
-        }).finally(() => {
+        })
+          .catch((err) => {
+            console.error(err);
+            delstatus = false;
+            delmessage = err?.error?.message || err?.error?.errors || ("Server Error: " + (err?.status ?? "unknown"));
+          }).finally(() => {
           if (delstatus) {
             delmessage = "Successfully Deleted";
             this.form.reset();
+            this.form.reset();
+            this.resetTimeCreated()
             this.leftAll();
             Object.values(this.form.controls).forEach(control => {
               control.markAsTouched();

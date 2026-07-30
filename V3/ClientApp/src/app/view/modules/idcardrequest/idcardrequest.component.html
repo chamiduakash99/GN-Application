@@ -1,5 +1,14 @@
 <mat-grid-list [cols]="12" rowHeight="4rem">
-
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
+    <div class="status-dashboard">
+      <div class="status-card"
+           *ngFor="let item of statusSummary"
+           [ngClass]="item.status.toLowerCase().replace(' ', '-')">
+        <div class="status-title">{{ item.status }}</div>
+        <div class="status-count">{{ item.count }}</div>
+      </div>
+    </div>
+  </mat-grid-tile>
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- LEFT PANEL — Form -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -55,7 +64,6 @@
             <mat-label>BC Number or ID Number <span class="req">*</span></mat-label>
             <input matInput formControlName="bcnooridno"
                    placeholder="Enter birth certificate or existing ID number">
-            <mat-hint>Required for first-time applications</mat-hint>
           </mat-form-field>
 
           <!-- ── MISPLACED / DAMAGED FIELDS ─────────────────────────────── -->
@@ -66,7 +74,6 @@
             <input matInput [matDatepicker]="compdate" formControlName="complaintdate">
             <mat-datepicker-toggle matSuffix [for]="compdate"></mat-datepicker-toggle>
             <mat-datepicker #compdate></mat-datepicker>
-            <mat-hint>Date complaint was lodged at police</mat-hint>
           </mat-form-field>
 
           <mat-form-field appearance="outline" *ngIf="isPoliceRequired">
@@ -97,16 +104,16 @@
           <!-- Buttons -->
           <div id="butpanel">
             <button mat-raised-button (click)="add()" [disabled]="!enaadd">
-              <mat-icon>add</mat-icon> Add
+              Add
             </button>
             <button mat-raised-button (click)="update()" [disabled]="!enaupd">
-              <mat-icon>edit</mat-icon> Update
+              Update
             </button>
             <button mat-raised-button (click)="delete()" [disabled]="!enadel">
-              <mat-icon>delete</mat-icon> Delete
+              Delete
             </button>
             <button mat-raised-button (click)="clear()">
-              <mat-icon>clear</mat-icon> Clear
+              Clear
             </button>
           </div>
 
@@ -181,7 +188,14 @@
 
           <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
             <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, binders[i])}}</mat-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col === 'applieddate'; else defaultCell">
+                {{ uiassist.getProperty(element, binders[i]) | date:'yyyy-MM-dd' }}
+              </ng-container>
+              <ng-template #defaultCell>
+                {{uiassist.getProperty(element, binders[i])}}
+              </ng-template>
+            </mat-cell>
           </ng-container>
 
           <ng-container *ngFor="let cscol of cscolumns; let i = index" [matColumnDef]="cscol">

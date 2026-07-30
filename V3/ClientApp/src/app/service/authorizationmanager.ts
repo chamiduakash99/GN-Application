@@ -34,8 +34,8 @@ export class AuthorizationManager {
   ]
 
   CertificateRequest = [
-    {name: 'Certificate',displayName: 'Certificate',  isVisible: false, routerLink: 'certificate'},
-    {name: 'CertificateRequest',displayName: 'Certificate Request',  isVisible: false, routerLink: 'certificaterequest'}
+    {name: 'CertificateRequest',displayName: 'Certificate Request',  isVisible: false, routerLink: 'certificaterequest'},
+    {name: 'Certificate',displayName: 'Certificate',  isVisible: false, routerLink: 'certificate'}
   ];
 
   TreeCuttingRequest = [

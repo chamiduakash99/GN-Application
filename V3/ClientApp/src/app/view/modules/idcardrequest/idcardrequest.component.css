@@ -57,7 +57,7 @@ mat-card-header {
 .sectionlabel {
   font-size: 13px;
   font-weight: 600;
-  color: #f00;
+  color: #000d33;
   margin: 14px 0 6px 0;
   border-left: 3px solid #3b4e5f;
   padding-left: 8px;
@@ -111,8 +111,38 @@ button:disabled {
 
 #idcardform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: #78b8dd;
+  background-color: #ffffff;
 }
 #idcardform mat-form-field .ng-dirty {
-  background-color: #d4d881;
+  background-color: #ffffff;
 }
+
+.status-dashboard {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.status-card {
+  width: 180px;
+  height: 100px;
+  border-radius: 12px;
+  color: #f2f5fd;
+  background: #607d8b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.pending   { background: #f39c12; }
+.approved  { background: #2ecc71; }
+.rejected  { background: #e74c3c; }
+.issued    { background: #3498db; }
+.completed { background: #9b59b6; }
+
+.status-title { font-size: 16px; }
+.status-count { font-size: 28px; margin-top: 5px; }

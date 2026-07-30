@@ -6,7 +6,8 @@ mat-card {
 }
 mat-card-content { overflow: auto; height: 100%; }
 mat-card-header {
-  background: #c0c9d9;
+  background: #000d33;
+  color: #f2f5fd;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -128,7 +129,7 @@ button:disabled { opacity: 0.5; }
 
 /* ── Form validation ─────────────────────────────────────────────────────── */
 #treeform mat-form-field .ng-valid,
-.ng-valid.required  { background-color: lightgreen; }
-#treeform mat-form-field .ng-dirty { background-color: gold; }
+.ng-valid.required  { background-color: #ffffff; }
+#treeform mat-form-field .ng-dirty { background-color: #ffffff; }
 
 mat-divider { margin: 10px 0; }

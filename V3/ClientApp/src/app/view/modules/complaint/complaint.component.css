@@ -78,8 +78,37 @@ button:disabled {
 
 #complaintform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: #78b8dd;
+  background-color: #ffffff;
 }
 #complaintform mat-form-field .ng-dirty {
-  background-color: #d4d881;
+  background-color: #ffffff;
 }
+
+.status-dashboard {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.status-card {
+  width: 180px;
+  height: 100px;
+  border-radius: 12px;
+  color: #f2f5fd;
+  background: #607d8b;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.pending       { background: #f39c12; }
+.investigating { background: #3498db; }
+.resolved      { background: #2ecc71; }
+.rejected      { background: #e74c3c; }
+
+.status-title { font-size: 16px; }
+.status-count { font-size: 28px; margin-top: 5px; }

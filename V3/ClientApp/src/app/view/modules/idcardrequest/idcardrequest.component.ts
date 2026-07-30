@@ -53,6 +53,7 @@ export class IdcardrequestComponent implements OnInit {
   reasons: Reason[] = [];
   citizens: Citizen[] = [];
   employees: Employee[] = [];
+  statusSummary: Array<{status: string, count: number}> = [];
 
   imageurl: string = '';
 
@@ -131,6 +132,14 @@ export class IdcardrequestComponent implements OnInit {
     this.clearConditionalValidators();
   }
 
+  updateStatusSummary(): void {
+    if (this.idcardrequeststatus.length === 0) return;
+    this.statusSummary = this.idcardrequeststatus.map(s => ({
+      status: s.name,
+      count: this.idcardrequests.filter(r => r.idcardrequeststatus?.name === s.name).length
+    }));
+  }
+
   // ── Reason-driven conditional validators ──────────────────────────────────
   onReasonChange(reason: Reason): void {
     if (!reason) return;
@@ -201,6 +210,7 @@ export class IdcardrequestComponent implements OnInit {
     this.irs.getAll(query)
       .then((items: Idcardrequest[]) => {
         this.idcardrequests = items;
+        this.updateStatusSummary();
         this.imageurl = 'assets/fullfilled.png';
       })
       .catch(error => {
@@ -210,6 +220,7 @@ export class IdcardrequestComponent implements OnInit {
       .finally(() => {
         this.data = new MatTableDataSource(this.idcardrequests);
         this.data.paginator = this.paginator;
+        this.updateStatusSummary();
       });
   }
 

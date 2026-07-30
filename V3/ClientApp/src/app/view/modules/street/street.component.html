@@ -8,6 +8,7 @@
 
       <mat-card-content id="streetform">
         <form [formGroup]="form">
+          <br><br>
 
           <mat-form-field appearance="outline">
             <mat-label>Codename</mat-label>
@@ -208,10 +209,10 @@
           </mat-form-field>
 
           <div>
-            <button mat-raised-button color="primary" (click)="btnSearchMc()">
+            <button mat-raised-button class="srchbtn" (click)="btnSearchMc()">
               <mat-icon>search</mat-icon> Search
             </button>
-            <button mat-raised-button color="primary" (click)="btnSearchClearMc()">
+            <button mat-raised-button class="srchbtn" (click)="btnSearchClearMc()">
               <mat-icon>reorder</mat-icon> Clear Search
             </button>
           </div>

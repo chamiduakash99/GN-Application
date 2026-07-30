@@ -35,11 +35,11 @@ mat-card-header { background: #0c1b31; color: #f2f5fd; }
 
 #userform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: #78b8dd;
+  background-color: #ffffff;
 }
 
 #userform mat-form-field .ng-dirty{
-  background-color: #d4d881;
+  background-color: #ffffff;
 }
 
 

@@ -77,6 +77,7 @@ export class CultivationComponent implements OnInit {
   areaunits: Areaunit[] = [];
   landdetails: Land[] = [];
   citizens: Citizen[] = [];
+  statusSummary: Array<{status: string, count: number}> = [];
 
   imageurl: string = '';
 
@@ -177,6 +178,15 @@ export class CultivationComponent implements OnInit {
     this.enableHarButtons(false, false, false);
   }
 
+  updateStatusSummary(): void {
+    this.statusSummary = [
+      { status: 'Active', count: this.cultivations.filter(c => c.cultivationstatus?.name === 'Active').length },
+      { status: 'Harvested', count: this.cultivations.filter(c => c.cultivationstatus?.name === 'Harvested').length },
+      { status: 'Abandoned', count: this.cultivations.filter(c => c.cultivationstatus?.name === 'Abandoned').length },
+      { status: 'Total Cultivations', count: this.cultivations.length },
+    ];
+  }
+
   // ── Table loaders ──────────────────────────────────────────────────────────
   loadCultivationTable(query: string): void {
     this.culs.getAll(query)
@@ -188,6 +198,7 @@ export class CultivationComponent implements OnInit {
       .finally(() => {
         this.culdata = new MatTableDataSource(this.cultivations);
         this.culdata.paginator = this.culpaginator;
+        this.updateStatusSummary();
       });
   }
 

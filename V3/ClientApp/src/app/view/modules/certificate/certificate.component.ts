@@ -12,16 +12,7 @@ import {UiAssist} from '../../../util/ui/ui.assist';
 import {MessageComponent} from '../../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
 
-// NOTE:
-// This component used to depend on an @Input() selectedRequest that was never
-// actually bound by any parent (the "certificate" route is standalone), so there
-// was no way to pick which Approved request to issue a certificate for. Fixed by
-// giving this component its own "Approved Requests" table (requeststatusid = 2)
-// to select from — same pattern used everywhere else in this app for tables.
-//
-// The GN Officer dropdown has also been removed. The officer is always whoever is
-// currently logged in (read from localStorage 'employee', same key already set by
-// AuthorizationManager.setEmployee()), never a manual selection.
+
 
 @Component({
   selector: 'app-certificate',
@@ -39,7 +30,7 @@ export class CertificateComponent implements OnInit {
   reqsearch!: FormGroup;
   @ViewChild('reqpaginator') reqpaginator!: MatPaginator;
 
-  // ── Certificate table (issued certificates for the selected request) ──────
+  // ── Certificate table (ALL issued certificates) ─────────────────────────────
   certcolumns: string[] = ['certificateNo', 'issuedDate', 'expiryDate',  'certpick'];
   certheaders: string[] = ['Certificate No', 'Issued Date', 'Expiry Date',  'Mark Picked'];
   certbinders: string[] = ['certificateno', 'issueddate', 'expirydate',  ''];
@@ -58,6 +49,7 @@ export class CertificateComponent implements OnInit {
   selectedcertrow: any;
   certificates: Array<Certificate> = [];
   certdata!: MatTableDataSource<Certificate>;
+  statusSummary: Array<{status: string, count: number}> = [];
   currentemployee!: Employee;
   imageurl: string = '';
   scannedimageurl: string = 'assets/default.png';
@@ -96,8 +88,7 @@ export class CertificateComponent implements OnInit {
     });
 
     // NOTE: 'employee' control removed on purpose — the officer is never picked
-    // from a dropdown, it's always the currently logged-in officer (see
-    // loadCurrentEmployee() / currentemployee below).
+
     this.certform = this.fb.group({
       'certificateno': new FormControl('', [Validators.required]),
       'issueddate': new FormControl(''),
@@ -133,6 +124,8 @@ export class CertificateComponent implements OnInit {
     this.imageurl = 'assets/pending.gif';
     // Only Approved (id = 2) requests are eligible to have a certificate issued.
     this.loadRequestTable('?requeststatusid=2');
+    // Certificate table shows every issued certificate, independent of selection.
+    this.loadCertificateTable('');
   }
 
   // ── Approved-requests table loader ─────────────────────────────────────────
@@ -149,6 +142,7 @@ export class CertificateComponent implements OnInit {
       .finally(() => {
         this.reqdata = new MatTableDataSource(this.reqrequests);
         this.reqdata.paginator = this.reqpaginator;
+        this.updateStatusSummary();
       });
   }
 
@@ -165,19 +159,19 @@ export class CertificateComponent implements OnInit {
   }
 
   // ── Select an Approved request to issue a certificate for ──────────────────
+
   selectRequest(req: Certificaterequest) {
     this.selectedreqrow = req;
     this.certificaterequest = req;
     this.certFormEnabled = true;
     this.toggleCertFormState();
-    this.loadCertificateTable('?requestId=' + req.id);
     this.enableCertButtons(true, false);
     this.selectedcertrow = null;
     this.certform.reset();
     this.scannedimageurl = 'assets/default.png';
   }
 
-  // ── Certificate table loader ────────────────────────────────────────────────
+  // ── Certificate table loader (loads ALL certificates when query is empty) ──
   loadCertificateTable(query: string) {
     this.cs.getAll(query)
       .then((certs: Certificate[]) => {
@@ -189,6 +183,7 @@ export class CertificateComponent implements OnInit {
       .finally(() => {
         this.certdata = new MatTableDataSource(this.certificates);
         this.certdata.paginator = this.certpaginator;
+        this.updateStatusSummary();
       });
   }
 
@@ -207,25 +202,43 @@ export class CertificateComponent implements OnInit {
   }
 
   // ── Client-side filter (issued certificates table) ─────────────────────────
+  private isPicked(val: any): boolean {
+    return val === true || val === 'true' || val === 1 || val === '1';
+  }
+
   filterCertTable(): void {
     const cs = this.cscertsearch.getRawValue();
     this.certdata.filterPredicate = (cert: Certificate, filter: string) => {
       return (cs.cscertno == null || cert.certificateno?.toLowerCase().includes(cs.cscertno)) &&
         (cs.cscertissued == null || cert.issueddate?.includes(cs.cscertissued)) &&
         (cs.cscertexpiry == null || cert.expirydate?.includes(cs.cscertexpiry)) &&
-        (cs.cscertpicked == null || String(cert.hardcopypicked).includes(cs.cscertpicked));
+        (cs.cscertpicked == null || cs.cscertpicked === '' ||
+          this.isPicked(cert.hardcopypicked) === (cs.cscertpicked === 'true'));
     };
     this.certdata.filter = 'xx';
   }
 
-  // ── Server-side search (issued certificates table) ─────────────────────────
+  updateStatusSummary(): void {
+    this.statusSummary = [
+      { status: 'Approved Requests', count: this.reqrequests.length },
+      { status: 'Certificates Issued', count: this.certificates.length },
+      { status: 'Picked Up', count: this.certificates.filter(c => this.isPicked(c.hardcopypicked)).length },
+      { status: 'Not Picked', count: this.certificates.filter(c => !this.isPicked(c.hardcopypicked)).length },
+    ];
+  }
+
+  // ── Server-side search (issued certificates table — searches ALL certificates) ─
   btnSearchCert(): void {
-    if (!this.certificaterequest?.id) return;
     const ss = this.sscertsearch.getRawValue();
-    let query = '?requestId=' + this.certificaterequest.id;
-    if (ss.sscertno != null) query += '&certificateno=' + ss.sscertno;
-    if (ss.sscertissued != null) query += '&issueddate=' + ss.sscertissued;
-    if (ss.sscertexpiry != null) query += '&expirydate=' + ss.sscertexpiry;
+    let query = '';
+    const addParam = (key: string, val: any) => {
+      if (val != null && val !== '') {
+        query += (query === '' ? '?' : '&') + key + '=' + val;
+      }
+    };
+    addParam('certificateno', ss.sscertno);
+    addParam('issueddate', ss.sscertissued);
+    addParam('expirydate', ss.sscertexpiry);
     this.loadCertificateTable(query);
   }
 
@@ -237,12 +250,11 @@ export class CertificateComponent implements OnInit {
     confirm.afterClosed().subscribe(async result => {
       if (result) {
         this.sscertsearch.reset();
-        if (this.certificaterequest?.id) {
-          this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
-        }
+        this.loadCertificateTable('');
       }
     });
   }
+
 
   // ── Fill form from table row (view / continue an in-progress certificate) ──
   fillCertForm(cert: Certificate) {
@@ -289,9 +301,7 @@ export class CertificateComponent implements OnInit {
         this.selectedcertrow = null;
         this.enableCertButtons(false, false);
         this.clearScan();
-        if (this.certificaterequest?.id) {
-          this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
-        }
+        this.loadCertificateTable('');
       }
     });
   }
@@ -361,7 +371,7 @@ export class CertificateComponent implements OnInit {
           if (crtstatus) {
             crtmessage = 'Certificate Created Successfully';
             this.certform.reset();
-            this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
+            this.loadCertificateTable('');
             this.enableCertButtons(false, true);
           }
           const stsmsg = this.dg.open(MessageComponent, {
@@ -410,7 +420,7 @@ export class CertificateComponent implements OnInit {
         }).finally(() => {
           if (uplstatus) {
             uplmessage = 'Scanned Copy Uploaded — Status changed to Certificate Ready';
-            this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
+            this.loadCertificateTable('');
             this.enableCertButtons(false, true);
             // The request status just flipped to "Certificate Ready" (4), so it
             // no longer belongs in the Approved-requests list — refresh it.
@@ -449,7 +459,7 @@ export class CertificateComponent implements OnInit {
         }).finally(() => {
           if (pkpstatus) {
             pkpmessage = 'Certificate Marked as Picked Up';
-            this.loadCertificateTable('?requestId=' + this.certificaterequest.id);
+            this.loadCertificateTable('');
           }
           const stsmsg = this.dg.open(MessageComponent, {
             width: '500px',

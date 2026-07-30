@@ -1,5 +1,14 @@
 <mat-grid-list [cols]="12" rowHeight="4rem">
-
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
+    <div class="status-dashboard">
+      <div class="status-card"
+           *ngFor="let item of statusSummary"
+           [ngClass]="item.status.toLowerCase().replace(' ', '-')">
+        <div class="status-title">{{ item.status }}</div>
+        <div class="status-count">{{ item.count }}</div>
+      </div>
+    </div>
+  </mat-grid-tile>
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- LEFT PANEL — Form -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -63,16 +72,16 @@
 
           <div id="butpanel">
             <button mat-raised-button (click)="add()" [disabled]="!enaadd">
-              <mat-icon>add</mat-icon> Add
+              Add
             </button>
             <button mat-raised-button (click)="update()" [disabled]="!enaupd">
-              <mat-icon>edit</mat-icon> Update
+              Update
             </button>
             <button mat-raised-button (click)="delete()" [disabled]="!enadel">
-              <mat-icon>delete</mat-icon> Delete
+              Delete
             </button>
             <button mat-raised-button (click)="clear()">
-              <mat-icon>clear</mat-icon> Clear
+              Clear
             </button>
           </div>
 
@@ -147,7 +156,14 @@
           <!-- Dynamic data columns -->
           <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
             <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, binders[i])}}</mat-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col === 'date'; else defaultCell">
+                {{ uiassist.getProperty(element, binders[i]) | date:'yyyy-MM-dd' }}
+              </ng-container>
+              <ng-template #defaultCell>
+                {{uiassist.getProperty(element, binders[i])}}
+              </ng-template>
+            </mat-cell>
           </ng-container>
 
           <!-- Dynamic client-side search columns -->

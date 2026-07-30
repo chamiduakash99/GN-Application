@@ -253,16 +253,34 @@
           <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">
             <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>
             <mat-cell *matCellDef="let element">
-              <ng-container *ngIf="col === 'transport'; else defaultCell">
+              <ng-container *ngIf="col === 'transport'; else checkDate">
                 <mat-icon [style.color]="element.needstransport ? '#2e7d32' : '#9e9e9e'">
                   {{ element.needstransport ? 'local_shipping' : 'remove' }}
                 </mat-icon>
               </ng-container>
+              <ng-template #checkDate>
+                <ng-container *ngIf="col === 'requesteddate'; else defaultCell">
+                  {{ element.requesteddate | date:'yyyy-MM-dd' }}
+                </ng-container>
+              </ng-template>
               <ng-template #defaultCell>
                 {{uiassist.getProperty(element, binders[i])}}
               </ng-template>
             </mat-cell>
           </ng-container>
+<!--          <ng-container *ngFor="let col of columns; let i = index" [matColumnDef]="col">-->
+<!--            <mat-header-cell *matHeaderCellDef>{{headers[i]}}</mat-header-cell>-->
+<!--            <mat-cell *matCellDef="let element">-->
+<!--              <ng-container *ngIf="col === 'transport'; else defaultCell">-->
+<!--                <mat-icon [style.color]="element.needstransport ? '#2e7d32' : '#9e9e9e'">-->
+<!--                  {{ element.needstransport ? 'local_shipping' : 'remove' }}-->
+<!--                </mat-icon>-->
+<!--              </ng-container>-->
+<!--              <ng-template #defaultCell>-->
+<!--                {{uiassist.getProperty(element, binders[i])}}-->
+<!--              </ng-template>-->
+<!--            </mat-cell>-->
+<!--          </ng-container>-->
 
           <ng-container *ngFor="let cscol of cscolumns; let i = index" [matColumnDef]="cscol">
             <mat-header-cell *matHeaderCellDef>

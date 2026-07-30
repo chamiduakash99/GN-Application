@@ -6,7 +6,8 @@ mat-card {
 }
 mat-card-content { overflow: auto; height: 100%; }
 mat-card-header {
-  background: #c0c9d9;
+  background: #000d33;
+  color: #f2f5fd;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -158,5 +159,5 @@ mat-divider { margin: 12px 0; }
 
 /* ── Form validation ─────────────────────────────────────────────────────── */
 mat-form-field .ng-valid,
-.ng-valid.required  { background-color: lightgreen; }
-mat-form-field .ng-dirty { background-color: gold; }
+.ng-valid.required  { background-color: #ffffff; }
+mat-form-field .ng-dirty { background-color: #ffffff; }

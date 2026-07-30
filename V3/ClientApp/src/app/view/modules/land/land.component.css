@@ -51,3 +51,8 @@ button:disabled {
 #btnPwdGenerate button{
   background-color: #f00;color: #f2f5fd;
 }
+
+button.srchbtn.mat-mdc-raised-button {
+  background-color: #152054 !important;
+  color: #f2f5fd !important;
+}

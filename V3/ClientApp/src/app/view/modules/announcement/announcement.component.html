@@ -1,6 +1,6 @@
 <mat-grid-list [cols]="12" rowHeight="4rem">
 
-  <mat-grid-tile [colspan]="4" [rowspan]="8">
+  <mat-grid-tile [colspan]="4" [rowspan]="9">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Announcement Detail</mat-card-title>
@@ -56,44 +56,44 @@
   </mat-grid-tile>
 
 
-  <mat-grid-tile [colspan]="8" [rowspan]="3">
-    <mat-card id="ssearch">
-      <mat-card-header>
-        <mat-card-title>Announcement Search</mat-card-title>
-      </mat-card-header>
+<!--  <mat-grid-tile [colspan]="8" [rowspan]="3">-->
+<!--    <mat-card id="ssearch">-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Announcement Search</mat-card-title>-->
+<!--      </mat-card-header>-->
 
-      <mat-card-content>
+<!--      <mat-card-content>-->
 
-        <mat-form [formGroup]="ssearch">
+<!--        <mat-form [formGroup]="ssearch">-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Search by Title</mat-label>
-            <input matInput formControlName="sstitle">
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Search by Title</mat-label>-->
+<!--            <input matInput formControlName="sstitle">-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="ssisactive">
-              <mat-option [value]="null" selected>Not Selected</mat-option>
-              <mat-option [value]="1">Active</mat-option>
-              <mat-option [value]="0">Inactive</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Status</mat-label>-->
+<!--            <mat-select formControlName="ssisactive">-->
+<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
+<!--              <mat-option [value]="1">Active</mat-option>-->
+<!--              <mat-option [value]="0">Inactive</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
-          <div>
-            <button mat-raised-button color="primary" (click)="btnSearchMc()"><mat-icon>search</mat-icon> Search </button>
-            <button mat-raised-button color="primary" (click)="btnSearchClearMc()"><mat-icon>reorder</mat-icon> Clear Search </button>
-          </div>
+<!--          <div>-->
+<!--            <button mat-raised-button color="primary" (click)="btnSearchMc()"><mat-icon>search</mat-icon> Search </button>-->
+<!--            <button mat-raised-button color="primary" (click)="btnSearchClearMc()"><mat-icon>reorder</mat-icon> Clear Search </button>-->
+<!--          </div>-->
 
-        </mat-form>
+<!--        </mat-form>-->
 
-      </mat-card-content>
+<!--      </mat-card-content>-->
 
-    </mat-card>
-  </mat-grid-tile>
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
 
 
-  <mat-grid-tile [colspan]="8" [rowspan]="5">
+  <mat-grid-tile [colspan]="8" [rowspan]="9">
     <mat-card>
       <mat-card-header>
         <mat-card-title>Announcement Table</mat-card-title>
@@ -106,12 +106,19 @@
 
         <mat-table [dataSource]="data">
 
-          <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
             <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
-            <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="column === 'publishedat' || column === 'expiredat'; else defaultCell">
+                {{ uiassist.getProperty(element, binders[i]) | date:'yyyy-MM-dd' }}
+              </ng-container>
+              <ng-template #defaultCell>
+                {{ uiassist.getProperty(element, binders[i]) }}
+              </ng-template>
+            </mat-cell>
           </ng-container>
 
-          <ng-container *ngFor="let cscolumn of cscolumns;let i = index;" [matColumnDef]="cscolumn">
+          <ng-container *ngFor="let cscolumn of cscolumns; let i = index;" [matColumnDef]="cscolumn">
             <mat-header-cell *matHeaderCellDef>
               <mat-form [formGroup]="csearch" class="csearch">
                 <mat-form-field appearance="outline">

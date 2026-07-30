@@ -49,6 +49,15 @@ mat-card-header { background: #0c1b31; color: #f2f5fd; }
   margin-top: -100px;
 }
 
+.srchbtn {
+  background-color: #152054;
+  color: #f2f5fd;
+}
+
+button.srchbtn.mat-mdc-raised-button {
+  background-color: #152054 !important;
+  color: #f2f5fd !important;
+}
 
 /* Employee Form > Button Panel  */
 #butpanel{  margin-top: 30px;

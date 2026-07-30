@@ -103,7 +103,7 @@
 
           <div id="butpanel">
             <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
-            <button mat-raised-button>Clear</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
             <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>
             <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>
           </div>
@@ -181,7 +181,7 @@
 
         </mat-table>
 
-        <mat-paginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]" [showFirstLastButtons]="true"></mat-paginator>
 
       </mat-card-content>
     </mat-card>

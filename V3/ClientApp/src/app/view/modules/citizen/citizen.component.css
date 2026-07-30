@@ -98,3 +98,8 @@ button:disabled {
 .form-field {
   flex: 1;
 }
+
+button.srchbtn.mat-mdc-raised-button {
+  background-color: #152054 !important;
+  color: #f2f5fd !important;
+}

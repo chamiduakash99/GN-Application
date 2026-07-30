@@ -256,7 +256,7 @@ mat-divider {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* Individual status colors */
+/* Individual status colors — Certificate Request workflow */
 .pending {
   background: #f39c12;
 }
@@ -275,6 +275,23 @@ mat-divider {
 
 .completed {
   background: #9b59b6;
+}
+
+/* Individual status colors — Certificate module dashboard */
+.approved-requests {
+  background: #2ecc71;
+}
+
+.certificates-issued {
+  background: #3498db;
+}
+
+.picked-up {
+  background: #2ecc71;
+}
+
+.not-picked {
+  background: #f39c12;
 }
 
 .status-title {

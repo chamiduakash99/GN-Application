@@ -1,5 +1,14 @@
 <mat-grid-list [cols]="12" rowHeight="4rem">
-
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
+    <div class="status-dashboard">
+      <div class="status-card"
+           *ngFor="let item of statusSummary"
+           [ngClass]="item.status.toLowerCase().replace(' ', '-')">
+        <div class="status-title">{{ item.status }}</div>
+        <div class="status-count">{{ item.count }}</div>
+      </div>
+    </div>
+  </mat-grid-tile>
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- LEFT PANEL — Cultivation Form + Harvest Form -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
@@ -90,16 +99,16 @@
 
           <div id="culbutpanel">
             <button mat-raised-button (click)="addCultivation()" [disabled]="!enaculadd">
-              <mat-icon>add</mat-icon> Add
+              Add
             </button>
             <button mat-raised-button (click)="updateCultivation()" [disabled]="!enaculupd">
-              <mat-icon>edit</mat-icon> Update
+              Update
             </button>
             <button mat-raised-button (click)="deleteCultivation()" [disabled]="!enaculdel">
-              <mat-icon>delete</mat-icon> Delete
+              Delete
             </button>
             <button mat-raised-button (click)="clear()">
-              <mat-icon>clear</mat-icon> Clear
+              Clear
             </button>
           </div>
 

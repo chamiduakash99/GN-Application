@@ -3,61 +3,61 @@
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- TOP — Citizen Table (full width) -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <mat-grid-tile [colspan]="12" [rowspan]="3">
-    <mat-card id="ssearch">
-      <mat-card-header>
-        <mat-card-title>Search Citizens</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form [formGroup]="sssearch">
+<!--  <mat-grid-tile [colspan]="12" [rowspan]="3">-->
+<!--    <mat-card id="ssearch">-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Search Citizens</mat-card-title>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <mat-form [formGroup]="sssearch">-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Citizen</mat-label>
-            <mat-select formControlName="sscitizens">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Citizen</mat-label>-->
+<!--            <mat-select formControlName="sscitizens">-->
+<!--              <mat-option [value]="null">Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Profession</mat-label>
-            <mat-select formControlName="ssprofession">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let p of professions" [value]="p.id">{{p.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Profession</mat-label>-->
+<!--            <mat-select formControlName="ssprofession">-->
+<!--              <mat-option [value]="null">Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let p of professions" [value]="p.id">{{p.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Income Source</mat-label>
-            <input matInput formControlName="ssincomesrc" placeholder="e.g. Farming">
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Income Source</mat-label>-->
+<!--            <input matInput formControlName="ssincomesrc" placeholder="e.g. Farming">-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Min Income (Rs.)</mat-label>
-            <input matInput type="number" formControlName="ssminamount" placeholder="e.g. 20000">
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Min Income (Rs.)</mat-label>-->
+<!--            <input matInput type="number" formControlName="ssminamount" placeholder="e.g. 20000">-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Max Income (Rs.)</mat-label>
-            <input matInput type="number" formControlName="ssmaxamount" placeholder="e.g. 80000">
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Max Income (Rs.)</mat-label>-->
+<!--            <input matInput type="number" formControlName="ssmaxamount" placeholder="e.g. 80000">-->
+<!--          </mat-form-field>-->
 
-          <div>
-            <button mat-raised-button (click)="btnSearchMc()">
-              <mat-icon>search</mat-icon> Search
-            </button>
-            <button mat-raised-button (click)="btnSearchClearMc()">
-              <mat-icon>reorder</mat-icon> Clear
-            </button>
-            <button mat-raised-button (click)="clear()">
-              <mat-icon>clear</mat-icon> Clear All
-            </button>
-          </div>
+<!--          <div>-->
+<!--            <button mat-raised-button (click)="btnSearchMc()">-->
+<!--              <mat-icon>search</mat-icon> Search-->
+<!--            </button>-->
+<!--            <button mat-raised-button (click)="btnSearchClearMc()">-->
+<!--              <mat-icon>reorder</mat-icon> Clear-->
+<!--            </button>-->
+<!--            <button mat-raised-button (click)="clear()">-->
+<!--              <mat-icon>clear</mat-icon> Clear All-->
+<!--            </button>-->
+<!--          </div>-->
 
-        </mat-form>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
+<!--        </mat-form>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
 
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- CITIZEN TABLE — full width -->

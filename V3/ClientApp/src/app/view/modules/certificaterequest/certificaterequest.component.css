@@ -215,11 +215,11 @@ button:disabled {
 
 #certreqform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: #78b8dd;
+  background-color: white;
 }
 
 #certreqform mat-form-field .ng-dirty {
-  background-color: #d4d881;
+  background-color: white;
 }
 
 mat-divider {
@@ -275,3 +275,5 @@ mat-divider {
   font-size: 28px;
   margin-top: 5px;
 }
+
+

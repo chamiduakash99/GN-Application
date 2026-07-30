@@ -50,6 +50,7 @@ export class ComplaintComponent {
   complaintstatuses: Array<Complaintstatus> = [];
   citizens: Array<Citizen> = [];
   employees: Array<Employee> = [];
+  statusSummary: Array<{status: string, count: number}> = [];
 
   imageurl: string = '';
 
@@ -124,11 +125,20 @@ export class ComplaintComponent {
     });
   }
 
+  updateStatusSummary(): void {
+    if (this.complaintstatuses.length === 0) return;
+    this.statusSummary = this.complaintstatuses.map(s => ({
+      status: s.name,
+      count: this.complaints.filter(c => c.complaintstatus?.name === s.name).length
+    }));
+  }
+
   // ── Table loader ──────────────────────────────────────────────────────────
   loadTable(query: string) {
     this.cs.getAll(query)
       .then((items: Complaint[]) => {
         this.complaints = items;
+        this.updateStatusSummary();
         this.imageurl = 'assets/fullfilled.png';
       })
       .catch((error) => {
@@ -138,6 +148,7 @@ export class ComplaintComponent {
       .finally(() => {
         this.data = new MatTableDataSource(this.complaints);
         this.data.paginator = this.paginator;
+        this.updateStatusSummary();
       });
   }
 
