@@ -50,7 +50,8 @@ public class Landdetail {
     @ManyToOne
     @JoinColumn(name = "street_id", referencedColumnName = "id", nullable = false)
     private Street street;
-    @OneToMany(mappedBy = "landdetail")
+
+    @OneToMany(mappedBy = "landdetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<LandfeatureHasLanddetail> landfeaturedetails;
 
     public Integer getId() {
