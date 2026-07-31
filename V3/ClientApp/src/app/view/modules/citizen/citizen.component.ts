@@ -408,6 +408,7 @@ export class CitizenComponent implements OnInit {
     this.indata = new MatTableDataSource<Citizenguardian>(this.citizenguardians);
     // ===== PATCH FORM =====
     this.form.patchValue(this.citizen);
+    this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
     this.form.markAsPristine();
   }
 
@@ -1083,50 +1084,53 @@ export class CitizenComponent implements OnInit {
   // }
 
   rightSelected(): void {
-
-    this.citizen.citizenaidprograms = this.availablelist.selectedOptions.selected.map(option => {
+    this.availablelist.selectedOptions.selected.forEach(option => {
       const citizenaidprogram = new Citizenaidprogram(option.value);
-      this.aidprograms = this.aidprograms.filter(aidprogram => aidprogram !== option.value); //Remove Selected
-      this.citizenaidprograms.push(citizenaidprogram); // Add selected to Right Side
-      return citizenaidprogram;
+      this.aidprograms = this.aidprograms.filter(ap => ap !== option.value);
+      this.citizenaidprograms.push(citizenaidprogram);
     });
 
-    this.form.controls["citizenaidprograms"].clearValidators();
-    this.form.controls["citizenaidprograms"].updateValueAndValidity(); // Update status
+    this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
+    this.form.controls['citizenaidprograms'].clearValidators();
+    this.form.controls['citizenaidprograms'].updateValueAndValidity();
   }
 
   leftSelected(): void {
     const selectedOptions = this.selectedlist.selectedOptions.selected;
     selectedOptions.forEach(option => {
-      const extcitizenaidprogram = option.value as Citizenaidprogram;
-      this.citizenaidprograms = this.citizenaidprograms.filter(citizenaidprogram => citizenaidprogram !== extcitizenaidprogram);
-      if (!this.aidprograms.includes(extcitizenaidprogram.aidprogram)) {
-        this.aidprograms.push(extcitizenaidprogram.aidprogram);
+      const ext = option.value as Citizenaidprogram;
+      this.citizenaidprograms = this.citizenaidprograms.filter(cap => cap !== ext);
+      if (!this.aidprograms.includes(ext.aidprogram)) {
+        this.aidprograms.push(ext.aidprogram);
       }
     });
 
-    this.form.controls["citizenaidprograms"].setValidators(Validators.required);
+    this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
+    if (this.citizenaidprograms.length === 0) {
+      this.form.controls['citizenaidprograms'].setValidators(Validators.required);
+    }
+    this.form.controls['citizenaidprograms'].updateValueAndValidity();
   }
 
   rightAll(): void {
-    this.citizen.citizenaidprograms = this.availablelist.selectAll().map(option => {
+    this.availablelist.selectAll().forEach(option => {
       const citizenaidprogram = new Citizenaidprogram(option.value);
-      this.aidprograms = this.aidprograms.filter(aidprogram => aidprogram !== option.value); //Remove Selected
-      this.citizenaidprograms.push(citizenaidprogram); // Add selected to Right Side
-      return citizenaidprogram;
+      this.aidprograms = this.aidprograms.filter(ap => ap !== option.value);
+      this.citizenaidprograms.push(citizenaidprogram);
     });
 
-    this.form.controls["citizenaidprograms"].clearValidators();
-    this.form.controls["citizenaidprograms"].updateValueAndValidity();
+    this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
+    this.form.controls['citizenaidprograms'].clearValidators();
+    this.form.controls['citizenaidprograms'].updateValueAndValidity();
   }
 
-
-
-  leftAll():void{
-    for(let citizenaidprogram of this.citizenaidprograms) this.aidprograms.push(citizenaidprogram.aidprogram);
+  leftAll(): void {
+    for (const cap of this.citizenaidprograms) this.aidprograms.push(cap.aidprogram);
     this.citizenaidprograms = [];
-    this.form.controls["citizenaidprograms"].setValidators(Validators.required);
 
+    this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
+    this.form.controls['citizenaidprograms'].setValidators(Validators.required);
+    this.form.controls['citizenaidprograms'].updateValueAndValidity();
   }
 
 

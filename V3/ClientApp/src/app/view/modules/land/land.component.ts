@@ -175,10 +175,10 @@ export class LandComponent implements OnInit{
     // main form fields (pattern same as street)
     this.form = this.fb.group({
       deedno: new FormControl('', []),
-      street: new FormControl('', []),
-      citizen: new FormControl('', []),
-      landtype: new FormControl('', []),
-      fencetype: new FormControl('', []),
+      street: new FormControl('', [Validators.required]),
+      citizen: new FormControl('', [Validators.required]),
+      landtype: new FormControl('', [Validators.required]),
+      fencetype: new FormControl('', [Validators.required]),
       latitude: new FormControl('', []),
       longitude: new FormControl('', []),
       size: new FormControl('', []),
@@ -411,8 +411,9 @@ export class LandComponent implements OnInit{
 
     this.landfeatures = this.oldlandfeatures;
     this.landfeaturedetailsList = this.land.landfeaturedetails;
+    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
     this.land.landfeaturedetails.forEach((lfd:Landfeaturedetails)=> this.landfeatures = this.landfeatures.filter((lf)=> lf.id != lfd.landfeature.id));
-    // this.user.userroles.forEach((ur)=> this.roles = this.roles.filter((r)=> r.id != ur.role.id )); // Load or remove roles by comparing with user.userroles
+
 
     // If images exist on land, set previews
     if (this.land.image) {
@@ -861,50 +862,99 @@ export class LandComponent implements OnInit{
   // }
 
   rightSelected(): void {
-
-    this.land.landfeaturedetails = this.availablelist.selectedOptions.selected.map(option => {
+    this.availablelist.selectedOptions.selected.forEach(option => {
       const landfeaturedetails = new Landfeaturedetails(option.value);
-      this.landfeatures = this.landfeatures.filter(landfeature => landfeature !== option.value); //Remove Selected
-      this.landfeaturedetailsList.push(landfeaturedetails); // Add selected to Right Side
-      return landfeaturedetails;
+      this.landfeatures = this.landfeatures.filter(lf => lf !== option.value);
+      this.landfeaturedetailsList.push(landfeaturedetails);
     });
 
-    this.form.controls["landfeaturedetails"].clearValidators();
-    this.form.controls["landfeaturedetails"].updateValueAndValidity(); // Update status
+    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
+    this.form.controls['landfeaturedetails'].clearValidators();
+    this.form.controls['landfeaturedetails'].updateValueAndValidity();
   }
 
   leftSelected(): void {
     const selectedOptions = this.selectedlist.selectedOptions.selected;
     selectedOptions.forEach(option => {
-      const extlandfeaturedetails = option.value;
-      this.landfeaturedetailsList = this.landfeaturedetailsList.filter(landfeature => landfeature !== extlandfeaturedetails);
-      if (!this.landfeatures.includes(extlandfeaturedetails.landfeature)) {
-        this.landfeatures.push(extlandfeaturedetails.landfeature);
+      const ext = option.value;
+      this.landfeaturedetailsList = this.landfeaturedetailsList.filter(lf => lf !== ext);
+      if (!this.landfeatures.includes(ext.landfeature)) {
+        this.landfeatures.push(ext.landfeature);
       }
     });
 
-    this.form.controls["landfeaturedetails"].setValidators(Validators.required);
+    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
+    if (this.landfeaturedetailsList.length === 0) {
+      this.form.controls['landfeaturedetails'].setValidators(Validators.required);
+    }
+    this.form.controls['landfeaturedetails'].updateValueAndValidity();
   }
 
   rightAll(): void {
-    this.land.landfeaturedetails = this.availablelist.selectAll().map(option => {
-      const landfeaturedetails1 = new Landfeaturedetails(option.value);
-      this.landfeatures = this.landfeatures.filter(landfeature => landfeature !== option.value);
-      this.landfeaturedetailsList.push(landfeaturedetails1);
-      return landfeaturedetails1;
+    this.availablelist.selectAll().forEach(option => {
+      const landfeaturedetails = new Landfeaturedetails(option.value);
+      this.landfeatures = this.landfeatures.filter(lf => lf !== option.value);
+      this.landfeaturedetailsList.push(landfeaturedetails);
     });
 
-    this.form.controls["landfeaturedetails"].clearValidators();
-    this.form.controls["landfeaturedetails"].updateValueAndValidity();
+    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
+    this.form.controls['landfeaturedetails'].clearValidators();
+    this.form.controls['landfeaturedetails'].updateValueAndValidity();
   }
 
-
-  leftAll():void{
-    for(let landfeaturedetails of this.landfeaturedetailsList) this.landfeatures.push(landfeaturedetails.landfeature);
+  leftAll(): void {
+    for (const lfd of this.landfeaturedetailsList) this.landfeatures.push(lfd.landfeature);
     this.landfeaturedetailsList = [];
-    this.form.controls["landfeaturedetails"].setValidators(Validators.required);
 
+    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
+    this.form.controls['landfeaturedetails'].setValidators(Validators.required);
+    this.form.controls['landfeaturedetails'].updateValueAndValidity();
   }
+  // rightSelected(): void {
+  //
+  //   this.land.landfeaturedetails = this.availablelist.selectedOptions.selected.map(option => {
+  //     const landfeaturedetails = new Landfeaturedetails(option.value);
+  //     this.landfeatures = this.landfeatures.filter(landfeature => landfeature !== option.value); //Remove Selected
+  //     this.landfeaturedetailsList.push(landfeaturedetails); // Add selected to Right Side
+  //     return landfeaturedetails;
+  //   });
+  //
+  //   this.form.controls["landfeaturedetails"].clearValidators();
+  //   this.form.controls["landfeaturedetails"].updateValueAndValidity(); // Update status
+  // }
+  //
+  // leftSelected(): void {
+  //   const selectedOptions = this.selectedlist.selectedOptions.selected;
+  //   selectedOptions.forEach(option => {
+  //     const extlandfeaturedetails = option.value;
+  //     this.landfeaturedetailsList = this.landfeaturedetailsList.filter(landfeature => landfeature !== extlandfeaturedetails);
+  //     if (!this.landfeatures.includes(extlandfeaturedetails.landfeature)) {
+  //       this.landfeatures.push(extlandfeaturedetails.landfeature);
+  //     }
+  //   });
+  //
+  //   this.form.controls["landfeaturedetails"].setValidators(Validators.required);
+  // }
+  //
+  // rightAll(): void {
+  //   this.land.landfeaturedetails = this.availablelist.selectAll().map(option => {
+  //     const landfeaturedetails1 = new Landfeaturedetails(option.value);
+  //     this.landfeatures = this.landfeatures.filter(landfeature => landfeature !== option.value);
+  //     this.landfeaturedetailsList.push(landfeaturedetails1);
+  //     return landfeaturedetails1;
+  //   });
+  //
+  //   this.form.controls["landfeaturedetails"].clearValidators();
+  //   this.form.controls["landfeaturedetails"].updateValueAndValidity();
+  // }
+  //
+  //
+  // leftAll():void{
+  //   for(let landfeaturedetails of this.landfeaturedetailsList) this.landfeatures.push(landfeaturedetails.landfeature);
+  //   this.landfeaturedetailsList = [];
+  //   this.form.controls["landfeaturedetails"].setValidators(Validators.required);
+  //
+  // }
 
 
 

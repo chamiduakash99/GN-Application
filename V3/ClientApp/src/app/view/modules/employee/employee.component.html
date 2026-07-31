@@ -1,4 +1,4 @@
-<mat-grid-list [cols]="12" rowHeight="4rem">
+  <mat-grid-list [cols]="12" rowHeight="4rem">
 
   <mat-grid-tile [colspan]="4" [rowspan]="10">
     <mat-card>
@@ -42,7 +42,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Birth Date</mat-label>
-            <input matInput [matDatepicker]="dob" [min]="minDate" [max]="maxDate" formControlName="dobirth">
+            <input matInput [matDatepicker]="dob" [min]="minBirthDate" [max]="maxBirthDate" formControlName="dobirth">
             <mat-datepicker-toggle matSuffix [for]="dob"></mat-datepicker-toggle>
             <mat-datepicker #dob></mat-datepicker>
           </mat-form-field>

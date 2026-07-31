@@ -70,6 +70,8 @@ export class EmployeeComponent {
 
   minDate : Date;
   maxDate : Date;
+  minBirthDate: Date;
+  maxBirthDate: Date;
 
   constructor(
 
@@ -124,8 +126,10 @@ export class EmployeeComponent {
       "empstatus": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
 
-      this.minDate = new Date(new Date().setDate(new Date().getDate() - 0));
-      this.maxDate = new Date(new Date().setDate(new Date().getDate() + 13));
+    this.minDate = new Date(new Date().setDate(new Date().getDate() - 0));
+    this.maxDate = new Date(new Date().setDate(new Date().getDate() + 13));
+    this.maxBirthDate = new Date();
+    this.minBirthDate = new Date(new Date().setFullYear(new Date().getFullYear() - 100));
 
   }
 

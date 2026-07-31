@@ -577,6 +577,9 @@ export class UserComponent implements OnInit{
           if (result) {
             //console.log("EmployeeService.update()");
             this.user = this.form.getRawValue();
+            this.user.id = this.olduser.id;
+            this.user.userroles = this.userroles;
+            delete (this.user as any).confirmpassword;
 
             this.us.update(this.user).then((responce: [] | undefined) => {
               //console.log("Res-" + responce);
