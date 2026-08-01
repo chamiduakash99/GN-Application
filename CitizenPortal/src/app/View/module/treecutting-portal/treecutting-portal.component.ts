@@ -24,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-treecutting-portal',
@@ -69,6 +70,7 @@ export class TreecuttingPortalComponent implements OnInit {
     private fb: FormBuilder,
     private dg: MatDialog,
     public auth: AuthorizationManager,
+    private datePipe: DatePipe,
   ) {
     this.uiassist = new UiAssist(this);
 
@@ -77,7 +79,7 @@ export class TreecuttingPortalComponent implements OnInit {
       employee:             new FormControl('', [Validators.required]),
       treetype:             new FormControl('', []),
       treepermissionstatus: new FormControl(''),
-      deedno:               new FormControl('', [Validators.required]),
+      deedno:               new FormControl('', [Validators.required, Validators.pattern(/^D\d{3}$/)]),
       treecount:            new FormControl('', [Validators.required]),
       reasonforcutting:     new FormControl('', [Validators.required]),
       requesteddate:        new FormControl(''),
@@ -86,7 +88,7 @@ export class TreecuttingPortalComponent implements OnInit {
       needstransport:       new FormControl(false),
       destination:          new FormControl(''),
       vehicletype:          new FormControl(''),
-      vehiclenumber:        new FormControl(''),
+      vehiclenumber:        new FormControl('', [Validators.pattern(/^[A-Z]{2,3}-\d{4}$/)]),
       transportdate:        new FormControl(''),
     });
 
@@ -167,7 +169,7 @@ export class TreecuttingPortalComponent implements OnInit {
       deedno:               this.treecuttingrequest.deedno,
       treecount:            this.treecuttingrequest.treecount,
       reasonforcutting:     this.treecuttingrequest.reasonforcutting,
-      requesteddate:        this.treecuttingrequest.requesteddate,
+      requesteddate: this.datePipe.transform(this.treecuttingrequest.requesteddate, 'yyyy-MM-dd'),
       rejectreason:         this.treecuttingrequest.rejectreason,
       needstransport:       this.treecuttingrequest.needstransport,
       destination:          this.treecuttingrequest.destination,

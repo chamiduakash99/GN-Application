@@ -7,6 +7,7 @@ import {LoginComponent} from "./View/login/login.component";
 import {ComplaintComponent} from "./View/module/complaintportal/complaintportal.component";
 import {IdcardrequestPortalComponent} from "./View/module/idcardrequest-portal/idcardrequest-portal.component";
 import {TreecuttingPortalComponent} from "./View/module/treecutting-portal/treecutting-portal.component";
+import {DatePipe} from "@angular/common";
 
 const routes: Routes = [
   { path: '', redirectTo: 'main/home', pathMatch: 'full' },
@@ -25,6 +26,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [DatePipe],
 })
 export class AppRoutingModule { }

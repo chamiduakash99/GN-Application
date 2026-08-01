@@ -148,15 +148,31 @@ export class LoginComponent implements OnInit{
     return false;
   }
   selectType(type: string) {
-
     this.userType = type;
 
-    // clear fields when switching
-    this.loginForm.patchValue({
-      fullname: '',
-      nic: '',
-      birthcert: ''
-    });
+    this.loginForm.patchValue({ fullname: '', nic: '', birthcert: '' });
 
+    if (type === 'adult') {
+      this.loginForm.get('nic')!.setValidators([Validators.required, Validators.pattern(/^(([0-9]{9}[vVxX])|([0-9]{12}))$/)]);
+      this.loginForm.get('birthcert')!.clearValidators();
+    } else {
+      this.loginForm.get('birthcert')!.setValidators([Validators.required, Validators.pattern(/^BC\d{4}$/)]);
+      this.loginForm.get('nic')!.clearValidators();
+    }
+
+    this.loginForm.get('nic')!.updateValueAndValidity();
+    this.loginForm.get('birthcert')!.updateValueAndValidity();
   }
+  // selectType(type: string) {
+  //
+  //   this.userType = type;
+  //
+  //   // clear fields when switching
+  //   this.loginForm.patchValue({
+  //     fullname: '',
+  //     nic: '',
+  //     birthcert: ''
+  //   });
+  //
+  // }
 }
