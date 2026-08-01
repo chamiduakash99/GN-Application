@@ -95,10 +95,10 @@ export class HouseholdComponent implements OnInit {
     });
 
     this.hhform = this.fb.group({
-      'householdno':      new FormControl('', [Validators.required]),
-      'address':          new FormControl('', [Validators.required]),
-      'registrationdate': new FormControl(''),
-      'headcitizenId':    new FormControl('', [Validators.required]),
+      'householdno': new FormControl('', [Validators.required, Validators.pattern(/^HH\d{3}$/), Validators.maxLength(55)]),
+      'address': new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9.,'\s-]{2,255}$/), Validators.maxLength(255)]),
+      'registrationdate': new FormControl('', [Validators.required]),
+      'headcitizenId': new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
   }
 

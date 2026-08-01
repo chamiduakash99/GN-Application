@@ -33,6 +33,8 @@ import {AuthorizationManager} from "../../../service/authorizationmanager";
 import {Citizenguardian} from "../../../entity/Citizenguardian";
 import { Citizenstatus } from 'src/app/entity/citizenstatus';
 import { CitizenstatusService } from 'src/app/service/citizenstatusservice';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-citizen',
@@ -77,6 +79,8 @@ export class CitizenComponent implements OnInit {
   regexes: any;
   uiassist: UiAssist;
 
+  minBirthDate: Date;
+  maxBirthDate: Date;
 
   enaadd = false;
   enaupd = false;
@@ -134,16 +138,17 @@ export class CitizenComponent implements OnInit {
     public authService: AuthorizationManager,
 
 
+
   ) {
 
     this.form = this.fb.group({
-      name: new FormControl(),
-      namewithinitials: new FormControl(),
-      nic: new FormControl(),
-      birthcetificateno: new FormControl(),
-      dateofbirth: new FormControl(),
-      mobileno: new FormControl(),
-      email: new FormControl(),
+      name: new FormControl('', [Validators.required]),
+      namewithinitials: new FormControl('', [Validators.required, Validators.pattern(/^([A-Z]\.){1,10}\s[A-Za-z]{2,45}$/)]),
+      nic: new FormControl('', [Validators.pattern(/^(([0-9]{9}[vVxX])|([0-9]{12}))$/)]),
+      birthcetificateno: new FormControl('', [Validators.pattern(/^BC\d{4}$/)]),
+      dateofbirth: new FormControl('', [Validators.required]),
+      mobileno: new FormControl('', [Validators.pattern(/^07[0-9]{8}$/)]),
+      email: new FormControl('', []),
       isconvicted: new FormControl(),
       medicalconditions: new FormControl(),
       remarks: new FormControl(),
@@ -191,6 +196,8 @@ export class CitizenComponent implements OnInit {
 
     this.citizen = new Citizen(0, '', '');
     this.uiassist = new UiAssist(this);
+    this.maxBirthDate = new Date();
+    this.minBirthDate = new Date(new Date().setFullYear(new Date().getFullYear() - 100));
   }
 
   ngOnInit(): void {

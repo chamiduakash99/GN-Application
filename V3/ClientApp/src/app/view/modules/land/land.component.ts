@@ -174,14 +174,14 @@ export class LandComponent implements OnInit{
 
     // main form fields (pattern same as street)
     this.form = this.fb.group({
-      deedno: new FormControl('', []),
+      deedno: new FormControl('', [Validators.required, Validators.pattern(/^D\d{3}$/)]),
       street: new FormControl('', [Validators.required]),
       citizen: new FormControl('', [Validators.required]),
       landtype: new FormControl('', [Validators.required]),
       fencetype: new FormControl('', [Validators.required]),
       latitude: new FormControl('', []),
       longitude: new FormControl('', []),
-      size: new FormControl('', []),
+      size: new FormControl('', [Validators.required]),
       image: new FormControl('', []),
       deed: new FormControl('', []),
       remarks: new FormControl('', []),
@@ -190,11 +190,11 @@ export class LandComponent implements OnInit{
 
     // inner form cascade: province -> district -> division -> gnd
     this.innerform = this.fb.group({
-      province: new FormControl('', []),
-      district: new FormControl('', []),
-      division: new FormControl('', []),
-      gnd: new FormControl('', []),
-      street: new FormControl('', [])
+      province: new FormControl('', [Validators.required]),
+      district: new FormControl('', [Validators.required]),
+      division: new FormControl('', [Validators.required]),
+      gnd: new FormControl('', [Validators.required]),
+      street: new FormControl('', [Validators.required])
     });
 
     this.uiassist = new UiAssist(this);

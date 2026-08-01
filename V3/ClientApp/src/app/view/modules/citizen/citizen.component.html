@@ -38,7 +38,9 @@
           <!-- Date of Birth -->
           <mat-form-field appearance="outline">
             <mat-label>Date of Birth</mat-label>
-            <input matInput type="date" formControlName="dateofbirth">
+            <input matInput [matDatepicker]="dob" [min]="minBirthDate" [max]="maxBirthDate" formControlName="dateofbirth">
+            <mat-datepicker-toggle matSuffix [for]="dob"></mat-datepicker-toggle>
+            <mat-datepicker #dob></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">

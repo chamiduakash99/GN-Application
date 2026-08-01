@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -112,17 +112,17 @@ export class StreetComponent implements OnInit{
 
 
     this.form = this.fb.group({
-      codename: new FormControl('', []),
-      fullname: new FormControl('', []),
-      length: new FormControl('', []),
-      province: new FormControl('', []),
-      district: new FormControl('', []),
-      division: new FormControl('', []),
-      gnd: new FormControl('', []),
-      width: new FormControl('', []),
-      streetstatus: new FormControl('', []),
-      streettype: new FormControl('', []),
-      streetmatierial: new FormControl('', []),
+      codename: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9\-]{2,20}$/)]),
+      fullname: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9\s]{2,100}$/)]),
+      length: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+      province: new FormControl('', [Validators.required]),
+      district: new FormControl('', [Validators.required]),
+      division: new FormControl('', [Validators.required]),
+      gnd: new FormControl('', [Validators.required]),
+      width: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
+      streetstatus: new FormControl('', [Validators.required]),
+      streettype: new FormControl('', [Validators.required]),
+      streetmatierial: new FormControl('', [Validators.required]),
       startlatitude: new FormControl('', []),
       startlongitude: new FormControl('', []),
       endlatitude: new FormControl('', []),
@@ -131,10 +131,10 @@ export class StreetComponent implements OnInit{
 
     });
     this.innerform =  this.fb.group({
-      province: new FormControl('', []),
-      district: new FormControl('', []),
-      division: new FormControl('', []),
-      gnd: new FormControl('', []),
+      province: new FormControl('', [Validators.required]),
+      district: new FormControl('', [Validators.required]),
+      division: new FormControl('', [Validators.required]),
+      gnd: new FormControl('', [Validators.required]),
 
     })
 
