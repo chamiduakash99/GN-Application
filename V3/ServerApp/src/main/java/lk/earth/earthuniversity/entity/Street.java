@@ -3,6 +3,7 @@ package lk.earth.earthuniversity.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,9 +16,11 @@ public class Street {
     private int id;
     @Basic
     @Column(name = "codename")
+    @Pattern(regexp = "^[A-Za-z0-9\\-]{2,20}$", message = "Invalid codename format")
     private String codename;
     @Basic
     @Column(name = "fullname")
+    @Pattern(regexp = "^[A-Za-z0-9\\s]{2,100}$", message = "Invalid fullname format")
     private String fullname;
     @Basic
     @Column(name = "mapimage")
@@ -36,9 +39,11 @@ public class Street {
     private BigDecimal endlongitude;
     @Basic
     @Column(name = "length")
+    @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Invalid length format")
     private BigDecimal length;
     @Basic
     @Column(name = "width")
+    @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Invalid width format")
     private BigDecimal width;
     @ManyToOne
     @JoinColumn(name = "streetstatus_id", referencedColumnName = "id", nullable = false)

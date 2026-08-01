@@ -3,6 +3,8 @@ package lk.earth.earthuniversity.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.Objects;
@@ -15,9 +17,12 @@ public class Household {
     private Integer id;
     @Basic
     @Column(name = "householdno")
+    @Pattern(regexp = "^HH\\d{3}$", message = "Invalid household number format")
     private String householdno;
     @Basic
     @Column(name = "address")
+    @Pattern(regexp = "^[A-Za-z0-9.,'\\s-]{2,255}$", message = "Invalid address format")
+    @Size(max = 255)
     private String address;
     @Basic
     @Column(name = "registrationdate")

@@ -1,6 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.Objects;
 
 @Entity
@@ -11,6 +12,7 @@ public class Building {
     private Integer id;
     @Basic
     @Column(name = "no")
+    @Pattern(regexp = "^B\\d{3,4}$", message = "Invalid building no format")
     private String no;
 
     @ManyToOne

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -27,6 +28,7 @@ public class Treecuttingrequest {
 
     @Basic
     @Column(name = "deedno")
+    @Pattern(regexp = "^D\\d{3}$", message = "Invalid deed number format")
     private String deedno;
 
 
@@ -79,6 +81,7 @@ public class Treecuttingrequest {
 
     @Basic
     @Column(name = "vehiclenumber")
+    @Pattern(regexp = "^[A-Z]{2,3}-\\d{4}$", message = "Invalid vehicle number format")
     private String vehiclenumber;
 
 

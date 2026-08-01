@@ -3,6 +3,7 @@ package lk.earth.earthuniversity.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Objects;
@@ -16,6 +17,7 @@ public class Landdetail {
 
     @Basic
     @Column(name = "deedno", unique = true)
+    @Pattern(regexp = "^D\\d{3}$", message = "Invalid deed number format")
     private String deedno;
     @JsonIgnore
     @OneToMany(mappedBy = "landdetail")

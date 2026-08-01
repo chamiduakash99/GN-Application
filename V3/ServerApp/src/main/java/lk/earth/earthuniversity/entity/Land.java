@@ -1,6 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;

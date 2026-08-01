@@ -52,7 +52,7 @@ public class Employee {
     private String land;
     @Basic
     @Column(name = "email")
-    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid Landphone Number")
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid email Number")
     private String email;
     @Basic
     @Column(name = "doassignment")

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.util.Collection;
 
@@ -18,6 +19,7 @@ public class Citizen {
     private String name;
     @Basic
     @Column(name = "nic")
+    @Pattern(regexp = "^(([0-9]{9}[vVxX])|([0-9]{12}))$", message = "Invalid NIC")
     private String nic;
     @JsonIgnore
     @OneToMany(mappedBy = "citizen")
@@ -27,12 +29,14 @@ public class Citizen {
     private Collection<Landdetail> landdetails;
     @Basic
     @Column(name = "namewithinitials")
+    @Pattern(regexp = "^([A-Z]\\.){1,10}\\s[A-Za-z]{2,45}$", message = "Invalid name with initials format")
     private String namewithinitials;
     @Basic
     @Column(name = "dateofbirth")
     private Date dateofbirth;
     @Basic
     @Column(name = "mobileno")
+    @Pattern(regexp = "^07[0-9]{8}$", message = "Invalid mobile number")
     private String mobileno;
     @Basic
     @Column(name = "email")
@@ -82,6 +86,7 @@ public class Citizen {
 
     @Basic
     @Column(name = "birthcetificateno")
+    @Pattern(regexp = "^BC\\d{4}$", message = "Invalid birth certificate number")
     private String birthcetificateno;
     @JsonIgnore
     @OneToMany(mappedBy = "citizen")
