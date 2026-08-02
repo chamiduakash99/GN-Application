@@ -3,6 +3,9 @@ package lk.earth.earthuniversity.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -37,17 +40,32 @@ public class Street {
     @Basic
     @Column(name = "endlongitude")
     private BigDecimal endlongitude;
+
     @Basic
     @Column(name = "length")
-    @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Invalid length format")
+    @NotNull(message = "Length is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Length must be greater than 0")
+    @Digits(integer = 10, fraction = 2, message = "Length allows up to 2 decimal places")
     private BigDecimal length;
+
     @Basic
     @Column(name = "width")
-    @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Invalid width format")
+    @NotNull(message = "Width is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Width must be greater than 0")
+    @Digits(integer = 10, fraction = 2, message = "Width allows up to 2 decimal places")
     private BigDecimal width;
+    //    @Basic
+//    @Column(name = "length")
+//    @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Invalid length format")
+//    private BigDecimal length;
+//    @Basic
+//    @Column(name = "width")
+//    @Pattern(regexp = "^\\d+(\\.\\d{1,2})?$", message = "Invalid width format")
+//    private BigDecimal width;
     @ManyToOne
     @JoinColumn(name = "streetstatus_id", referencedColumnName = "id", nullable = false)
     private Streetstatus streetstatus;
+
     @ManyToOne
     @JoinColumn(name = "streettype_id", referencedColumnName = "id", nullable = false)
     private Streettype streettype;
