@@ -92,14 +92,10 @@ export class AnnouncementComponent {
   }
 
   initialize() {
-
     this.createView();
-
-
     this.createForm();
 
     const authoritiesArray = this.authService.getAuthorities();
-
     if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
       const authorities = this.authService.extractAuthorities(authoritiesArray);
       this.buttonStates(authorities);
@@ -210,14 +206,10 @@ export class AnnouncementComponent {
 
     let title = sserchdata.sstitle;
     let isactive = sserchdata.ssisactive;
-
     let query = "";
-
     if (title != null && title.trim() != "") query = query + "&title=" + title;
     if (isactive != null) query = query + "&isactive=" + isactive;
-
     if (query != "") query = query.replace(/^./, "?")
-
     this.loadTable(query);
 
   }

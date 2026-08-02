@@ -286,19 +286,9 @@ export class CitizenComponent implements OnInit {
   }
 
   buttonStates(authorities: { module: string; operation: string }[]): void {
-
-    this.hasInsertAuthority = authorities.some(
-      authority => authority.module === 'citizen' && authority.operation === 'insert'
-    );
-
-    this.hasUpdateAuthority = authorities.some(
-      authority => authority.module === 'citizen' && authority.operation === 'update'
-    );
-
-    this.hasDeleteAuthority = authorities.some(
-      authority => authority.module === 'citizen' && authority.operation === 'delete'
-    );
-
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'citizen' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'citizen' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'citizen' && authority.operation === 'delete');
   }
 
   // LOAD TABLE

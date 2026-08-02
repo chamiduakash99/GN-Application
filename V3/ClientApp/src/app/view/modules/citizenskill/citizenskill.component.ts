@@ -80,6 +80,10 @@ export class CitizenskillComponent implements OnInit {
   enaincomeupd: boolean = false;
   enaincomedel: boolean = false;
 
+  hasInsertAuthority: boolean = false;
+  hasUpdateAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
+
   uiassist: UiAssist;
 
   constructor(
@@ -142,6 +146,18 @@ export class CitizenskillComponent implements OnInit {
     this.ps.getAllList().then(res => this.professions = res);
     this.skills = [];
     this.skilldata = new MatTableDataSource(this.skills);
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'citizenskill' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'citizenskill' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'citizenskill' && authority.operation === 'delete');
   }
 
   // ── Citizen table loader ───────────────────────────────────────────────────

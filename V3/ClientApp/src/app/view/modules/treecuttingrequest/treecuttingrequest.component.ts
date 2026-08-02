@@ -29,12 +29,12 @@ import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
 export class TreecuttingrequestComponent implements OnInit {
 
   // ── Table ──────────────────────────────────────────────────────────────────
-  columns: string[]  = ['citizen', 'treetype', 'status', 'requesteddate', 'deedno', 'transport', 'modi'];
-  headers: string[]  = ['Citizen', 'Tree Type', 'Status', 'Requested Date', 'Deed No', 'Transport', 'Modification'];
-  binders: string[]  = ['citizen.name', 'treetype.name', 'treepermissionstatus.name', 'requesteddate', 'deedno', 'needstransport', 'getModi()'];
+  columns: string[]  = ['citizen', 'treetype', 'status', 'requesteddate', 'deedno', 'transport'];
+  headers: string[]  = ['Citizen', 'Tree Type', 'Status', 'Requested Date', 'Deed No', 'Transport'];
+  binders: string[]  = ['citizen.name', 'treetype.name', 'treepermissionstatus.name', 'requesteddate', 'deedno', 'needstransport'];
 
-  cscolumns: string[] = ['cscitizen', 'cstreetype', 'csstatus', 'csdate', 'csdeed', 'cstransport', 'csmodi'];
-  csprompts: string[] = ['Search Citizen', 'Search Type', 'Search Status', 'Search Date', 'Search Deed No', 'Transport?', 'Search'];
+  cscolumns: string[] = ['cscitizen', 'cstreetype', 'csstatus', 'csdate', 'csdeed', 'cstransport'];
+  csprompts: string[] = ['Search Citizen', 'Search Type', 'Search Status', 'Search Date', 'Search Deed No', 'Transport?'];
 
   // ── Forms ──────────────────────────────────────────────────────────────────
   cssearch!: FormGroup;
@@ -66,6 +66,11 @@ export class TreecuttingrequestComponent implements OnInit {
   enareject: boolean       = false;
   enauploadpermit: boolean = false;
   enauploadtransport: boolean = false;
+
+  hasApproveAuthority: boolean = false;
+  hasRejectAuthority: boolean = false;
+  hasUploadPermitAuthority: boolean = false;
+  hasUploadTransportAuthority: boolean = false;
 
   uiassist: UiAssist;
 
@@ -133,6 +138,12 @@ export class TreecuttingrequestComponent implements OnInit {
     this.cits.getAllListNameId().then(res => this.citizens = res);
     this.es.getAllList().then(res => this.employees = res);
     this.loadStatusSummary();
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
   }
 
   loadStatusSummary(): void {
@@ -252,6 +263,13 @@ export class TreecuttingrequestComponent implements OnInit {
     this.enareject         = (status === 'Pending');
     this.enauploadpermit   = (status === 'Approved');
     this.enauploadtransport = (status === 'Approved' || status === 'Permit Issued') && r.needstransport;
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasApproveAuthority = authorities.some(authority => authority.module === 'treecuttingrequest' && authority.operation === 'update');
+    this.hasRejectAuthority = authorities.some(authority => authority.module === 'treecuttingrequest' && authority.operation === 'update');
+    this.hasUploadPermitAuthority = authorities.some(authority => authority.module === 'treecuttingrequest' && authority.operation === 'update');
+    this.hasUploadTransportAuthority = authorities.some(authority => authority.module === 'treecuttingrequest' && authority.operation === 'update');
   }
 
   // ── Errors ─────────────────────────────────────────────────────────────────

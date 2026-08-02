@@ -64,6 +64,10 @@ export class IdcardrequestComponent implements OnInit {
   enaupd: boolean = false;
   enadel: boolean = false;
 
+  hasInsertAuthority: boolean = false;
+  hasUpdateAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
+
   uiassist: UiAssist;
 
   // Track selected reason to drive conditional validation
@@ -128,8 +132,12 @@ export class IdcardrequestComponent implements OnInit {
     this.cits.getAllListNameId().then(res => this.citizens = res);
     this.es.getAllList().then(res => this.employees = res);
 
-    // Start with no fields required until reason is chosen
     this.clearConditionalValidators();
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
   }
 
   updateStatusSummary(): void {
@@ -152,6 +160,13 @@ export class IdcardrequestComponent implements OnInit {
       // Misplaced (2) or Damaged (3) — police complaint fields required
       this.setPoliceComplaintValidators();
     }
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'delete');
+
   }
 
   setFirstTimeValidators(): void {

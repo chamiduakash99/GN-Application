@@ -112,10 +112,10 @@
 
           <!-- BUTTON PANEL (BOTTOM FIXED STYLE) -->
           <div id="butpanel" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
-            <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
+            <button mat-raised-button (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
             <button mat-raised-button (click)="clear()">Clear</button>
-            <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>
-            <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>
+            <button mat-raised-button (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority)">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority)">Delete</button>
           </div>
 
         </form>

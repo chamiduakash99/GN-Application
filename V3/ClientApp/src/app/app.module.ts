@@ -66,6 +66,7 @@ import { CitizenskillComponent } from './view/modules/citizenskill/citizenskill.
 import { NgChartsModule } from 'ng2-charts';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LandreportComponent } from './report/view/landreport/landreport.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 
@@ -106,37 +107,38 @@ import { LandreportComponent } from './report/view/landreport/landreport.compone
     CitizenskillComponent,
     LandreportComponent
   ],
-  imports: [
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatGridListModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatDialogModule,
-    HttpClientModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    MatSlideToggleModule,
-    MatAutocompleteModule,
-    AppGroupAutocompleteComponent,
-    GetControlPipe,
-    MatStepperModule,
-    NgChartsModule,
-    MatProgressBarModule
-  ],
+    imports: [
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        MatTableModule,
+        MatPaginatorModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatGridListModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatDialogModule,
+        HttpClientModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
+        MatAutocompleteModule,
+        AppGroupAutocompleteComponent,
+        GetControlPipe,
+        MatStepperModule,
+        NgChartsModule,
+        MatProgressBarModule,
+        MatCheckboxModule
+    ],
   providers: [
     OperationComponent,
     EmployeeService,

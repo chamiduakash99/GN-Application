@@ -147,12 +147,19 @@ export class AuthorizationManager {
     }
   }
 
+
   extractAuthorities(authoritiesArray: string[]): { module: string; operation: string }[] {
     return authoritiesArray.map(authority => {
       const [module, operation] = authority.split('-');
-      return { module, operation };
+      return { module: module.toLowerCase(), operation: operation.toLowerCase() };
     });
   }
+  // extractAuthorities(authoritiesArray: string[]): { module: string; operation: string }[] {
+  //   return authoritiesArray.map(authority => {
+  //     const [module, operation] = authority.split('-');
+  //     return { module, operation };
+  //   });
+  // }
 
   getUsername(): string {
     return localStorage.getItem(this.localStorageUsreName) || '';

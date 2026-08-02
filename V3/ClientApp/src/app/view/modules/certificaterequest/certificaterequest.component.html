@@ -42,11 +42,11 @@
           </mat-form>
           <div id="decisionpanel">
             <button mat-raised-button id="approvebtn"
-                    (click)="approve()" [disabled]="!enaapprove">
+                    (click)="approve()" [disabled]="!(enaapprove && hasApproveAuthority)">
               <mat-icon>check_circle</mat-icon> Approve
             </button>
             <button mat-raised-button id="rejectbtn"
-                    (click)="reject()" [disabled]="!enareject">
+                    (click)="reject()" [disabled]="!(enareject && hasRejectAuthority)">
               <mat-icon>cancel</mat-icon> Reject
             </button>
           </div>

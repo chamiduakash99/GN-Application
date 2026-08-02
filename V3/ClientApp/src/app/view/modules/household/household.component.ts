@@ -68,6 +68,11 @@ export class HouseholdComponent implements OnInit {
   enaupd: boolean = false;
   enadel: boolean = false;
 
+
+  hasInsertAuthority: boolean = false;
+  hasUpdateAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
+
   uiassist: UiAssist;
 
   constructor(
@@ -113,6 +118,13 @@ export class HouseholdComponent implements OnInit {
     this.memdata = new MatTableDataSource(this.members);
     this.cits.getAllListNameId().then(res => this.citizens = res);
     this.css2.getAllListNameId().then(res => this.citizenstatuses = res);
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
+
     // this.css2.getAllList().then(res => this.citizenstatuses = res);
   }
 
@@ -208,6 +220,13 @@ export class HouseholdComponent implements OnInit {
     this.enadel = true;
 
     this.loadMembersTable(h);
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'household' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'household' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'household' && authority.operation === 'delete');
+
   }
 
   // ── Validation ─────────────────────────────────────────────────────────────

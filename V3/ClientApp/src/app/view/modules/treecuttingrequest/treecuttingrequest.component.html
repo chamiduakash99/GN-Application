@@ -81,10 +81,10 @@
           </mat-form-field>
 
           <div id="decisionpanel">
-            <button mat-raised-button id="approvebtn" (click)="approve()" [disabled]="!enaapprove">
+            <button mat-raised-button id="approvebtn" (click)="approve()" [disabled]="!(enaapprove && hasApproveAuthority)">
               <mat-icon>check_circle</mat-icon> Approve
             </button>
-            <button mat-raised-button id="rejectbtn" (click)="reject()" [disabled]="!enareject">
+            <button mat-raised-button id="rejectbtn" (click)="reject()" [disabled]="!(enareject && hasRejectAuthority)">
               <mat-icon>cancel</mat-icon> Reject
             </button>
           </div>
@@ -94,9 +94,9 @@
           <p class="sectionlabel">Wood Transport</p>
 
           <div class="transport-toggle">
-            <mat-checkbox formControlName="needstransport" color="primary">
-              Transport permit required
-            </mat-checkbox>
+<!--            <mat-checkbox formControlName="needstransport" color="primary">-->
+<!--              Transport permit required-->
+<!--            </mat-checkbox>-->
           </div>
 
           <ng-container *ngIf="needsTransportChecked">
@@ -141,7 +141,7 @@
             <input id="permitFile" hidden type="file" accept=".pdf"
                    (change)="selectPermitPdf($event)">
             <label for="permitFile" class="file-select-btn">Select PDF</label>
-            <button mat-raised-button (click)="uploadPermit()" [disabled]="!enauploadpermit">
+            <button mat-raised-button (click)="uploadPermit()" [disabled]="!(enauploadpermit && hasUploadPermitAuthority)">
               <mat-icon>upload</mat-icon> Upload Permit
             </button>
           </div>
@@ -160,7 +160,7 @@
             <input id="transportFile" hidden type="file" accept=".pdf"
                    (change)="selectTransportPdf($event)">
             <label for="transportFile" class="file-select-btn">Select PDF</label>
-            <button mat-raised-button (click)="uploadTransport()" [disabled]="!enauploadtransport">
+            <button mat-raised-button (click)="uploadTransport()" [disabled]="!(enauploadtransport && hasUploadTransportAuthority)">
               <mat-icon>upload</mat-icon> Upload Transport
             </button>
           </div>

@@ -58,6 +58,9 @@ export class VoterregistryComponent implements OnInit {
 
   uiassist: UiAssist;
 
+  hasInsertAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
+
   constructor(
     private vrs: VoterregistryService,
     private fb: FormBuilder,
@@ -90,6 +93,12 @@ export class VoterregistryComponent implements OnInit {
     this.loadTotalCount();
     this.voters = [];
     this.voterdata = new MatTableDataSource(this.voters);
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
   }
 
   // ── Load household summary table ───────────────────────────────────────────
@@ -108,6 +117,11 @@ export class VoterregistryComponent implements OnInit {
         this.hhdata = new MatTableDataSource(this.householdSummary);
         this.hhdata.paginator = this.hhpaginator;
       });
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'voterregistry' && authority.operation === 'insert');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'voterregistry' && authority.operation === 'delete');
   }
 
   // ── Load total count stat ──────────────────────────────────────────────────

@@ -220,15 +220,9 @@
             </mat-form-field>
 
             <div class="skill-btn-group">
-              <button mat-raised-button (click)="addSkill()" [disabled]="!enaskilladd">
-                <mat-icon>add</mat-icon> Add
-              </button>
-              <button mat-raised-button (click)="updateSkill()" [disabled]="!enaskillupd">
-                <mat-icon>edit</mat-icon> Update
-              </button>
-              <button mat-raised-button (click)="deleteSkill()" [disabled]="!enaskilldel">
-                <mat-icon>delete</mat-icon> Delete
-              </button>
+              <button mat-raised-button (click)="addSkill()" [disabled]="!(enaskilladd && hasInsertAuthority)"><mat-icon>add</mat-icon> Add</button>
+              <button mat-raised-button (click)="updateSkill()" [disabled]="!(enaskillupd && hasUpdateAuthority)"><mat-icon>edit</mat-icon> Update
+              </button><button mat-raised-button (click)="deleteSkill()" [disabled]="!(enaskilldel && hasDeleteAuthority)"><mat-icon>delete</mat-icon> Delete</button>
             </div>
 
           </div>
@@ -369,15 +363,9 @@
             </mat-form-field>
 
             <div id="incomebutpanel">
-              <button mat-raised-button (click)="addIncome()" [disabled]="!enaincomeadd">
-                <mat-icon>add</mat-icon> Add
-              </button>
-              <button mat-raised-button (click)="updateIncome()" [disabled]="!enaincomeupd">
-                <mat-icon>edit</mat-icon> Update
-              </button>
-              <button mat-raised-button (click)="deleteIncome()" [disabled]="!enaincomedel">
-                <mat-icon>delete</mat-icon> Delete
-              </button>
+              <button mat-raised-button (click)="addIncome()" [disabled]="!(enaincomeadd && hasInsertAuthority)"><mat-icon>add</mat-icon> Add</button>
+              <button mat-raised-button (click)="updateIncome()" [disabled]="!(enaincomeupd && hasUpdateAuthority)"><mat-icon>edit</mat-icon> Update</button>
+              <button mat-raised-button (click)="deleteIncome()" [disabled]="!(enaincomedel && hasDeleteAuthority)"><mat-icon>delete</mat-icon> Delete</button>
             </div>
 
           </mat-form>

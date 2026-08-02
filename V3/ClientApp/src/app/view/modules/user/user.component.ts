@@ -76,9 +76,14 @@ export class UserComponent implements OnInit{
   mindate = new Date();
   pwdhide = true;
   pwdconfhide = true;
+
   enaadd:boolean = false;
   enaupd:boolean = false;
   enadel:boolean = false;
+
+  hasInsertAuthority: boolean = false;
+  hasUpdateAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
 
   constructor(
     private fb:FormBuilder,
@@ -163,6 +168,12 @@ export class UserComponent implements OnInit{
       this.createForm();
     });
 
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
+
   }
 
   createView() {
@@ -245,6 +256,13 @@ export class UserComponent implements OnInit{
     this.enaadd=add;
     this.enaupd=upd;
     this.enadel=del;
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'user' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'user' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'user' && authority.operation === 'delete');
+
   }
 
   rightSelected(): void {

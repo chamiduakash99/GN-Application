@@ -67,10 +67,10 @@
           </div>
 
           <div id="certbutpanel">
-            <button mat-raised-button (click)="createCertificate()" [disabled]="!enacreate">
+            <button mat-raised-button (click)="createCertificate()" [disabled]="!(enacreate && hasCreateAuthority)">
               <mat-icon>note_add</mat-icon> Create
             </button>
-            <button mat-raised-button (click)="uploadScan()" [disabled]="!enaupload">
+            <button mat-raised-button (click)="uploadScan()" [disabled]="!(enaupload && hasUploadAuthority)">
               <mat-icon>upload</mat-icon> Upload Scan
             </button>
             <button mat-raised-button (click)="clear()">

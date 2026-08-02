@@ -115,9 +115,6 @@ export class StreetComponent implements OnInit{
       codename: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9\-]{2,20}$/)]),
       fullname: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9\s]{2,100}$/)]),
       length: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
-      province: new FormControl('', [Validators.required]),
-      district: new FormControl('', [Validators.required]),
-      division: new FormControl('', [Validators.required]),
       gnd: new FormControl('', [Validators.required]),
       width: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
       streetstatus: new FormControl('', [Validators.required]),
@@ -137,6 +134,10 @@ export class StreetComponent implements OnInit{
       gnd: new FormControl('', [Validators.required]),
 
     })
+
+    // province: new FormControl('', [Validators.required]),
+    //   district: new FormControl('', [Validators.required]),
+    // division: new FormControl('', [Validators.required]),
 
 
     this.uiassist = new UiAssist(this);
@@ -475,19 +476,90 @@ export class StreetComponent implements OnInit{
     let errors: string = "";
 
     for (const controlName in this.form.controls) {
+
       const control = this.form.controls[controlName];
 
       if (control.errors) {
-        if (this.regexes[controlName] != undefined) {
+
+        if (this.regexes && this.regexes[controlName] != undefined) {
+
           errors = errors + "<br>" + this.regexes[controlName]['message'];
+
         } else {
-          errors = errors + "<br>Invalid " + controlName;
+
+          switch (controlName) {
+
+            case 'codename':
+              errors += "<br>Codename must be 2-20 characters (letters, numbers, hyphens only)";
+              break;
+
+            case 'fullname':
+              errors += "<br>Full name must be 2-100 characters (letters, numbers, spaces only)";
+              break;
+
+            case 'length':
+              errors += "<br>Length must be a valid number (up to 2 decimal places)";
+              break;
+
+            case 'width':
+              errors += "<br>Width must be a valid number (up to 2 decimal places)";
+              break;
+
+            case 'province':
+              errors += "<br>Province is required";
+              break;
+
+            case 'district':
+              errors += "<br>District is required";
+              break;
+
+            case 'division':
+              errors += "<br>Division is required";
+              break;
+
+            case 'gnd':
+              errors += "<br>GND is required";
+              break;
+
+            case 'streetstatus':
+              errors += "<br>Street Status is required";
+              break;
+
+            case 'streettype':
+              errors += "<br>Street Type is required";
+              break;
+
+            case 'streetmatierial':
+              errors += "<br>Street Material is required";
+              break;
+
+            default:
+              errors += "<br>Invalid " + controlName;
+          }
         }
       }
     }
 
     return errors;
   }
+  // getErrors(): string {
+  //
+  //   let errors: string = "";
+  //
+  //   for (const controlName in this.form.controls) {
+  //     const control = this.form.controls[controlName];
+  //
+  //     if (control.errors) {
+  //       if (this.regexes[controlName] != undefined) {
+  //         errors = errors + "<br>" + this.regexes[controlName]['message'];
+  //       } else {
+  //         errors = errors + "<br>Invalid " + controlName;
+  //       }
+  //     }
+  //   }
+  //
+  //   return errors;
+  // }
 
   getUpdates(): string {
 

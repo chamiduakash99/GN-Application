@@ -11,7 +11,7 @@ import {CertificaterequestService} from '../../../service/certificaterequestserv
 import {UiAssist} from '../../../util/ui/ui.assist';
 import {MessageComponent} from '../../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
-
+import {AuthorizationManager} from "../../../service/authorizationmanager";
 
 
 @Component({
@@ -56,9 +56,13 @@ export class CertificateComponent implements OnInit {
   @ViewChild('certpaginator') certpaginator!: MatPaginator;
 
   // ── Button states ─────────────────────────────────────────────────────────
+
   enacreate: boolean = false;
   enaupload: boolean = false;
   certFormEnabled: boolean = false;
+
+  hasCreateAuthority: boolean = false;
+  hasUploadAuthority: boolean = false;
 
   uiassist: UiAssist;
 
@@ -67,6 +71,7 @@ export class CertificateComponent implements OnInit {
     private crs: CertificaterequestService,
     private fb: FormBuilder,
     private dg: MatDialog,
+    public authService: AuthorizationManager,
   ) {
     this.uiassist = new UiAssist(this);
 
@@ -110,6 +115,12 @@ export class CertificateComponent implements OnInit {
     this.createView();
     this.enableCertButtons(false, false);
     this.toggleCertFormState();
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
   }
 
   // GN Officer is always the one currently logged in — never a dropdown.
@@ -191,6 +202,11 @@ export class CertificateComponent implements OnInit {
   enableCertButtons(create: boolean, upload: boolean): void {
     this.enacreate = create;
     this.enaupload = upload;
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasCreateAuthority = authorities.some(authority => authority.module === 'certificate' && authority.operation === 'insert');
+    this.hasUploadAuthority = authorities.some(authority => authority.module === 'certificate' && authority.operation === 'update');
   }
 
   toggleCertFormState(): void {

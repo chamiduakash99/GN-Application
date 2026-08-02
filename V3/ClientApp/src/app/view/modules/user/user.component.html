@@ -102,10 +102,10 @@
           </mat-form-field>
 
           <div id="butpanel">
-            <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
+            <button mat-raised-button (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
             <button mat-raised-button (click)="clear()">Clear</button>
-            <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>
-            <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>
+            <button mat-raised-button (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority)">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority)">Delete</button>
           </div>
         </form>
 

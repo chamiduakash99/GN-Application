@@ -98,18 +98,10 @@
           </mat-form-field>
 
           <div id="culbutpanel">
-            <button mat-raised-button (click)="addCultivation()" [disabled]="!enaculadd">
-              Add
-            </button>
-            <button mat-raised-button (click)="updateCultivation()" [disabled]="!enaculupd">
-              Update
-            </button>
-            <button mat-raised-button (click)="deleteCultivation()" [disabled]="!enaculdel">
-              Delete
-            </button>
-            <button mat-raised-button (click)="clear()">
-              Clear
-            </button>
+            <button mat-raised-button (click)="addCultivation()" [disabled]="!(enaculadd && hasInsertAuthority)">Add</button>
+            <button mat-raised-button (click)="updateCultivation()" [disabled]="!(enaculupd && hasUpdateAuthority)">Update</button>
+            <button mat-raised-button (click)="deleteCultivation()" [disabled]="!(enaculdel && hasDeleteAuthority)">Delete</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
           </div>
 
         </mat-form>
@@ -152,15 +144,10 @@
             </mat-form-field>
 
             <div id="harbutpanel">
-              <button mat-raised-button (click)="addHarvest()" [disabled]="!enaharadd">
-                <mat-icon>add</mat-icon> Add
-              </button>
-              <button mat-raised-button (click)="updateHarvest()" [disabled]="!enaharupd">
-                <mat-icon>edit</mat-icon> Update
-              </button>
-              <button mat-raised-button (click)="deleteHarvest()" [disabled]="!enahardel">
-                <mat-icon>delete</mat-icon> Delete
-              </button>
+              <button mat-raised-button (click)="addHarvest()" [disabled]="!(enaharadd && hasInsertAuthority)"> Add</button>
+              <button mat-raised-button (click)="updateHarvest()" [disabled]="!(enaharupd && hasUpdateAuthority)">Update</button>
+              <button mat-raised-button (click)="deleteHarvest()" [disabled]="!(enahardel && hasDeleteAuthority)">Delete</button>
+              <button mat-raised-button (click)="clearHarvest()">Clear</button>
             </div>
 
           </ng-container>
@@ -174,51 +161,51 @@
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- RIGHT TOP — Server-side Search -->
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
-  <mat-grid-tile [colspan]="8" [rowspan]="4">
-    <mat-card id="ssearch">
-      <mat-card-header>
-        <mat-card-title>Cultivation Search</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-form [formGroup]="sssearch">
+<!--  <mat-grid-tile [colspan]="8" [rowspan]="4">-->
+<!--    <mat-card id="ssearch">-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Cultivation Search</mat-card-title>-->
+<!--      </mat-card-header>-->
+<!--      <mat-card-content>-->
+<!--        <mat-form [formGroup]="sssearch">-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Farmer</mat-label>
-            <mat-select formControlName="sscitizens">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Farmer</mat-label>-->
+<!--            <mat-select formControlName="sscitizens">-->
+<!--              <mat-option [value]="null">Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let c of citizens" [value]="c.id">{{c.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Crop Type</mat-label>
-            <mat-select formControlName="sscroptype">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let t of croptypes" [value]="t.id">{{t.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Crop Type</mat-label>-->
+<!--            <mat-select formControlName="sscroptype">-->
+<!--              <mat-option [value]="null">Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let t of croptypes" [value]="t.id">{{t.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
-          <mat-form-field appearance="outline">
-            <mat-label>Status</mat-label>
-            <mat-select formControlName="ssstatus">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let s of cultivationstatuses" [value]="s.id">{{s.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Status</mat-label>-->
+<!--            <mat-select formControlName="ssstatus">-->
+<!--              <mat-option [value]="null">Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let s of cultivationstatuses" [value]="s.id">{{s.name}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
-          <div>
-            <button mat-raised-button (click)="btnSearchMc()">
-              <mat-icon>search</mat-icon> Search
-            </button>
-            <button mat-raised-button (click)="btnSearchClearMc()">
-              <mat-icon>reorder</mat-icon> Clear
-            </button>
-          </div>
+<!--          <div>-->
+<!--            <button mat-raised-button (click)="btnSearchMc()">-->
+<!--              <mat-icon>search</mat-icon> Search-->
+<!--            </button>-->
+<!--            <button mat-raised-button (click)="btnSearchClearMc()">-->
+<!--              <mat-icon>reorder</mat-icon> Clear-->
+<!--            </button>-->
+<!--          </div>-->
 
-        </mat-form>
-      </mat-card-content>
-    </mat-card>
-  </mat-grid-tile>
+<!--        </mat-form>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
 
   <!-- ═══════════════════════════════════════════════════════════════════════ -->
   <!-- RIGHT MIDDLE — Cultivation Table -->
@@ -236,10 +223,10 @@
             <mat-header-cell *matHeaderCellDef>{{culheaders[i]}}</mat-header-cell>
             <mat-cell *matCellDef="let element">
               <ng-container *ngIf="col === 'status'; else defaultCulCell">
-                <span class="status-chip"
-                      [ngClass]="element.cultivationstatus?.name?.toLowerCase()">
-                  {{element.cultivationstatus?.name}}
-                </span>
+        <span class="status-chip"
+              [ngClass]="element.cultivationstatus?.name?.toLowerCase()">
+          {{element.cultivationstatus?.name}}
+        </span>
               </ng-container>
               <ng-template #defaultCulCell>
                 {{uiassist.getProperty(element, culbinders[i])}}
@@ -250,10 +237,24 @@
           <ng-container *ngFor="let cscol of csculcolumns; let i = index" [matColumnDef]="cscol">
             <mat-header-cell *matHeaderCellDef>
               <mat-form [formGroup]="cssearch" class="csearch">
-                <mat-form-field appearance="outline">
-                  <mat-label>{{csculprompts[i]}}</mat-label>
-                  <input matInput [formControlName]="cscol" (keyup)="filterCultivationTable()">
-                </mat-form-field>
+
+                <ng-container *ngIf="cscol === 'csstatus'; else defaultSearchCell">
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{csculprompts[i]}}</mat-label>
+                    <mat-select formControlName="csstatus" (selectionChange)="filterCultivationTable()">
+                      <mat-option [value]="null">All</mat-option>
+                      <mat-option *ngFor="let s of cultivationstatuses" [value]="s.name">{{s.name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </ng-container>
+
+                <ng-template #defaultSearchCell>
+                  <mat-form-field appearance="outline">
+                    <mat-label>{{csculprompts[i]}}</mat-label>
+                    <input matInput [formControlName]="cscol" (keyup)="filterCultivationTable()">
+                  </mat-form-field>
+                </ng-template>
+
               </mat-form>
             </mat-header-cell>
           </ng-container>

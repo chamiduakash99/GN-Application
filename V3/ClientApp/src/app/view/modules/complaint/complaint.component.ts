@@ -27,12 +27,12 @@ import {AuthorizationManager} from '../../../service/authorizationmanager';
 export class ComplaintComponent {
 
   // ── Table columns ─────────────────────────────────────────────────────────
-  columns: string[]  = ['citizen', 'subject', 'status', 'date', 'referredto', 'modi'];
-  headers: string[]  = ['Citizen', 'Subject', 'Status', 'Date', 'Referred To', 'Modification'];
-  binders: string[]  = ['citizen.name', 'subject', 'complaintstatus.name', 'complaineddate', 'referredto', 'getModi()'];
+  columns: string[]  = ['citizen', 'subject', 'status', 'date', 'referredto'];
+  headers: string[]  = ['Citizen', 'Subject', 'Status', 'Date', 'Referred To'];
+  binders: string[]  = ['citizen.name', 'subject', 'complaintstatus.name', 'complaineddate', 'referredto'];
 
-  cscolumns: string[]  = ['cscitizen', 'cssubject', 'csstatus', 'csdate', 'csreferred', 'csmodi'];
-  csprompts: string[]  = ['Search Citizen', 'Search Subject', 'Search Status', 'Search Date', 'Search Referred', 'Search'];
+  cscolumns: string[]  = ['cscitizen', 'cssubject', 'csstatus', 'csdate', 'csreferred'];
+  csprompts: string[]  = ['Search Citizen', 'Search Subject', 'Search Status', 'Search Date', 'Search Referred'];
 
   // ── Forms ─────────────────────────────────────────────────────────────────
   public cssearch!: FormGroup;
@@ -60,6 +60,10 @@ export class ComplaintComponent {
   enaadd: boolean    = false;
   enaupd: boolean    = false;
   enadel: boolean    = false;
+
+  hasInsertAuthority: boolean = false;
+  hasUpdateAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
 
   uiassist: UiAssist;
 
@@ -123,6 +127,12 @@ export class ComplaintComponent {
     this.es.getAllList().then((emps: Employee[]) => {
       this.employees = emps;
     });
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
   }
 
   updateStatusSummary(): void {
@@ -150,6 +160,19 @@ export class ComplaintComponent {
         this.data.paginator = this.paginator;
         this.updateStatusSummary();
       });
+  }
+
+  enableButtons(add: boolean, upd: boolean, del: boolean): void {
+    this.enaadd = add;
+    this.enaupd = upd;
+    this.enadel = del;
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'complaint' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'complaint' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'complaint' && authority.operation === 'delete');
+
   }
 
   // ── Table helper ──────────────────────────────────────────────────────────

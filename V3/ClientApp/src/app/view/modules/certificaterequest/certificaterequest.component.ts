@@ -16,11 +16,6 @@ import {MessageComponent} from '../../../util/dialog/message/message.component';
 import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
 import {AuthorizationManager} from '../../../service/authorizationmanager';
 
-// NOTE:
-// The "Issue Certificate" panel and the "Certificates Issued for Selected Request"
-// table have been REMOVED from this component on purpose — they now live in the
-// Certificate module (certificate.component.ts) as requested. This component is
-// only responsible for reviewing (Approve / Reject) certificate requests.
 
 @Component({
   selector: 'app-certificaterequest',
@@ -57,6 +52,10 @@ export class CertificaterequestComponent implements OnInit {
   // ── Button states ─────────────────────────────────────────────────────────
   enaapprove: boolean = false;
   enareject: boolean = false;
+
+  hasApproveAuthority: boolean = false;
+  hasRejectAuthority: boolean = false;
+
 
   uiassist: UiAssist;
 
@@ -114,6 +113,14 @@ export class CertificaterequestComponent implements OnInit {
       this.citizens = citizens;
     });
     this.loadStatusSummary();
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
+
+
   }
 
   createView() {
@@ -158,6 +165,11 @@ export class CertificaterequestComponent implements OnInit {
   enableApproveReject(approve: boolean, reject: boolean): void {
     this.enaapprove = approve;
     this.enareject = reject;
+  }
+
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasApproveAuthority = authorities.some(authority => authority.module === 'certificaterequest' && authority.operation === 'update');
+    this.hasRejectAuthority = authorities.some(authority => authority.module === 'certificaterequest' && authority.operation === 'update');
   }
 
   // ── Table helper ──────────────────────────────────────────────────────────

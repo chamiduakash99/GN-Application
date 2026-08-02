@@ -35,12 +35,12 @@ import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
 export class CultivationComponent implements OnInit {
 
   // ── Cultivation table ──────────────────────────────────────────────────────
-  culcolumns: string[] = ['cultivationno', 'citizen', 'land', 'croptype', 'status', 'plantingdate', 'expectedharvestdate', 'modi'];
-  culheaders: string[] = ['Cultivation No', 'Farmer', 'Land', 'Crop', 'Status', 'Planted', 'Expected Harvest', 'Modification'];
-  culbinders: string[] = ['cultivationno', 'citizen.name', 'landdetail.deedno', 'croptype.name', 'cultivationstatus.name', 'plantingdate', 'expectedharvestdate', 'getModi()'];
+  culcolumns: string[] = ['cultivationno', 'citizen', 'land', 'croptype', 'status', 'plantingdate', 'expectedharvestdate'];
+  culheaders: string[] = ['Cultivation No', 'Farmer', 'Land', 'Crop', 'Status', 'Planted', 'Expected Harvest'];
+  culbinders: string[] = ['cultivationno', 'citizen.name', 'landdetail.deedno', 'croptype.name', 'cultivationstatus.name', 'plantingdate', 'expectedharvestdate'];
 
-  csculcolumns: string[] = ['csculno', 'csfarmer', 'csland', 'cscrop', 'csstatus', 'csplant', 'csexpected', 'csmodi'];
-  csculprompts: string[] = ['Search No', 'Search Farmer', 'Search Land', 'Search Crop', 'Search Status', 'Search Planted', 'Search Expected', 'Search'];
+  csculcolumns: string[] = ['csculno', 'csfarmer', 'csland', 'cscrop', 'csstatus', 'csplant', 'csexpected'];
+  csculprompts: string[] = ['Search No', 'Search Farmer', 'Search Land', 'Search Crop', 'Search Status', 'Search Planted', 'Search Expected'];
 
   // ── Harvest table ──────────────────────────────────────────────────────────
   harcolumns: string[] = ['harvestdate', 'quantity', 'qualityremarks', 'harmodi'];
@@ -92,6 +92,10 @@ export class CultivationComponent implements OnInit {
   enaharadd: boolean = false;
   enaharupd: boolean = false;
   enahardel: boolean = false;
+
+  hasInsertAuthority: boolean = false;
+  hasUpdateAuthority: boolean = false;
+  hasDeleteAuthority: boolean = false;
 
   uiassist: UiAssist;
 
@@ -176,6 +180,12 @@ export class CultivationComponent implements OnInit {
     // this.lds.getAllList().then(res => this.landdetails = res);
 
     this.enableHarButtons(false, false, false);
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
   }
 
   updateStatusSummary(): void {
@@ -235,6 +245,12 @@ export class CultivationComponent implements OnInit {
     this.enahardel = del;
   }
 
+  buttonStates(authorities: { module: string; operation: string }[]): void {
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'cultivation' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'cultivation' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'cultivation' && authority.operation === 'delete');
+  }
+
   // ── Client-side filters ────────────────────────────────────────────────────
   filterCultivationTable(): void {
     const cs = this.cssearch.getRawValue();
@@ -243,7 +259,7 @@ export class CultivationComponent implements OnInit {
         (cs.csfarmer  == null || c.citizen?.name.toLowerCase().includes(cs.csfarmer)) &&
         (cs.csland    == null || c.landdetail?.deed.toLowerCase().includes(cs.csland)) &&
         (cs.cscrop    == null || c.croptype?.name.toLowerCase().includes(cs.cscrop)) &&
-        (cs.csstatus  == null || c.cultivationstatus?.name.toLowerCase().includes(cs.csstatus));
+        (cs.csstatus  == null || c.cultivationstatus?.name.toLowerCase().includes(cs.csstatus.toLowerCase()));
     };
     this.culdata.filter = 'xx';
   }
@@ -421,6 +437,20 @@ export class CultivationComponent implements OnInit {
           }
           this.dg.open(MessageComponent, {width: '500px', data: {heading: 'Status - Update Cultivation', message}});
         });
+      }
+    });
+  }
+
+  clearHarvest(): void {
+    const confirm = this.dg.open(ConfirmComponent, {
+      width: '500px',
+      data: {heading: 'Confirmation - Clear', message: 'Are you sure to Clear the Harvest Details?'}
+    });
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        this.harform.reset();
+        this.selectedharrow = null;
+        this.enableHarButtons(true, false, false);   // ready for a new harvest entry against the still-selected cultivation
       }
     });
   }

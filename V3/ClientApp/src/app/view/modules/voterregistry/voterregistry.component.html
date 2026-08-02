@@ -40,7 +40,7 @@
 
       <!-- Action buttons -->
       <div class="action-group">
-        <button mat-raised-button id="generatebtn" (click)="generate()">
+        <button mat-raised-button id="generatebtn" (click)="generate()" [disabled]="!hasInsertAuthority">
           <mat-icon>refresh</mat-icon> Generate Registry
         </button>
         <button mat-raised-button id="clearbtn" (click)="clearSelection()">

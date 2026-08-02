@@ -187,10 +187,8 @@
 
               <!-- Row 4: Line Total + Buttons -->
               <div class="form-row">
-
-
-                <button mat-raised-button id="btnAdd" class="form-field" (click)="btnaddMc()" [disabled]="this.disabledadd">Add</button>
-                <button mat-raised-button id="btnEdit" class="form-field" (click)="updateRow()" [disabled]="this.disablededit">
+                <button mat-raised-button id="btnAdd" class="form-field" (click)="btnaddMc()" [disabled]="disabledadd || !hasInsertAuthority">Add</button>
+                <button mat-raised-button id="btnEdit" class="form-field" (click)="updateRow()" [disabled]="disablededit || !hasUpdateAuthority">
                   <mat-icon>edit</mat-icon>
                 </button>
               </div>
@@ -201,7 +199,7 @@
                   <mat-cell *matCellDef="let element">
                     <div *ngIf="i<inbinders.length-2 && column !== 'edit'" [innerHTML]="uiassist.getProperty(element, inbinders[i])"></div>
                     <div *ngIf="column === 'remove'">
-                      <button mat-raised-button (click)="deleteRaw(element)"><mat-icon>delete</mat-icon>
+                      <button mat-raised-button (click)="deleteRaw(element)" [disabled]="!hasDeleteAuthority"><mat-icon>delete</mat-icon>
                       </button>
                     </div>
                     <div *ngIf="column === 'edit'">
