@@ -38,7 +38,7 @@ public class Idcardrequest {
     @JoinColumn(name = "citizen_id", referencedColumnName = "id", nullable = false)
     private Citizen citizen;
     @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = true)
     private Employee employee;
 
     public Integer getId() {

@@ -44,6 +44,39 @@ public class ComplaintController {
         return stream.collect(Collectors.toList());
     }
 
+    @PutMapping("/{id}/citizenupdate")
+    @ResponseStatus(HttpStatus.CREATED)
+    public HashMap<String, String> citizenUpdate(@PathVariable Integer id,
+                                                 @RequestBody Complaint incoming) {
+        HashMap<String, String> response = new HashMap<>();
+        String errors = "";
+
+        Complaint existing = complaintdao.findById(id).orElse(null);
+
+        if (existing == null) {
+            errors = "<br> Complaint Does Not Exist";
+        } else if (!"Pending".equals(existing.getComplaintstatus().getName())) {
+            errors = "<br> Only Pending complaints can be updated";
+        } else if (incoming.getSubject() == null || incoming.getSubject().trim().isEmpty()) {
+            errors = "<br> Subject is required";
+        } else if (incoming.getDescription() == null || incoming.getDescription().trim().isEmpty()) {
+            errors = "<br> Description is required";
+        }
+
+        if (errors.equals("")) {
+            existing.setSubject(incoming.getSubject());
+            existing.setDescription(incoming.getDescription());
+            complaintdao.save(existing);
+        } else {
+            errors = "Server Validation Errors : <br> " + errors;
+        }
+
+        response.put("id", String.valueOf(id));
+        response.put("url", "/complaints/" + id);
+        response.put("errors", errors);
+        return response;
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String, String> add(@RequestBody Complaint complaint) {

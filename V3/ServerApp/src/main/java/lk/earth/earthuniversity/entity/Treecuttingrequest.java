@@ -126,7 +126,7 @@ public class Treecuttingrequest {
     // Employee Relationship
 
     @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = true)
     private Employee employee;
 
 

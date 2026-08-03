@@ -60,17 +60,26 @@ public class TreecuttingrequestController {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
+        if (treecuttingrequest.getTreecount() == null || treecuttingrequest.getTreecount() <= 0) {
+            errors += "<br> Number of trees must be at least 1";
+        }
+
+        if (treecuttingrequest.getNeedstransport() != null && treecuttingrequest.getNeedstransport()) {
+            if (treecuttingrequest.getTransportdate() == null || treecuttingrequest.getTransportdate().isEmpty()) {
+                errors += "<br> Transport date is required";
+            } else if (isPastDate(treecuttingrequest.getTransportdate())) {
+                errors += "<br> Transport date cannot be in the past";
+            }
+        }
+
         if (errors.equals("")) {
-            // Auto-set requested date
             treecuttingrequest.setRequesteddate(
                     new java.sql.Timestamp(System.currentTimeMillis()));
 
-            // Auto-set default status to Pending (id=1)
             Treepermissionstatus pending = new Treepermissionstatus();
             pending.setId(1);
             treecuttingrequest.setTreepermissionstatus(pending);
 
-            // Null out transport fields if transport not needed
             if (treecuttingrequest.getNeedstransport() == null ||
                     !treecuttingrequest.getNeedstransport()) {
                 treecuttingrequest.setDestination(null);
@@ -88,6 +97,68 @@ public class TreecuttingrequestController {
         response.put("url", "/treecuttingrequests/" + treecuttingrequest.getId());
         response.put("errors", errors);
         return response;
+    }
+
+    // ── PUT — citizen updates their own Pending request ────────────────────────
+    @PutMapping("/{id}/citizenupdate")
+    @ResponseStatus(HttpStatus.CREATED)
+    public HashMap<String, String> citizenUpdate(@PathVariable Integer id,
+                                                 @RequestBody Treecuttingrequest incoming) {
+        HashMap<String, String> response = new HashMap<>();
+        String errors = "";
+
+        Treecuttingrequest existing = treecuttingrequestdao.findById(id).orElse(null);
+
+        if (existing == null) {
+            errors = "<br> Tree Cutting Request Does Not Exist";
+        } else if (!"Pending".equals(existing.getTreepermissionstatus().getName())) {
+            errors = "<br> Only Pending requests can be updated";
+        } else if (incoming.getTreecount() == null || incoming.getTreecount() <= 0) {
+            errors = "<br> Number of trees must be at least 1";
+        } else if (Boolean.TRUE.equals(incoming.getNeedstransport())) {
+            if (incoming.getTransportdate() == null || incoming.getTransportdate().isEmpty()) {
+                errors = "<br> Transport date is required";
+            } else if (isPastDate(incoming.getTransportdate())) {
+                errors = "<br> Transport date cannot be in the past";
+            }
+        }
+
+        if (errors.equals("")) {
+            existing.setTreetype(incoming.getTreetype());
+            existing.setDeedno(incoming.getDeedno());
+            existing.setTreecount(incoming.getTreecount());
+            existing.setReasonforcutting(incoming.getReasonforcutting());
+            existing.setNeedstransport(incoming.getNeedstransport());
+
+            if (Boolean.TRUE.equals(incoming.getNeedstransport())) {
+                existing.setDestination(incoming.getDestination());
+                existing.setVehicletype(incoming.getVehicletype());
+                existing.setVehiclenumber(incoming.getVehiclenumber());
+                existing.setTransportdate(incoming.getTransportdate());
+            } else {
+                existing.setDestination(null);
+                existing.setVehicletype(null);
+                existing.setVehiclenumber(null);
+                existing.setTransportdate(null);
+            }
+
+            treecuttingrequestdao.save(existing);
+        } else {
+            errors = "Server Validation Errors : <br> " + errors;
+        }
+
+        response.put("id", String.valueOf(id));
+        response.put("url", "/treecuttingrequests/" + id);
+        response.put("errors", errors);
+        return response;
+    }
+
+    // helper — transportdate is a String (e.g. "2026-08-05T00:00:00.000Z"), compare its date part
+    private boolean isPastDate(String isoDateStr) {
+        if (isoDateStr == null || isoDateStr.length() < 10) return false;
+        String datePart = isoDateStr.substring(0, 10);
+        String today = java.time.LocalDate.now().toString();
+        return datePart.compareTo(today) < 0;
     }
 
     // ── PUT — GN officer updates (approve / reject / status change) ───────────
