@@ -14,7 +14,7 @@ export class Idcardrequest {
   public reason!: Reason;
   public idcardrequeststatus!: Idcardrequeststatus;
   public citizen!: Citizen;
-  public employee!: Employee;
+  public employee?: Employee;
 
   constructor(
     id: number,
@@ -27,7 +27,7 @@ export class Idcardrequest {
     reason: Reason,
     idcardrequeststatus: Idcardrequeststatus,
     citizen: Citizen,
-    employee: Employee
+    employee?: Employee
   ) {
     this.id = id;
     this.bcnooridno = bcnooridno;

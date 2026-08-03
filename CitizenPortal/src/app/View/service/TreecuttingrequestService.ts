@@ -28,9 +28,16 @@ export class TreecuttingrequestService {
     });
   }
 
-  update(request: Treecuttingrequest): Promise<[] | undefined> {
-    return this.http.put<[]>(this.url, request).toPromise();
+  update(id: number, request: Treecuttingrequest): Promise<[] | undefined> {
+    return this.http.put<[]>(this.url + '/' + id + '/citizenupdate', request).toPromise().catch(error => {
+      console.log('Update Error:', error);
+      return undefined;
+    });
   }
+
+  // update(request: Treecuttingrequest): Promise<[] | undefined> {
+  //   return this.http.put<[]>(this.url, request).toPromise();
+  // }
 
   delete(id: number): Promise<[] | undefined> {
     return this.http.delete<[]>(`${this.url}/${id}`).toPromise();

@@ -72,8 +72,12 @@
           <!-- Buttons -->
           <div id="butpanel">
             <button mat-raised-button class="btn-navy"
-                    (click)="add()" [disabled]="!canSubmit()">
+                    (click)="add()" *ngIf="!selectedRow" [disabled]="!canSubmit()">
               Submit
+            </button>
+            <button mat-raised-button class="btn-navy"
+                    (click)="update()" *ngIf="selectedRow" [disabled]="!canUpdate()">
+              Update
             </button>
             <button mat-raised-button color="warn"
                     (click)="delete()" [disabled]="!canDelete()">

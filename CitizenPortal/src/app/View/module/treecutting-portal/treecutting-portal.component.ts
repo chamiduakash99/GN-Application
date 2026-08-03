@@ -58,6 +58,7 @@ export class TreecuttingPortalComponent implements OnInit {
   treepermissionstatuses: Treepermissionstatus[] = [];
   citizens: Citizen[] = [];
   employees: Employee[] = [];
+  minTransportDate = new Date();
 
   uiassist: UiAssist;
 
@@ -76,7 +77,6 @@ export class TreecuttingPortalComponent implements OnInit {
 
     this.form = this.fb.group({
       citizen:              new FormControl('', [Validators.required]),
-      employee:             new FormControl('', [Validators.required]),
       treetype:             new FormControl('', []),
       treepermissionstatus: new FormControl(''),
       deedno:               new FormControl('', [Validators.required, Validators.pattern(/^D\d{3}$/)]),
@@ -190,6 +190,55 @@ export class TreecuttingPortalComponent implements OnInit {
     return this.treecuttingrequest?.treepermissionstatus?.name === 'Pending';
   }
 
+  canUpdate(): boolean {
+    if (!this.selectedRow) return false;
+    return this.treecuttingrequest?.treepermissionstatus?.name === 'Pending' && this.form.valid;
+  }
+
+  update(): void {
+    if (this.form.invalid) {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Validation Error', message: 'Please fill all required fields.'}
+      });
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+    const request: Treecuttingrequest = {
+      ...this.treecuttingrequest,
+      treetype:         raw.treetype,
+      deedno:           raw.deedno,
+      treecount:        raw.treecount,
+      reasonforcutting: raw.reasonforcutting,
+      needstransport:   raw.needstransport ?? false,
+      destination:      raw.needstransport ? raw.destination   : '',
+      vehicletype:      raw.needstransport ? raw.vehicletype   : '',
+      vehiclenumber:    raw.needstransport ? raw.vehiclenumber : '',
+      transportdate:    raw.needstransport ? raw.transportdate : '',
+    };
+
+    this.tcrs.update(request.id, request).then((response) => {
+      if (response === undefined) {
+        this.dg.open(MessageComponent, {
+          width: '400px',
+          data: {heading: 'Error', message: 'Failed to update request.'}
+        });
+        return;
+      }
+
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Success', message: 'Tree Cutting Request updated successfully.'}
+      });
+      this.clear();
+      const citizenString = localStorage.getItem('citizen');
+      if (!citizenString) return;
+      const citizen = JSON.parse(citizenString);
+      this.loadTable('?citizenid=' + citizen.id);
+    });
+  }
+
   get needsTransportChecked(): boolean {
     return this.form.get('needstransport')!.value === true;
   }
@@ -218,7 +267,6 @@ export class TreecuttingPortalComponent implements OnInit {
     const request: Treecuttingrequest = {
       id:                   0,
       citizen:              raw.citizen,
-      employee:             raw.employee,
       treetype:             raw.treetype,
       treepermissionstatus: {id: 1, name: 'Pending'} as Treepermissionstatus,
       deedno:               raw.deedno,

@@ -24,7 +24,7 @@
     public treetype!: Treetype;
     public treepermissionstatus!: Treepermissionstatus;
     public citizen!: Citizen;
-    public employee!: Employee;
+    public employee?: Employee;
 
     constructor(
       id: number,

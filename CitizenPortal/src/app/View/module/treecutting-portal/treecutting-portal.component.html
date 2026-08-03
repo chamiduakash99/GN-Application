@@ -25,17 +25,6 @@
 
           </mat-form-field>
 
-          <!-- Employee -->
-
-<!--          <mat-form-field appearance="outline" class="full-width">-->
-<!--            <mat-label>GN Officer</mat-label>-->
-<!--            <mat-select formControlName="employee">-->
-<!--              <mat-option *ngFor="let e of employees"-->
-<!--                          [value]="e">-->
-<!--                {{e.fullname}}-->
-<!--              </mat-option>-->
-<!--            </mat-select>-->
-<!--          </mat-form-field>-->
 
 
           <!-- Tree Type -->
@@ -65,9 +54,7 @@
 
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Number of Trees</mat-label>
-            <input matInput
-                   type="number"
-                   formControlName="treecount">
+            <input matInput type="number" min="1" formControlName="treecount">
           </mat-form-field>
 
           <!-- Reason -->
@@ -123,10 +110,7 @@
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Transport Date</mat-label>
 
-              <input
-                matInput
-                [matDatepicker]="picker"
-                formControlName="transportdate">
+              <input matInput [matDatepicker]="picker" [min]="minTransportDate" formControlName="transportdate">
 
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -171,7 +155,15 @@
         <button mat-raised-button
                 class="btn-navy"
                 (click)="add()"
+                *ngIf="!selectedRow"
                 [disabled]="!canSubmit()">Submit
+        </button>
+
+        <button mat-raised-button
+                class="btn-navy"
+                (click)="update()"
+                *ngIf="selectedRow"
+                [disabled]="!canUpdate()">Update
         </button>
 
         <button mat-raised-button

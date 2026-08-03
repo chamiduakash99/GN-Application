@@ -71,7 +71,6 @@ export class IdcardrequestPortalComponent implements OnInit {
 
     this.form = this.fb.group({
       citizen:               new FormControl('', [Validators.required]),
-      employee:              new FormControl('', [Validators.required]),
       reason:                new FormControl('', [Validators.required]),
       idcardrequeststatus:   new FormControl(''),
       bcnooridno:            new FormControl(''),
@@ -183,7 +182,6 @@ export class IdcardrequestPortalComponent implements OnInit {
     this.stepper?.reset();
 
     const selectedCitizen  = this.citizens.find(x => x.id === this.idcardrequest.citizen?.id);
-    const selectedEmployee = this.employees.find(x => x.id === this.idcardrequest.employee?.id);
     const selectedReason   = this.reasons.find(x => x.id === this.idcardrequest.reason?.id);
 
     // Set validators before patching so fields are enabled correctly
@@ -191,7 +189,6 @@ export class IdcardrequestPortalComponent implements OnInit {
 
     this.form.patchValue({
       citizen:                selectedCitizen,
-      employee:               selectedEmployee,
       reason:                 selectedReason,
       idcardrequeststatus:    this.idcardrequest.idcardrequeststatus?.name,
       bcnooridno:             this.idcardrequest.bcnooridno,
@@ -228,7 +225,6 @@ export class IdcardrequestPortalComponent implements OnInit {
     const request: Idcardrequest = {
       id:                     0,
       citizen:                raw.citizen,
-      employee:               raw.employee,
       reason:                 raw.reason,
       idcardrequeststatus:    {id: 1, name: 'Pending'} as Idcardrequeststatus,
       bcnooridno:             raw.bcnooridno ?? '',

@@ -65,7 +65,6 @@ export class ComplaintComponent implements OnInit {
 
     this.form = this.fb.group({
       citizen:         new FormControl('', [Validators.required]),
-      employee:        new FormControl('', [Validators.required]),
       subject:         new FormControl('', [Validators.required]),
       description:     new FormControl('', [Validators.required]),
       complaintstatus: new FormControl(''),
@@ -156,7 +155,6 @@ export class ComplaintComponent implements OnInit {
     const request: Complaint = {
       id: 0,
       citizen:         raw.citizen,
-      employee:        raw.employee,
       subject:         raw.subject,
       description:     raw.description,
       complaintstatus: {id: 1, name: 'Pending'} as Complaintstatus,
@@ -184,6 +182,47 @@ export class ComplaintComponent implements OnInit {
           data: {heading: 'Error', message: 'Failed to submit complaint.'}
         });
       });
+  }
+
+  canUpdate(): boolean {
+    if (!this.selectedRow) return false;
+    return this.complaint?.complaintstatus?.name === 'Pending' && this.form.valid;
+  }
+
+  update(): void {
+    if (this.form.invalid) {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Validation Error', message: 'Please fill all required fields.'}
+      });
+      return;
+    }
+
+    const raw = this.form.getRawValue();
+    const request: Complaint = {
+      ...this.complaint,
+      subject: raw.subject,
+      description: raw.description,
+    };
+
+    this.cs.update(request.id, request).then((response) => {
+      if (response === undefined) {
+        this.dg.open(MessageComponent, {
+          width: '400px',
+          data: {heading: 'Error', message: 'Failed to update complaint.'}
+        });
+        return;
+      }
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Success', message: 'Complaint updated successfully.'}
+      });
+      this.clear();
+      const citizenString = localStorage.getItem('citizen');
+      if (!citizenString) return;
+      const citizen = JSON.parse(citizenString);
+      this.loadTable('?citizenid=' + citizen.id);
+    });
   }
 
   // ── Delete ────────────────────────────────────────────────────────────────

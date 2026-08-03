@@ -20,14 +20,6 @@
             </mat-select>
           </mat-form-field>
 
-          <!-- GN Officer -->
-          <mat-form-field appearance="outline">
-            <mat-label>GN Officer</mat-label>
-            <mat-select formControlName="employee">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let e of employees" [value]="e">{{e.callingname}}</mat-option>
-            </mat-select>
-          </mat-form-field>
 
           <!-- Reason — key field that drives conditional sections -->
           <mat-form-field appearance="outline">

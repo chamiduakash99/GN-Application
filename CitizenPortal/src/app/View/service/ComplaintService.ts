@@ -27,8 +27,11 @@ export class ComplaintService {
     });
   }
 
-  update(complaint: Complaint): Promise<[] | undefined> {
-    return this.http.put<[]>(this.url, complaint).toPromise();
+  update(id: number, complaint: Complaint): Promise<[] | undefined> {
+    return this.http.put<[]>(this.url + '/' + id + '/citizenupdate', complaint).toPromise().catch(error => {
+      console.log('Update Error:', error);
+      return undefined;
+    });
   }
 
   delete(id: number): Promise<[] | undefined> {
