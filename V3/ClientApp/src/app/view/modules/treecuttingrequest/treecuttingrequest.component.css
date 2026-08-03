@@ -133,3 +133,24 @@ button:disabled { opacity: 0.5; }
 #treeform mat-form-field .ng-dirty { background-color: #ffffff; }
 
 mat-divider { margin: 10px 0; }
+
+::ng-deep #treeform input[matinput]:disabled,
+::ng-deep #treeform textarea[matinput]:disabled,
+::ng-deep #treeform .mat-mdc-input-element:disabled,
+::ng-deep #treeform .mat-input-element:disabled {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 500;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.87);
+  opacity: 1 !important;
+}
+
+::ng-deep #treeform .mat-mdc-select-disabled .mat-mdc-select-value-text,
+::ng-deep #treeform .mat-select-disabled .mat-select-value-text {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 500;
+}
+
+::ng-deep #treeform .mat-mdc-form-field-disabled .mdc-floating-label,
+::ng-deep #treeform .mat-form-field-disabled .mat-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}

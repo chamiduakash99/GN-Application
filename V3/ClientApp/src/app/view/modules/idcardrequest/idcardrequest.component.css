@@ -146,3 +146,24 @@ button:disabled {
 
 .status-title { font-size: 16px; }
 .status-count { font-size: 28px; margin-top: 5px; }
+
+::ng-deep #idcardform input[matinput]:disabled,
+::ng-deep #idcardform textarea[matinput]:disabled,
+::ng-deep #idcardform .mat-mdc-input-element:disabled,
+::ng-deep #idcardform .mat-input-element:disabled {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 500;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.87);
+  opacity: 1 !important;
+}
+
+::ng-deep #idcardform .mat-mdc-select-disabled .mat-mdc-select-value-text,
+::ng-deep #idcardform .mat-select-disabled .mat-select-value-text {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 500;
+}
+
+::ng-deep #idcardform .mat-mdc-form-field-disabled .mdc-floating-label,
+::ng-deep #idcardform .mat-form-field-disabled .mat-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}

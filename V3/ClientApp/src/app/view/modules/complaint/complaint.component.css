@@ -112,3 +112,24 @@ button:disabled {
 
 .status-title { font-size: 16px; }
 .status-count { font-size: 28px; margin-top: 5px; }
+
+::ng-deep #complaintform  input[matinput]:disabled,
+::ng-deep #complaintform  textarea[matinput]:disabled,
+::ng-deep #complaintform  .mat-mdc-input-element:disabled,
+::ng-deep #complaintform  .mat-input-element:disabled {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 500;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.87);
+  opacity: 1 !important;
+}
+
+::ng-deep #complaintform  .mat-mdc-select-disabled .mat-mdc-select-value-text,
+::ng-deep #complaintform  .mat-select-disabled .mat-select-value-text {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-weight: 500;
+}
+
+::ng-deep #complaintform  .mat-mdc-form-field-disabled .mdc-floating-label,
+::ng-deep #complaintform  .mat-form-field-disabled .mat-form-field-label {
+  color: rgba(0, 0, 0, 0.6) !important;
+}

@@ -98,7 +98,6 @@ export class ComplaintComponent {
     // Main form
     this.form = this.fb.group({
       'citizen':          new FormControl('', [Validators.required]),
-      'employee':         new FormControl('', [Validators.required]),
       'complaintstatus':  new FormControl(''),
       'subject':          new FormControl('', [Validators.required]),
       'description':      new FormControl('', [Validators.required]),
@@ -107,6 +106,10 @@ export class ComplaintComponent {
       'actiontaken':      new FormControl(''),
       'referredto':       new FormControl(''),
     }, {updateOn: 'change'});
+
+    ['citizen', 'subject', 'description', 'complaineddate'].forEach(key => {
+      this.form.get(key)!.disable();
+    });
   }
 
   // ── Lifecycle ─────────────────────────────────────────────────────────────
@@ -226,7 +229,7 @@ export class ComplaintComponent {
     // @ts-ignore
     this.complaint.citizen         = this.citizens.find(x => x.id === this.complaint.citizen.id);
     // @ts-ignore
-    this.complaint.employee        = this.employees.find(x => x.id === this.complaint.employee.id);
+    this.complaint.employee = this.complaint.employee ? this.employees.find(x => x.id === this.complaint.employee!.id) : undefined;
     // @ts-ignore
     this.complaint.complaintstatus = this.complaintstatuses.find(x => x.id === this.complaint.complaintstatus.id);
 

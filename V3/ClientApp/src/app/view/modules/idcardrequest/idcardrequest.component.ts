@@ -102,7 +102,6 @@ export class IdcardrequestComponent implements OnInit {
 
     this.form = this.fb.group({
       'citizen':               new FormControl('', [Validators.required]),
-      'employee':              new FormControl('', [Validators.required]),
       'reason':                new FormControl('', [Validators.required]),
       'idcardrequeststatus':   new FormControl(''),
       'bcnooridno':            new FormControl(''),
@@ -113,7 +112,10 @@ export class IdcardrequestComponent implements OnInit {
       'rejectreason':          new FormControl(''),
     }, {updateOn: 'change'});
 
-    // Watch reason changes to update validators dynamically
+    ['citizen', 'reason', 'bcnooridno', 'applieddate', 'complaintdate', 'complaintpolicestation', 'complaintno']
+      .forEach(key => this.form.get(key)!.disable());
+
+// Watch reason changes to update validators dynamically
     this.form.get('reason')!.valueChanges.subscribe((reason: Reason) => {
       this.onReasonChange(reason);
     });
@@ -290,8 +292,6 @@ export class IdcardrequestComponent implements OnInit {
     // @ts-ignore
     this.idcardrequest.citizen           = this.citizens.find(x => x.id === this.idcardrequest.citizen.id);
     // @ts-ignore
-    this.idcardrequest.employee          = this.employees.find(x => x.id === this.idcardrequest.employee.id);
-    // @ts-ignore
     this.idcardrequest.reason            = this.reasons.find(x => x.id === this.idcardrequest.reason.id);
     // @ts-ignore
     this.idcardrequest.idcardrequeststatus = this.idcardrequeststatus.find(x => x.id === this.idcardrequest.idcardrequeststatus.id);
@@ -301,6 +301,12 @@ export class IdcardrequestComponent implements OnInit {
 
     this.form.patchValue(this.idcardrequest);
     this.form.markAsPristine();
+
+    // Re-lock citizen-submitted fields — onReasonChange() above re-enables
+    // bcnooridno/complaintdate/complaintpolicestation/complaintno as a side
+    // effect, so they must be disabled again after patching.
+    ['citizen', 'reason', 'bcnooridno', 'applieddate', 'complaintdate', 'complaintpolicestation', 'complaintno']
+      .forEach(key => this.form.get(key)!.disable());
 
     const status = r.idcardrequeststatus?.name;
     this.enaadd = false;

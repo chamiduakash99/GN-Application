@@ -33,13 +33,6 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Assigned Officer</mat-label>
-            <mat-select formControlName="employee">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let e of employees" [value]="e">{{e.callingname}}</mat-option>
-            </mat-select>
-          </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Tree Type</mat-label>

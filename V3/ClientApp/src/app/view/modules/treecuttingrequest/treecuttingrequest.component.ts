@@ -105,7 +105,6 @@ export class TreecuttingrequestComponent implements OnInit {
 
     this.form = this.fb.group({
       'citizen':               new FormControl('', [Validators.required]),
-      'employee':              new FormControl('', [Validators.required]),
       'treetype':              new FormControl('', [Validators.required]),
       'deedno':                new FormControl('', [Validators.required]),
       'treecount':             new FormControl('', [Validators.required]),
@@ -120,7 +119,13 @@ export class TreecuttingrequestComponent implements OnInit {
       'transportdate':         new FormControl(''),
     }, {updateOn: 'change'});
 
-    // Watch needstransport toggle
+    Object.keys(this.form.controls).forEach(key => {
+      if (key !== 'rejectreason') {
+        this.form.get(key)!.disable();
+      }
+    });
+
+// Watch needstransport toggle
     this.form.get('needstransport')!.valueChanges.subscribe((val: boolean) => {
       this.onTransportToggle(val);
     });
@@ -241,7 +246,9 @@ export class TreecuttingrequestComponent implements OnInit {
     // @ts-ignore
     this.treecuttingrequest.citizen              = this.citizens.find(x => x.id === this.treecuttingrequest.citizen.id);
     // @ts-ignore
-    this.treecuttingrequest.employee             = this.employees.find(x => x.id === this.treecuttingrequest.employee.id);
+    this.treecuttingrequest.employee = this.treecuttingrequest.employee
+      ? this.employees.find(x => x.id === this.treecuttingrequest.employee!.id)
+      : undefined;
     // @ts-ignore
     this.treecuttingrequest.treetype             = this.treetypes.find(x => x.id === this.treecuttingrequest.treetype.id);
     // @ts-ignore
