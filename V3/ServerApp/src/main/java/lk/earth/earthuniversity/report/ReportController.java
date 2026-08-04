@@ -1,33 +1,31 @@
 package lk.earth.earthuniversity.report;
 
-import lk.earth.earthuniversity.report.dao.CountByStreetMaterialDao;
-import lk.earth.earthuniversity.report.dao.FenceReportDao;
-import lk.earth.earthuniversity.report.dao.LandFeatureReportDao;
-import lk.earth.earthuniversity.report.dao.LandReportDao;
+import lk.earth.earthuniversity.entity.Complaintstatus;
+import lk.earth.earthuniversity.entity.Idcardrequeststatus;
+import lk.earth.earthuniversity.report.dao.*;
 import lk.earth.earthuniversity.report.entity.CountByStreetMaterial;
 import lk.earth.earthuniversity.report.entity.CountReport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-import lk.earth.earthuniversity.report.dao.UsageReportDao;
-import lk.earth.earthuniversity.report.dao.OwnershiptypeReportDao;
-import lk.earth.earthuniversity.report.dao.BuildingtypeReportDao;
-import lk.earth.earthuniversity.report.dao.WalltypeReportDao;
-import lk.earth.earthuniversity.report.dao.FloortypeReportDao;
-import lk.earth.earthuniversity.report.dao.RooftypeReportDao;
-import lk.earth.earthuniversity.report.dao.ReligionReportDao;
-import lk.earth.earthuniversity.report.dao.MatiralstatusReportDao;
-import lk.earth.earthuniversity.report.dao.EducationlevelReportDao;
-import lk.earth.earthuniversity.report.dao.EthnicityReportDao;
-import lk.earth.earthuniversity.report.dao.GenderReportDao;
-import lk.earth.earthuniversity.report.dao.CitizenstatusReportDao;
-import lk.earth.earthuniversity.report.dao.AidprogramReportDao;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 
 import java.util.List;
+import org.springframework.format.annotation.DateTimeFormat;
+import lk.earth.earthuniversity.dao.IdcardrequeststatusDao;
+import lk.earth.earthuniversity.dao.ComplaintstatusDao;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/reports")
 public class ReportController {
+
+   //Street
 
     @Autowired
     private CountByStreetMaterialDao countByStreetMaterialDao;
@@ -36,6 +34,8 @@ public class ReportController {
     public List<CountReport> countByStreetMaterial() {
         return withPercentages(countByStreetMaterialDao.countByStreetMaterial());
     }
+
+    //Land
 
     @Autowired
     private LandReportDao landReportDao;
@@ -60,6 +60,8 @@ public class ReportController {
     public List<CountReport> countByLandFeatures() {
         return withPercentages(landFeatureReportDao.countByLandFeature());
     }
+
+   //Building
 
     @Autowired
     private UsageReportDao usageReportDao;
@@ -112,6 +114,8 @@ public class ReportController {
     @Autowired
     private ReligionReportDao religionReportDao;
 
+
+    //citizen
     @GetMapping(path = "/religionreport", produces = "application/json")
     public List<CountReport> countByReligion() {
         return withPercentages(religionReportDao.countByReligion());
@@ -165,6 +169,39 @@ public class ReportController {
         return withPercentages(aidprogramReportDao.countByAidprogram());
     }
 
+    @Autowired
+    private HouseholdReportDao householdReportDao;
+
+//   Household
+    @GetMapping(path = "/householdreport", produces = "application/json")
+    public List<CountReport> countHouseholdsByMemberCount(
+            @RequestParam(value = "min", required = false) Integer min,
+            @RequestParam(value = "max", required = false) Integer max) {
+
+        List<Object[]> rows = householdReportDao.getHouseholdMemberCounts();
+
+        Map<Integer, Long> buckets = new TreeMap<>();
+        for (Object[] row : rows) {
+            Number memberCount = (Number) row[1];
+            int count = memberCount.intValue();
+
+            if (min != null && count < min) continue;
+            if (max != null && count > max) continue;
+
+            buckets.merge(count, 1L, Long::sum);
+        }
+
+        List<CountReport> result = new ArrayList<>();
+        for (Map.Entry<Integer, Long> entry : buckets.entrySet()) {
+            CountReport cr = new CountReport();
+            cr.setName(entry.getKey() + (entry.getKey() == 1 ? " member" : " members"));
+            cr.setCount(entry.getValue());
+            result.add(cr);
+        }
+
+        return withPercentages(result);
+    }
+
     private List<CountReport> withPercentages(List<CountReport> list) {
         long totalCount = 0;
         for (CountReport record : list) {
@@ -176,4 +213,114 @@ public class ReportController {
         }
         return list;
     }
+
+    //Voter registry
+
+    @Autowired
+    private VoterRegistryReportDao voterRegistryReportDao;
+
+    @GetMapping(path = "/voterregistryreport", produces = "application/json")
+    public List<CountReport> countVotersByAge(
+            @RequestParam(value = "min", required = false) Integer min,
+            @RequestParam(value = "max", required = false) Integer max) {
+
+        List<Object[]> rows = voterRegistryReportDao.getVoterAges();
+
+        Map<Integer, Long> buckets = new TreeMap<>();
+        for (Object[] row : rows) {
+            Number ageNum = (Number) row[1];
+            int age = ageNum.intValue();
+
+            if (min != null && age < min) continue;
+            if (max != null && age > max) continue;
+
+            buckets.merge(age, 1L, Long::sum);
+        }
+
+        List<CountReport> result = new ArrayList<>();
+        for (Map.Entry<Integer, Long> entry : buckets.entrySet()) {
+            CountReport cr = new CountReport();
+            cr.setName(entry.getKey() + " years");
+            cr.setCount(entry.getValue());
+            result.add(cr);
+        }
+
+        return withPercentages(result);
+    }
+
+    //Announcement
+
+    @Autowired
+    private AnnouncementReportDao announcementReportDao;
+
+    @GetMapping(path = "/announcementreport", produces = "application/json")
+    public List<CountReport> countAnnouncements(
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+
+        List<CountReport> list;
+        if (start != null && end != null) {
+            list = announcementReportDao.countByActiveStatusBetweenDates(
+                    Timestamp.valueOf(start), Timestamp.valueOf(end));
+        } else {
+            list = announcementReportDao.countByActiveStatus();
+        }
+        return withPercentages(list);
+    }
+
+    //complaint
+
+    @Autowired
+    private ComplaintReportDao complaintReportDao;
+
+    @Autowired
+    private ComplaintstatusDao complaintstatusDao;
+
+    @GetMapping(path = "/complaintreport", produces = "application/json")
+    public List<CountReport> countComplaints(
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(value = "statusId", required = false) Integer statusId) {
+
+        Timestamp startTs = (start != null) ? Timestamp.valueOf(start) : null;
+        Timestamp endTs = (end != null) ? Timestamp.valueOf(end) : null;
+
+        List<CountReport> list = complaintReportDao.countByStatus(startTs, endTs, statusId);
+        return withPercentages(list);
+    }
+
+    @GetMapping(path = "/complaintstatuses", produces = "application/json")
+    public List<Complaintstatus> getAllComplaintStatuses() {
+        return complaintstatusDao.findAll();
+    }
+
+    //ID Card Request
+
+    @Autowired
+    private IdcardrequestReportDao idcardrequestReportDao;
+
+    @Autowired
+    private IdcardrequeststatusDao idcardrequeststatusDao;
+
+    @GetMapping(path = "/idcardrequestreport", produces = "application/json")
+    public List<CountReport> countIdcardRequests(
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam(value = "statusId", required = false) Integer statusId) {
+
+        Timestamp startTs = (start != null) ? Timestamp.valueOf(start) : null;
+        Timestamp endTs = (end != null) ? Timestamp.valueOf(end) : null;
+
+        List<CountReport> list = idcardrequestReportDao.countByStatus(startTs, endTs, statusId);
+        return withPercentages(list);
+    }
+
+    @GetMapping(path = "/idcardrequeststatuses", produces = "application/json")
+    public List<Idcardrequeststatus> getAllIdcardRequestStatuses() {
+        return idcardrequeststatusDao.findAll();
+    }
+
+
+
+
 }
