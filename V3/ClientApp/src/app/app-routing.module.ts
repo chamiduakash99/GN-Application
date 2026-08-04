@@ -32,6 +32,11 @@ import {CitizenskillComponent} from "./view/modules/citizenskill/citizenskill.co
 import {LandreportComponent} from "./report/view/landreport/landreport.component";
 import {BuildingreportComponent} from "./report/view/buildingreport/buildingreport.component";
 import {CitizenreportComponent} from "./report/view/citizenreport/citizenreport.component";
+import {HouseholdreportComponent} from "./report/view/householdreport/householdreport.component";
+import {VoterregistryreportComponent} from "./report/view/voterregistryreport/voterregistryreport.component";
+import {AnnouncementreportComponent} from "./report/view/announcementreport/announcementreport.component";
+import {ComplaintreportComponent} from "./report/view/complaintreport/complaintreport.component";
+import {IdcardrequestreportComponent} from "./report/view/idcardrequestreport/idcardrequestreport.component";
 
 
 const routes: Routes = [
@@ -79,7 +84,12 @@ const routes: Routes = [
           { path: "countbystreetmaterial", component: CountByStreetMaterialComponent },
           { path: "landreport", component: LandreportComponent },
           { path: "buildingreport", component: BuildingreportComponent },
-          { path: "citizenreport", component: CitizenreportComponent }
+          { path: "citizenreport", component: CitizenreportComponent },
+          { path: "householdreport", component: HouseholdreportComponent },
+          { path: "voterregistryreport", component: VoterregistryreportComponent },
+          { path: "announcementreport", component: AnnouncementreportComponent },
+          { path: "complaintreport", component: ComplaintreportComponent },
+          { path: "idcardrequestreport", component: IdcardrequestreportComponent }
         ]},
 
     ]

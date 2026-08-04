@@ -62,6 +62,11 @@ export class AuthorizationManager {
     {name: 'landreport', displayName: 'Land Report', isVisible: false, routerLink: 'reports/landreport'},
     {name: 'buildingreport', displayName: 'Building Report', isVisible: false, routerLink: 'reports/buildingreport'},
     {name: 'citizenreport', displayName: 'Citizen Report', isVisible: false, routerLink: 'reports/citizenreport'},
+    {name: 'householdreport', displayName: 'Household Report', isVisible: false, routerLink: 'reports/householdreport'},
+    {name: 'voterregistryreport', displayName: 'Voter Registry Report', isVisible: false, routerLink: 'reports/voterregistryreport'},
+    {name: 'announcementreport', displayName: 'Announcement Report', isVisible: false, routerLink: 'reports/announcementreport'},
+    {name: 'complaintreport', displayName: 'Complaint Report', isVisible: false, routerLink: 'reports/complaintreport'},
+    {name: 'idcardrequestreport', displayName: 'ID Card Request Report', isVisible: false, routerLink: 'reports/idcardrequestreport'},
   ];
 
 

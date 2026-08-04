@@ -10,7 +10,7 @@ import {EmployeeComponent} from './view/modules/employee/employee.component';
 import {UserComponent} from './view/modules/user/user.component';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
@@ -70,6 +70,11 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
 import {ChipStateDirective} from "./util/ui/MatChipList-Transfer/ChipStateDirective";
 import { BuildingreportComponent } from './report/view/buildingreport/buildingreport.component';
 import { CitizenreportComponent } from './report/view/citizenreport/citizenreport.component';
+import { HouseholdreportComponent } from './report/view/householdreport/householdreport.component';
+import { VoterregistryreportComponent } from './report/view/voterregistryreport/voterregistryreport.component';
+import { AnnouncementreportComponent } from './report/view/announcementreport/announcementreport.component';
+import { ComplaintreportComponent } from './report/view/complaintreport/complaintreport.component';
+import { IdcardrequestreportComponent } from './report/view/idcardrequestreport/idcardrequestreport.component';
 
 
 
@@ -110,7 +115,12 @@ import { CitizenreportComponent } from './report/view/citizenreport/citizenrepor
     CitizenskillComponent,
     LandreportComponent,
     BuildingreportComponent,
-    CitizenreportComponent
+    CitizenreportComponent,
+    HouseholdreportComponent,
+    VoterregistryreportComponent,
+    AnnouncementreportComponent,
+    ComplaintreportComponent,
+    IdcardrequestreportComponent
   ],
     imports: [
         MatDatepickerModule,
@@ -143,7 +153,11 @@ import { CitizenreportComponent } from './report/view/citizenreport/citizenrepor
         NgChartsModule,
         MatProgressBarModule,
         MatCheckboxModule,
-        ChipStateDirective
+        ChipStateDirective,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
     ],
   providers: [
     OperationComponent,
