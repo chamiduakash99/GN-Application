@@ -15,7 +15,6 @@ import {ClassComponent} from "./view/modules/class/class.component";
 import {BookdistributionComponent} from "./view/modules/bookdistribution/bookdistribution.component";
 import {ItemComponent} from "./view/modules/item/item.component";
 import { StreetComponent } from './view/modules/street/street.component';
-import { CountByStreetMaterial } from './report/entity/countbystreetmaterial';
 import { CountByStreetMaterialComponent } from './report/view/countbystreetmaterial/countbystreetmaterial.component';
 import {LandComponent} from "./view/modules/land/land.component";
 import {BuildingComponent} from "./view/modules/building/building.component";
@@ -31,6 +30,8 @@ import {VoterregistryComponent} from "./view/modules/voterregistry/voterregistry
 import {CultivationComponent} from "./view/modules/cultivation/cultivation.component";
 import {CitizenskillComponent} from "./view/modules/citizenskill/citizenskill.component";
 import {LandreportComponent} from "./report/view/landreport/landreport.component";
+import {BuildingreportComponent} from "./report/view/buildingreport/buildingreport.component";
+import {CitizenreportComponent} from "./report/view/citizenreport/citizenreport.component";
 
 
 const routes: Routes = [
@@ -76,7 +77,9 @@ const routes: Routes = [
       {path: "reports",
         children: [
           { path: "countbystreetmaterial", component: CountByStreetMaterialComponent },
-          { path: "landreport", component: LandreportComponent }
+          { path: "landreport", component: LandreportComponent },
+          { path: "buildingreport", component: BuildingreportComponent },
+          { path: "citizenreport", component: CitizenreportComponent }
         ]},
 
     ]

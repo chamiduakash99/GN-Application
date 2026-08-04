@@ -35,6 +35,8 @@ import { Citizenstatus } from 'src/app/entity/citizenstatus';
 import { CitizenstatusService } from 'src/app/service/citizenstatusservice';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {ChipItem} from "../../../util/ui/MatChipList-Transfer/chip-item.model";
+import {ChipSelectService} from "../../../util/ui/MatChipList-Transfer/ChipSelectService";
 
 @Component({
   selector: 'app-citizen',
@@ -99,6 +101,7 @@ export class CitizenComponent implements OnInit {
   oldaidprograms:Array<Aidprogram>=[];
   @Input()selectedaidprograms: Array<Aidprogram> =[];
   citizenaidprograms: Array<Citizenaidprogram> = [];
+  chips: ChipItem<Aidprogram>[] = [];
 
   incolumns: string[] = ['relationshiptype', 'citizenparent','remove','edit'];
   inheaders: string[] = ['Relationshiptype', 'Citizenguardian','Remove','Edit'];
@@ -113,6 +116,7 @@ export class CitizenComponent implements OnInit {
   citizenguardiansChanges: Array<Citizenguardian> = [];
   citizenguardian!:Citizenguardian;
  oldcitizenguardian!:Citizenguardian;
+
 
   relationshiptypes: Array<Relationshiptype> = [];
   id:number = 0;
@@ -136,6 +140,7 @@ export class CitizenComponent implements OnInit {
     private aps: AidprogramService,
     private rts: RelationshiptypeService,
     public authService: AuthorizationManager,
+    private chipSelectService: ChipSelectService,
 
 
 
@@ -160,7 +165,7 @@ export class CitizenComponent implements OnInit {
       gender: new FormControl(),
       citizenstatus: new FormControl(),
 
-      citizenaidprograms: new FormControl(),
+      citizenaidprograms: new FormControl([]),
       citizenguardians: new FormControl()
     });
 
@@ -216,9 +221,11 @@ export class CitizenComponent implements OnInit {
     this.rts.getAllListNameId().then(r => this.relationshiptypes = r);
     this.css.getAllListNameId().then(r => this.citizenstatuses = r);
 
+
     this.aps.getAllListNameId().then((r:Aidprogram[]) => {
       this.aidprograms = r
       this.oldaidprograms = this.aidprograms
+      this.chips = this.chipSelectService.buildChips(this.aidprograms);
     });
 
 
@@ -272,6 +279,46 @@ export class CitizenComponent implements OnInit {
     this.enableButtons(true, false, false);
     console.log(this.enaadd)
 
+  }
+
+  private rebuildChips(): void {
+    // Start fresh from current aidprograms
+    this.chips = this.chipSelectService.buildChips(this.aidprograms);
+
+    // For each existing shipmentorder, reconcile against new chips
+    this.citizenaidprograms.forEach(citizenaidprogram => {
+      const existingChip = this.chips.find(c => c.data.id === citizenaidprogram.aidprogram.id);
+
+      if (existingChip) {
+        // It exists in salesorders → just mark saved
+        existingChip.state = 'saved';
+      } else {
+        // It does NOT exist in salesorders → inject as orphan chip marked saved
+        this.chips.push({ data: citizenaidprogram.aidprogram, state: 'saved' });
+      }
+    });
+  }
+
+  onFillForm(): void {
+    this.chipSelectService.fillForm(
+      this.chips,
+      this.citizenaidprograms.map(c => c.aidprogram),
+      (a, b) => a.id === b.id     // 👈 your match function
+    );
+  }
+
+  onChipClick(chip: ChipItem<Aidprogram>): void {
+    this.chipSelectService.toggleChip(chip, this.aidprograms);
+
+    // wrap into Shipmentorder after toggle
+    this.citizenaidprograms = this.chips
+      .filter(c => c.state === 'new' || c.state === 'saved')
+      .map(c => new Citizenaidprogram(c.data));
+    console.log(this.citizenaidprograms);
+
+    const control = this.form.get('citizenaidprograms');
+
+    control?.markAsDirty();
   }
 
   createView() {
@@ -405,8 +452,18 @@ export class CitizenComponent implements OnInit {
     this.indata = new MatTableDataSource<Citizenguardian>(this.citizenguardians);
     // ===== PATCH FORM =====
     this.form.patchValue(this.citizen);
-    this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
+    // this.form.controls['citizenaidprograms'].setValue(this.citizenaidprograms);
     this.form.markAsPristine();
+
+    this.rebuildChips();
+    this.onFillForm();
+  }
+
+  resetChips() {
+    this.chips.forEach(chip => {
+      chip.originallySaved = false;
+      chip.state = 'default';
+    });
   }
 
   btnSearchClearMc(): void {
@@ -509,6 +566,7 @@ export class CitizenComponent implements OnInit {
         delete s.id;   // removes the id property
       });
       this.citizen.citizenguardians = this.citizenguardians;
+      this.citizen.citizenaidprograms = this.citizenaidprograms;
 
       // -----------------------------
       // BUILD CONFIRMATION DATA
@@ -569,6 +627,8 @@ export class CitizenComponent implements OnInit {
               });
 
               this.loadTable("");
+              this. resetChips();
+              // this.rebuildChips();
 
             }
 
@@ -597,68 +657,172 @@ export class CitizenComponent implements OnInit {
   //   this.citizen.citizenguardians = this.citizenguardians;
   //   console.log(this.citizen)
   // }
+  // getErrors(): string {
+  //
+  //   let errors: string = "";
+  //
+  //   for (const controlName in this.form.controls) {
+  //
+  //     const control = this.form.controls[controlName];
+  //
+  //     if (control.errors) {
+  //
+  //       // If you have regex validation messages defined
+  //       if (this.regexes && this.regexes[controlName] != undefined) {
+  //
+  //         errors = errors + "<br>" + this.regexes[controlName]['message'];
+  //
+  //       } else {
+  //
+  //         // Better readable fallback messages (IMPORTANT for Citizen module)
+  //         switch (controlName) {
+  //
+  //           case 'name':
+  //             errors += "<br>Name is required";
+  //             break;
+  //
+  //           case 'nic':
+  //             errors += "<br>NIC is required";
+  //             break;
+  //
+  //           case 'citizenstatus':
+  //             errors += "<br>Citizen Status is required";
+  //             break;
+  //
+  //           case 'email':
+  //             errors += "<br>Invalid Email";
+  //             break;
+  //
+  //           case 'mobileno':
+  //             errors += "<br>Invalid Mobile Number";
+  //             break;
+  //
+  //           case 'religion':
+  //             errors += "<br>Religion is required";
+  //             break;
+  //
+  //           case 'ethnicity':
+  //             errors += "<br>Ethnicity is required";
+  //             break;
+  //
+  //           case 'educationlevel':
+  //             errors += "<br>Education Level is required";
+  //             break;
+  //
+  //           default:
+  //             errors += "<br>Invalid " + controlName;
+  //         }
+  //       }
+  //     }
+  //   }
+  //
+  //   return errors;
+  // }
+  // getErrors(): string {
+  //
+  //   let errors: string = "";
+  //
+  //   for (const controlName in this.form.controls) {
+  //
+  //     const control = this.form.controls[controlName];
+  //
+  //     if (control.errors) {
+  //
+  //       // If you have regex validation messages defined
+  //       if (this.regexes && this.regexes[controlName] != undefined) {
+  //
+  //         errors = errors + "<br>" + this.regexes[controlName]['message'];
+  //
+  //       } else {
+  //
+  //         // Better readable fallback messages (IMPORTANT for Citizen module)
+  //         switch (controlName) {
+  //
+  //           case 'name':
+  //             errors += "<br>Name is required";
+  //             break;
+  //
+  //           case 'nic':
+  //             errors += "<br>NIC is required";
+  //             break;
+  //
+  //           case 'citizenstatus':
+  //             errors += "<br>Citizen Status is required";
+  //             break;
+  //
+  //           case 'email':
+  //             errors += "<br>Invalid Email";
+  //             break;
+  //
+  //           case 'mobileno':
+  //             errors += "<br>Invalid Mobile Number";
+  //             break;
+  //
+  //           case 'religion':
+  //             errors += "<br>Religion is required";
+  //             break;
+  //
+  //           case 'ethnicity':
+  //             errors += "<br>Ethnicity is required";
+  //             break;
+  //
+  //           case 'educationlevel':
+  //             errors += "<br>Education Level is required";
+  //             break;
+  //
+  //           default:
+  //             errors += "<br>Invalid " + controlName;
+  //         }
+  //       }
+  //     }
+  //   }
+  //
+  //   return errors;
+  // }
+
   getErrors(): string {
-
     let errors: string = "";
-
     for (const controlName in this.form.controls) {
+      if (controlName === 'citizenaidprograms') continue; // skip validation errors for this control
 
       const control = this.form.controls[controlName];
-
       if (control.errors) {
-
-        // If you have regex validation messages defined
         if (this.regexes && this.regexes[controlName] != undefined) {
-
           errors = errors + "<br>" + this.regexes[controlName]['message'];
-
         } else {
-
-          // Better readable fallback messages (IMPORTANT for Citizen module)
           switch (controlName) {
-
             case 'name':
               errors += "<br>Name is required";
               break;
-
             case 'nic':
               errors += "<br>NIC is required";
               break;
-
             case 'citizenstatus':
               errors += "<br>Citizen Status is required";
               break;
-
             case 'email':
               errors += "<br>Invalid Email";
               break;
-
             case 'mobileno':
               errors += "<br>Invalid Mobile Number";
               break;
-
             case 'religion':
               errors += "<br>Religion is required";
               break;
-
             case 'ethnicity':
               errors += "<br>Ethnicity is required";
               break;
-
             case 'educationlevel':
               errors += "<br>Education Level is required";
               break;
-
             default:
               errors += "<br>Invalid " + controlName;
           }
         }
       }
     }
-
     return errors;
   }
-
   getUpdates(): string {
 
     let updates: string = "";
@@ -760,6 +924,7 @@ export class CitizenComponent implements OnInit {
   }
 
   update() {
+console.log(this.citizenaidprograms)
 
     let errors = this.getErrors();
 
@@ -808,9 +973,12 @@ export class CitizenComponent implements OnInit {
             this.citizen.id = this.oldcitizen.id;
 
             // preserve relationships if not changed
-            if (!this.citizen.citizenaidprograms) {
-              this.citizen.citizenaidprograms = this.oldcitizen.citizenaidprograms;
-            }
+            // if (!this.citizen.citizenaidprograms) {
+            //   this.citizen.citizenaidprograms = this.oldcitizen.citizenaidprograms;
+            // }
+
+            this.citizen.citizenaidprograms = this.citizenaidprograms;
+
             this.citizenguardians.forEach(s => {
               // @ts-ignore
               delete s.id;   // removes the id property
@@ -860,6 +1028,8 @@ export class CitizenComponent implements OnInit {
 
                 this.loadTable("");
                 this.innerformUpdated =  false;
+                this. resetChips();
+                // this.rebuildChips();
               }
 
               const stsmsg = this.dg.open(MessageComponent, {
@@ -945,6 +1115,8 @@ export class CitizenComponent implements OnInit {
             });
 
             this.loadTable("");
+            this. resetChips();
+            // this.rebuildChips();
           }
 
           const stsmsg = this.dg.open(MessageComponent, {
@@ -983,6 +1155,8 @@ export class CitizenComponent implements OnInit {
 
         this.form.reset();
         this.createForm();
+        this.resetChips();
+        // this.rebuildChips();
 
         this.selectedrow = null;
 

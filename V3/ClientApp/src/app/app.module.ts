@@ -67,6 +67,9 @@ import { NgChartsModule } from 'ng2-charts';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { LandreportComponent } from './report/view/landreport/landreport.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {ChipStateDirective} from "./util/ui/MatChipList-Transfer/ChipStateDirective";
+import { BuildingreportComponent } from './report/view/buildingreport/buildingreport.component';
+import { CitizenreportComponent } from './report/view/citizenreport/citizenreport.component';
 
 
 
@@ -105,7 +108,9 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
     VoterregistryComponent,
     CultivationComponent,
     CitizenskillComponent,
-    LandreportComponent
+    LandreportComponent,
+    BuildingreportComponent,
+    CitizenreportComponent
   ],
     imports: [
         MatDatepickerModule,
@@ -137,7 +142,8 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         MatStepperModule,
         NgChartsModule,
         MatProgressBarModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        ChipStateDirective
     ],
   providers: [
     OperationComponent,

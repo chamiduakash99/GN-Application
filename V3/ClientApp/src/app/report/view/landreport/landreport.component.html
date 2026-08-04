@@ -1,5 +1,6 @@
 <mat-grid-list [cols]="1" rowHeight="13rem">
 
+<!--  land type-->
   <mat-grid-tile [colspan]="1" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Land Type - Table View</mat-card-title></mat-card-header>
@@ -40,6 +41,8 @@
   <mat-divider [inset]="true"></mat-divider>
   <mat-divider [inset]="true"></mat-divider>
 
+<!--  fence type-->
+
   <mat-grid-tile [colspan]="1" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Fence Type - Table View</mat-card-title></mat-card-header>
@@ -66,6 +69,7 @@
     </mat-card>
   </mat-grid-tile>
 
+
   <mat-grid-tile [colspan]="1" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Fence Type - Column Chart</mat-card-title></mat-card-header>
@@ -74,6 +78,43 @@
     <mat-card>
       <mat-card-header><mat-card-title>Fence Type - Pie Chart View</mat-card-title></mat-card-header>
       <mat-card-content><canvas #fencepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+<!--  land feature-->
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Land Feature - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="landfeatureData">
+          <ng-container *ngFor="let column of landfeatureColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ landfeatureHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[landfeatureBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ landfeatureTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="landfeatureColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: landfeatureColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="landfeatureColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Land Feature - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #landfeaturecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Land Feature - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #landfeaturepiechart></canvas></mat-card-content>
     </mat-card>
   </mat-grid-tile>
 

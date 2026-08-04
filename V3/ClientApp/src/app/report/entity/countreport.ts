@@ -1,24 +1,13 @@
-export class ArrearsByProgram {
+export class countreport {
+  public id!: number;
+  public name!: string;
+  public count!: number;
+  public percentage!: number;
 
-  public program!: string;
-  public no !: number;
-  public count !: number;
-  public expected !: number;
-  public paid !: number;
-  public due !: number;
-  public arrears !: number;
-  public percentage !: number;
-
-  constructor(prgram:string, no:number,count:number,expected:number,paid:number,due:number,arrears:number,percentage:number) {
-
-    this.program = prgram;
-    this.no=no;
-    this.count=count;
-    this.expected=expected;
-    this.paid=paid;
-    this.due=due;
-    this.arrears = arrears;
+  constructor(id: number, name: string, count: number, percentage: number) {
+    this.id = id;
+    this.name = name;
+    this.count = count;
     this.percentage = percentage;
   }
-
 }

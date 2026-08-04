@@ -3,7 +3,6 @@ import { AuthoritySevice } from './authoritysevice';
 import {UserService} from "./userservice";
 import {jwtDecode} from "jwt-decode";
 import {AnnouncementComponent} from "../view/modules/announcement/announcement.component";
-import {landreport} from "../report/entity/landreport";
 
 @Injectable()
 export class AuthorizationManager {
@@ -61,6 +60,8 @@ export class AuthorizationManager {
   Reports = [
     {name: 'CountByStreetMaterial', displayName: 'Street Report', isVisible: false, routerLink: 'reports/countbystreetmaterial'},
     {name: 'landreport', displayName: 'Land Report', isVisible: false, routerLink: 'reports/landreport'},
+    {name: 'buildingreport', displayName: 'Building Report', isVisible: false, routerLink: 'reports/buildingreport'},
+    {name: 'citizenreport', displayName: 'Citizen Report', isVisible: false, routerLink: 'reports/citizenreport'},
   ];
 
 

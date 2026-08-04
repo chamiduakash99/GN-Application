@@ -23,7 +23,7 @@ mat-card-header { background: #0c1b31; color: #f2f5fd;}
 
 #pnlmiddle button{ margin: 8px; display: block!important;}
 
-.list{ border: solid #152054; border-radius: 5px; max-height: 160px; width: 180px;margin-top: 10px; overflow: auto}
+.list{ border: solid #152054; border-radius: 5px; max-height: 160px; width: 280px;margin-top: 10px; overflow: auto}
 
 .list mat-list-option{ height: 27px;}
 

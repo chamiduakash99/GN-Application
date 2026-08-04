@@ -1,1 +1,217 @@
-<p>buildingreport works!</p>
+<mat-grid-list [cols]="1" rowHeight="13rem">
+
+  <!-- Usage -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Usage - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="usageData">
+          <ng-container *ngFor="let column of usageColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ usageHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[usageBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ usageTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="usageColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: usageColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="usageColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Usage - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #usagecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Usage - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #usagepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Ownership Type -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Ownership Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="ownershiptypeData">
+          <ng-container *ngFor="let column of ownershiptypeColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ ownershiptypeHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[ownershiptypeBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ ownershiptypeTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="ownershiptypeColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ownershiptypeColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="ownershiptypeColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Ownership Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #ownershiptypecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Ownership Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #ownershiptypepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Building Type -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Building Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="buildingtypeData">
+          <ng-container *ngFor="let column of buildingtypeColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ buildingtypeHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[buildingtypeBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ buildingtypeTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="buildingtypeColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: buildingtypeColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="buildingtypeColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Building Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #buildingtypecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Building Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #buildingtypepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Wall Type -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Wall Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="walltypeData">
+          <ng-container *ngFor="let column of walltypeColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ walltypeHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[walltypeBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ walltypeTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="walltypeColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: walltypeColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="walltypeColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Wall Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #walltypecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Wall Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #walltypepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Floor Type -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Floor Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="floortypeData">
+          <ng-container *ngFor="let column of floortypeColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ floortypeHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[floortypeBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ floortypeTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="floortypeColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: floortypeColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="floortypeColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Floor Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #floortypecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Floor Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #floortypepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Roof Type -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Roof Type - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="rooftypeData">
+          <ng-container *ngFor="let column of rooftypeColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ rooftypeHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[rooftypeBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ rooftypeTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="rooftypeColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: rooftypeColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="rooftypeColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Roof Type - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #rooftypecolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Roof Type - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #rooftypepiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

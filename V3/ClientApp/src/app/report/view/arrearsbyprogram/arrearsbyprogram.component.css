@@ -7,3 +7,64 @@ mat-card-header { background: #c0d9c3; }
 mat-row.mat-mdc-row:nth-child(even) {
   background-color: lightgray!important;
 }
+
+/**
+ * ============================================================
+ * HOW TO ADD A NEW REPORT TO THIS FILE (e.g. "Road Type")
+ * ============================================================
+ * This component follows a copy-paste pattern per report.
+ * All reports share the same backend response shape: CountReport { name, count, percentage }
+ *
+ * STEP 1 — Add properties (replace "xxx" with your report name, e.g. "road")
+ * ------------------------------------------------------------
+ *   xxxreports: countreport[] = [];
+ *   xxxData!: MatTableDataSource<countreport>;
+ *   xxxColumns: string[] = ['name', 'percentage', 'count'];
+ *   xxxHeaders: string[] = ['Xxx Type', 'Percentage', 'Count'];
+ *   xxxBinders: string[] = ['name', 'percentage', 'count'];
+ *   xxxTotal: number[] = [];
+ *
+ *   @ViewChild('xxxcolumnchart', { static: false }) xxxcolumnchart!: ElementRef<HTMLCanvasElement>;
+ *   @ViewChild('xxxpiechart', { static: false }) xxxpiechart!: ElementRef<HTMLCanvasElement>;
+ *
+ * STEP 2 — Call the loader inside ngOnInit()
+ * ------------------------------------------------------------
+ *   this.loadXxxData();
+ *
+ * STEP 3 — Call the chart drawer inside ngAfterViewInit()
+ * ------------------------------------------------------------
+ *   if (this.xxxreports.length) {
+ *     this.drawXxxCharts();
+ *   }
+ *
+ * STEP 4 — Add 3 methods (copy loadLandFeatureData / loadLandFeatureTable /
+ *          drawLandFeatureCharts below, rename to Xxx, change endpoint string)
+ * ------------------------------------------------------------
+ *   async loadXxxData(): Promise<void> {
+ *     const result = await this.rs.getCountReport('xxxreport'); // <-- backend endpoint name
+ *     this.xxxreports = result;
+ *     this.xxxTotal = [result.reduce((sum, item) => sum + item.count, 0)];
+ *     this.loadXxxTable();
+ *     if (this.viewReady) {
+ *       this.drawXxxCharts();
+ *     }
+ *   }
+ *
+ *   loadXxxTable(): void {
+ *     this.xxxData = new MatTableDataSource(this.xxxreports);
+ *   }
+ *
+ *   drawXxxCharts(): void {
+ *     // same body as drawLandFeatureCharts(), just renamed
+ *   }
+ *
+ * STEP 5 — In the .html file: copy the "Land Feature" table + chart
+ *          mat-grid-tile block, rename bindings to match Xxx properties above.
+ *
+ * BACKEND SIDE (not this file):
+ *   - Add one DAO returning List<CountReport>
+ *   - Add one @GetMapping endpoint in ReportController.java calling withPercentages(...)
+ *
+ * NO new model/entity file needed — everything reuses CountReport / countreport.
+ * ============================================================
+ */

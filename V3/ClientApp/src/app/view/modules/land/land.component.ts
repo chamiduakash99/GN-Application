@@ -47,9 +47,9 @@ import {MatSelectionList} from "@angular/material/list";
 export class LandComponent implements OnInit{
 
   // Table columns / headers / binders (pattern similar to StreetComponent)
-  columns: string[] = ['deedno','street', 'citizen', 'size', 'landtype', 'fencetype', 'remarks'];
-  headers: string[] = ['Deed No','Street', 'Citizen', 'Size (sq.m)', 'Land Type', 'Fence Type', 'Remarks'];
-  binders: string[] = ['deedno','street.fullname', 'citizen.name', 'size', 'landtype.name', 'fencetype.name', 'remarks'];
+  columns: string[] = ['deedno','street', 'citizen', 'size', 'landtype', 'fencetype'];
+  headers: string[] = ['Deed No','Street', 'Citizen', 'Size (sq.m)', 'Land Type', 'Fence Type'];
+  binders: string[] = ['deedno','street.fullname', 'citizen.name', 'size', 'landtype.name', 'fencetype.name'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -182,8 +182,6 @@ export class LandComponent implements OnInit{
       latitude: new FormControl('', []),
       longitude: new FormControl('', []),
       size: new FormControl('', [Validators.required]),
-      image: new FormControl('', []),
-      deed: new FormControl('', []),
       remarks: new FormControl('', []),
       landfeaturedetails: new FormControl([])
     });
@@ -415,27 +413,27 @@ export class LandComponent implements OnInit{
     this.land.landfeaturedetails.forEach((lfd:Landfeaturedetails)=> this.landfeatures = this.landfeatures.filter((lf)=> lf.id != lfd.landfeature.id));
 
 
-    // If images exist on land, set previews
-    if (this.land.image) {
-      try {
-        this.imagelandurl = atob(this.land.image as unknown as string);
-      } catch (e) {
-        // if not base64 or null, ignore
-      }
-      // clear validator for image if present
-      if (this.form.controls['image']) this.form.controls['image'].clearValidators();
-    } else {
-      this.clearImage();
-    }
-
-    if (this.land.deed) {
-      try {
-        this.imagedeedurl = atob(this.land.deed as unknown as string);
-      } catch (e) { }
-      if (this.form.controls['deed']) this.form.controls['deed'].clearValidators();
-    } else {
-      this.clearDeed();
-    }
+    // // If images exist on land, set previews
+    // if (this.land.image) {
+    //   try {
+    //     this.imagelandurl = atob(this.land.image as unknown as string);
+    //   } catch (e) {
+    //     // if not base64 or null, ignore
+    //   }
+    //   // clear validator for image if present
+    //   if (this.form.controls['image']) this.form.controls['image'].clearValidators();
+    // } else {
+    //   this.clearImage();
+    // }
+    //
+    // if (this.land.deed) {
+    //   try {
+    //     this.imagedeedurl = atob(this.land.deed as unknown as string);
+    //   } catch (e) { }
+    //   if (this.form.controls['deed']) this.form.controls['deed'].clearValidators();
+    // } else {
+    //   this.clearDeed();
+    // }
 
     // Patch values to form
     this.form.patchValue(this.land);
@@ -462,22 +460,21 @@ export class LandComponent implements OnInit{
   btnSearchMc(): void {
 
     const ssearchdata = this.ssearch.getRawValue();
-    let landfeature = ssearchdata.sslandfeature;
 
     let streetid = ssearchdata.ssstreet;
     let citizenid = ssearchdata.sscitizen;
     let landtypeid = ssearchdata.sslandtype;
     let fencetypeid = ssearchdata.ssfencetype;
+    let landfeature = ssearchdata.sslandfeature;
     let deedno = ssearchdata.ssdeedno;
 
     let query = "";
-    if (streetid != null && streetid !== "") query = query + "&/=" + landfeature;
-
     if (streetid != null && streetid !== "") query = query + "&street=" + streetid;
     if (citizenid != null && citizenid !== "") query = query + "&citizen=" + citizenid;
-    if (landtypeid != null) query = query + "&landtype=" + landtypeid;
-    if (fencetypeid != null) query = query + "&fencetype=" + fencetypeid;
-    if (deedno != null && deedno !== "") {query = query + "&deedno=" + deedno;}
+    if (landtypeid != null && landtypeid !== "") query = query + "&landtype=" + landtypeid;
+    if (fencetypeid != null && fencetypeid !== "") query = query + "&fencetype=" + fencetypeid;
+    if (landfeature != null && landfeature !== "") query = query + "&landfeature=" + encodeURIComponent(landfeature);
+    if (deedno != null && deedno !== "") query = query + "&deedno=" + deedno;
 
     if (query != "") query = query.replace(/^./, "?");
     console.log(query)
@@ -587,6 +584,7 @@ export class LandComponent implements OnInit{
     }
   }
 
+
   getErrors(): string {
 
     let errors: string = "";
@@ -595,16 +593,30 @@ export class LandComponent implements OnInit{
       const control = this.form.controls[controlName];
 
       if (control.errors) {
-        // if (this.regexes && this.regexes[controlName] != undefined) {
-        //   errors = errors + "<br>" + this.regexes[controlName]['message'];
-        // } else {
-        //   errors = errors + "<br>Invalid " + controlName;
-        // }
+        errors = errors + "<br>Invalid " + controlName;
       }
     }
 
     return errors;
   }
+  // getErrors(): string {
+  //
+  //   let errors: string = "";
+  //
+  //   for (const controlName in this.form.controls) {
+  //     const control = this.form.controls[controlName];
+  //
+  //     if (control.errors) {
+  //       // if (this.regexes && this.regexes[controlName] != undefined) {
+  //       //   errors = errors + "<br>" + this.regexes[controlName]['message'];
+  //       // } else {
+  //       //   errors = errors + "<br>Invalid " + controlName;
+  //       // }
+  //     }
+  //   }
+  //
+  //   return errors;
+  // }
 
   getUpdates(): string {
 

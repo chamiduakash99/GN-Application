@@ -1,19 +1,20 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ReportService } from '../../reportservice';
-import { CountByStreetMaterial } from '../../entity/countbystreetmaterial';
+import { countreport } from '../../entity/countreport';
 import { MatTableDataSource } from '@angular/material/table';
 import { Chart } from 'chart.js/auto';
 
 @Component({
-  selector: 'app-countbystreetmaterial', templateUrl: './countbystreetmaterial.component.html',
+  selector: 'app-countbystreetmaterial',
+  templateUrl: './countbystreetmaterial.component.html',
   styleUrls: ['./countbystreetmaterial.component.css']
 })
 export class CountByStreetMaterialComponent implements OnInit, AfterViewInit {
-  countByStreetMaterials: CountByStreetMaterial[] = [];
-  data!: MatTableDataSource<CountByStreetMaterial>;
-  columns: string[] = ['streetMaterial','percentage', 'count' ];
-  headers: string[] = ['Street Material','Percentage', 'Count' ];
-  binders: string[] = ['streetMaterial','percentage', 'count'];
+  countByStreetMaterials: countreport[] = [];
+  data!: MatTableDataSource<countreport>;
+  columns: string[] = ['name', 'percentage', 'count'];
+  headers: string[] = ['Street Material', 'Percentage', 'Count'];
+  binders: string[] = ['name', 'percentage', 'count'];
   ftext = 'Total';
   total: number[] = [];
 
@@ -30,28 +31,19 @@ export class CountByStreetMaterialComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.viewReady = true;
-    // if data already arrived before the view was ready, draw now
     if (this.countByStreetMaterials.length) {
       this.drawCharts();
     }
   }
 
   async loadData(): Promise<void> {
-    const result = await this.rs.countByStreetMaterial();
-
+    const result = await this.rs.getCountReport('countbystreetmaterial');
     this.countByStreetMaterials = result;
     this.total = [result.reduce((sum, item) => sum + item.count, 0)];
     this.loadTable();
-
-    // only draw once the canvases actually exist in the DOM
     if (this.viewReady) {
       this.drawCharts();
     }
-  }
-
-  calculateTotals(): void {
-    const totalCount = this.countByStreetMaterials.reduce((sum, item) => sum + item.count, 0);
-    this.total = [totalCount];
   }
 
   loadTable(): void {
@@ -59,7 +51,7 @@ export class CountByStreetMaterialComponent implements OnInit, AfterViewInit {
   }
 
   drawCharts(): void {
-    const labels = this.countByStreetMaterials.map(sm => sm.streetMaterial);
+    const labels = this.countByStreetMaterials.map(sm => sm.name);
     const counts = this.countByStreetMaterials.map(sm => sm.count);
     const percentages = this.countByStreetMaterials.map(sm => sm.percentage);
 

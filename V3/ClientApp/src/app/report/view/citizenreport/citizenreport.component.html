@@ -1,1 +1,254 @@
-<p>citizenreport works!</p>
+<mat-grid-list [cols]="1" rowHeight="13rem">
+
+  <!-- Gender -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Gender - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="genderData">
+          <ng-container *ngFor="let column of genderColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ genderHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[genderBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ genderTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="genderColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: genderColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="genderColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Gender - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #gendercolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Gender - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #genderpiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Citizen Status -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Citizen Status - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="citizenstatusData">
+          <ng-container *ngFor="let column of citizenstatusColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ citizenstatusHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[citizenstatusBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ citizenstatusTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="citizenstatusColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: citizenstatusColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="citizenstatusColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Citizen Status - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #citizenstatuscolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Citizen Status - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #citizenstatuspiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Religion -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Religion - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="religionData">
+          <ng-container *ngFor="let column of religionColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ religionHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[religionBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ religionTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="religionColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: religionColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="religionColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Religion - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #religioncolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Religion - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #religionpiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Ethnicity -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Ethnicity - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="ethnicityData">
+          <ng-container *ngFor="let column of ethnicityColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ ethnicityHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[ethnicityBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ ethnicityTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="ethnicityColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: ethnicityColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="ethnicityColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Ethnicity - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #ethnicitycolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Ethnicity - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #ethnicitypiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Education Level Type -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Education Level - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="educationlevelData">
+          <ng-container *ngFor="let column of educationlevelColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ educationlevelHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[educationlevelBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ educationlevelTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="educationlevelColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: educationlevelColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="educationlevelColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Education Level - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #educationlevelcolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Education Level - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #educationlevelpiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- Marital Status  -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Marital Status - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="matiralstatusData">
+          <ng-container *ngFor="let column of matiralstatusColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ matiralstatusHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[matiralstatusBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ matiralstatusTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="matiralstatusColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: matiralstatusColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="matiralstatusColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Marital Status - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #matiralstatuscolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Marital Status - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #matiralstatuspiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+
+  <!-- Aid Program -->
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Aid Program - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="aidprogramData">
+          <ng-container *ngFor="let column of aidprogramColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ aidprogramHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[aidprogramBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ aidprogramTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="aidprogramColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: aidprogramColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="aidprogramColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Aid Program - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #aidprogramcolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Aid Program - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #aidprogrampiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>

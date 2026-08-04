@@ -136,26 +136,64 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div id="listtrnasfer">
 
-            <div class="list">
-              <mat-selection-list  #availablelist>
-                <mat-list-option multiple *ngFor="let aidprogram of aidprograms" [value]="aidprogram" >{{aidprogram.name}}</mat-list-option>
-              </mat-selection-list>
-            </div>
+<!--          <div id="listtrnasfer">-->
 
-            <div id="pnlmiddle">
-              <button mat-raised-button (click)="rightSelected()">&gt;</button>
-              <button mat-raised-button (click)="leftSelected()">&lt;</button>
-              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>
-              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>
-            </div>
+<!--            <div class="list">-->
+<!--              <mat-selection-list  #availablelist>-->
+<!--                <mat-list-option multiple *ngFor="let aidprogram of aidprograms" [value]="aidprogram" >{{aidprogram.name}}</mat-list-option>-->
+<!--              </mat-selection-list>-->
+<!--            </div>-->
 
-            <div class="list">
-              <mat-selection-list  formControlName="citizenaidprograms" #selectedlist>
-                <mat-list-option *ngFor="let citizenaidprogram of citizenaidprograms" [value]="citizenaidprogram">{{citizenaidprogram.aidprogram.name}}</mat-list-option>
-              </mat-selection-list>
-            </div>
+<!--            <div id="pnlmiddle">-->
+<!--              <button mat-raised-button (click)="rightSelected()">&gt;</button>-->
+<!--              <button mat-raised-button (click)="leftSelected()">&lt;</button>-->
+<!--              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>-->
+<!--              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>-->
+<!--            </div>-->
+
+<!--            <div class="list">-->
+<!--              <mat-selection-list  formControlName="citizenaidprograms" #selectedlist>-->
+<!--                <mat-list-option *ngFor="let citizenaidprogram of citizenaidprograms" [value]="citizenaidprogram">{{citizenaidprogram.aidprogram.name}}</mat-list-option>-->
+<!--              </mat-selection-list>-->
+<!--            </div>-->
+
+<!--          </div>-->
+          <div class="chip-container">
+
+            <mat-chip-listbox class="chip-list" >
+
+              <mat-chip
+                *ngFor="let chip of chips"
+                [appChipState]="chip.state"
+                (click)="onChipClick(chip)"
+                class="custom-chip">
+                    <span class="chip-row">
+                        <span class="chip-icon">
+                          {{ chip.state === 'default' ? '+' : chip.state === 'saved' ? '✓✓' : '✓' }}
+                        </span>
+                        <span class="chip-label">{{ chip.data.name }}</span>
+                     </span>
+              </mat-chip>
+
+<!--              <mat-chip-->
+<!--                *ngFor="let chip of chips"-->
+<!--                [appChipState]="chip.state"-->
+<!--                (click)="onChipClick(chip)"-->
+
+<!--                class="custom-chip">-->
+<!--                  <span class="chip-icon">-->
+<!--                {{ chip.state === 'default'-->
+<!--                    ? '+'-->
+<!--                    : chip.state === 'saved'-->
+<!--                      ? '✓✓'-->
+<!--                      : '✓' }}-->
+<!--                </span>-->
+<!--                <span class="chip-label">-->
+<!--                  {{ chip.data.name }}-->
+<!--                 </span>-->
+<!--              </mat-chip>-->
+            </mat-chip-listbox>
 
           </div>
 
