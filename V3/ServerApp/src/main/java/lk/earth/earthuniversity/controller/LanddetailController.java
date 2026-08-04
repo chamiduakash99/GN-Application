@@ -39,6 +39,7 @@ public class LanddetailController {
         String landtype = param.get("landtype");
         String citizen = param.get("citizen");
         String fencetype = param.get("fencetype");
+        String landfeature = param.get("landfeature");
 
         String remarks = param.get("remarks");
         String deedno = param.get("deedno");
@@ -57,10 +58,15 @@ public class LanddetailController {
         if (fencetype != null) {
             landStream = landStream.filter(l -> l.getFencetype().getName().equalsIgnoreCase(fencetype));
         }
+        if (landfeature != null) {
+            landStream = landStream.filter(l -> l.getLandfeaturedetails() != null &&
+                    l.getLandfeaturedetails().stream().anyMatch(lfd ->
+                            lfd.getLandfeature() != null &&
+                                    lfd.getLandfeature().getName().equalsIgnoreCase(landfeature)));
+        }
         if (remarks != null) {
             landStream = landStream.filter(l -> l.getRemarks() != null && l.getRemarks().contains(remarks));
         }
-
         if (deedno != null) {
             landStream = landStream.filter(l -> l.getDeedno() != null && l.getDeedno().equalsIgnoreCase(deedno));
         }
@@ -74,15 +80,6 @@ public class LanddetailController {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
-        // Prevent duplicate based on Street + Citizen (same person owning land on same street)
-        Landdetail existing = landdetailDao.findByStreetAndCitizen(
-                landdetail.getStreet(),
-                landdetail.getCitizen()
-        );
-
-        if (existing != null) {
-            errors += "Existing land record found for this citizen on this street.<br>";
-        }
 
         if (landdetail.getDeedno() != null && !landdetail.getDeedno().isEmpty()) {
             Landdetail existingDeed = landdetailDao.findByDeedno(landdetail.getDeedno());
@@ -90,6 +87,10 @@ public class LanddetailController {
             if (existingDeed != null) {
                 errors += "Deed number already exists.<br>";
             }
+        }
+
+        if (landdetail.getLandfeaturedetails() == null || landdetail.getLandfeaturedetails().isEmpty()) {
+            errors += "At least one Land Feature is required.<br>";
         }
 
         if (errors.isEmpty()) {
@@ -118,15 +119,6 @@ public class LanddetailController {
             errors = "No existing record found for ID: " + landdetail.getId() + "<br>";
         }
 
-        // Check duplicate condition again
-        Landdetail duplicate = landdetailDao.findByStreetAndCitizen(
-                landdetail.getStreet(),
-                landdetail.getCitizen()
-        );
-
-        if (duplicate != null && !Objects.equals(landdetail.getId(), duplicate.getId())) {
-            errors += "Duplicate record found for this citizen on the same street.<br>";
-        }
 
         if (landdetail.getDeedno() != null && !landdetail.getDeedno().isEmpty()) {
 
@@ -137,6 +129,10 @@ public class LanddetailController {
 
                 errors += "Deed number already exists.<br>";
             }
+        }
+
+        if (landdetail.getLandfeaturedetails() == null || landdetail.getLandfeaturedetails().isEmpty()) {
+            errors += "At least one Land Feature is required.<br>";
         }
 
         if (errors.isEmpty()) {
