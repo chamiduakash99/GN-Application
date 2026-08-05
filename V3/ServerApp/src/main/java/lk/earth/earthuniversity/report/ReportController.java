@@ -1,7 +1,7 @@
 package lk.earth.earthuniversity.report;
 
-import lk.earth.earthuniversity.entity.Complaintstatus;
-import lk.earth.earthuniversity.entity.Idcardrequeststatus;
+import lk.earth.earthuniversity.dao.*;
+import lk.earth.earthuniversity.entity.*;
 import lk.earth.earthuniversity.report.dao.*;
 import lk.earth.earthuniversity.report.entity.CountByStreetMaterial;
 import lk.earth.earthuniversity.report.entity.CountReport;
@@ -9,16 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import java.time.LocalDate;
 
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
-import lk.earth.earthuniversity.dao.IdcardrequeststatusDao;
-import lk.earth.earthuniversity.dao.ComplaintstatusDao;
 
 @CrossOrigin
 @RestController
@@ -320,7 +321,119 @@ public class ReportController {
         return idcardrequeststatusDao.findAll();
     }
 
+    // cultivation
 
+    @Autowired
+    private CultivationReportDao cultivationReportDao;
+
+    @Autowired
+    private CroptypeDao croptypeDao;
+
+    @Autowired
+    private CultivationstatusDao cultivationstatusDao;
+
+    @GetMapping(path = "/cultivationreport", produces = "application/json")
+    public List<CountReport> countCultivations(
+            @RequestParam(value = "statusId", required = false) Integer statusId,
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate end,
+            @RequestParam(value = "minArea", required = false) BigDecimal minArea,
+            @RequestParam(value = "maxArea", required = false) BigDecimal maxArea) {
+
+        Date startDate = (start != null) ? Date.valueOf(start) : null;
+        Date endDate = (end != null) ? Date.valueOf(end) : null;
+
+        List<CountReport> list = cultivationReportDao.countByCropType(statusId, startDate, endDate, minArea, maxArea);
+        return withPercentages(list);
+    }
+
+    @GetMapping(path = "/cultivationstatuses", produces = "application/json")
+    public List<Cultivationstatus> getAllCultivationStatuses() {
+        return cultivationstatusDao.findAll();
+    }
+
+    //Harvest
+
+    @Autowired
+    private HarvestReportDao harvestReportDao;
+
+    @GetMapping(path = "/harvestreport", produces = "application/json")
+    public List<CountReport> countHarvests(
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+            @RequestParam(value = "minQty", required = false) BigDecimal minQty,
+            @RequestParam(value = "maxQty", required = false) BigDecimal maxQty) {
+
+        Date startDate = (start != null) ? Date.valueOf(start) : null;
+        Date endDate = (end != null) ? Date.valueOf(end) : null;
+
+        List<Object[]> rows = harvestReportDao.getHarvestSummaryByMonth(startDate, endDate, minQty, maxQty);
+
+        List<CountReport> result = new ArrayList<>();
+        for (Object[] row : rows) {
+            CountReport cr = new CountReport();
+            cr.setName((String) row[0]);
+            cr.setCount(((Number) row[2]).longValue());
+            BigDecimal totalQty = (row[1] != null) ? BigDecimal.valueOf(((Number) row[1]).doubleValue()) : BigDecimal.ZERO;
+            cr.setValue(totalQty);
+            result.add(cr);
+        }
+
+        return withPercentages(result);
+    }
+
+    // certificate request
+
+    @Autowired
+    private CertificateReportDao certificateReportDao;
+
+    @Autowired
+    private RequeststatusDao requeststatusDao; // adjust import based on what you confirm exists
+
+    @GetMapping(path = "/certificatereport", produces = "application/json")
+    public List<CountReport> countCertificates(
+            @RequestParam(value = "statusId", required = false) Integer statusId,
+            @RequestParam(value = "picked", required = false) Byte picked,
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
+
+        Date startDate = (start != null) ? Date.valueOf(start) : null;
+        Date endDate = (end != null) ? Date.valueOf(end) : null;
+
+        List<CountReport> list = certificateReportDao.countByStatus(statusId, picked, startDate, endDate);
+        return withPercentages(list);
+    }
+
+    @GetMapping(path = "/requeststatuses", produces = "application/json")
+    public List<Requeststatus> getAllRequestStatuses() {
+        return requeststatusDao.findAll();
+    }
+
+    //Citizen skill
+
+    @Autowired
+    private CitizenskillReportDao citizenskillReportDao;
+
+    @Autowired
+    private ProfessionDao professionDao;
+
+    @GetMapping(path = "/citizenskillreport", produces = "application/json")
+    public List<CountReport> countCitizenSkills(
+            @RequestParam(value = "professionId", required = false) Integer professionId,
+            @RequestParam(value = "minExp", required = false) Integer minExp,
+            @RequestParam(value = "maxExp", required = false) Integer maxExp,
+            @RequestParam(value = "minIncome", required = false) BigDecimal minIncome,
+            @RequestParam(value = "maxIncome", required = false) BigDecimal maxIncome) {
+
+        List<CountReport> list = citizenskillReportDao.countByProfession(
+                professionId, minExp, maxExp, minIncome, maxIncome);
+        return withPercentages(list);
+    }
+
+    @GetMapping(path = "/professions", produces = "application/json")
+    public List<Profession> getAllProfessions() {
+        return professionDao.findAll();
+    }
 
 
 }
