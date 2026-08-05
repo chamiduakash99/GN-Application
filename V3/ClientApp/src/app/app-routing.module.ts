@@ -37,6 +37,10 @@ import {VoterregistryreportComponent} from "./report/view/voterregistryreport/vo
 import {AnnouncementreportComponent} from "./report/view/announcementreport/announcementreport.component";
 import {ComplaintreportComponent} from "./report/view/complaintreport/complaintreport.component";
 import {IdcardrequestreportComponent} from "./report/view/idcardrequestreport/idcardrequestreport.component";
+import {CultivationreportComponent} from "./report/view/cultivationreport/cultivationreport.component";
+import {HarvestreportComponent} from "./report/view/harvestreport/harvestreport.component";
+import {CertificatereportComponent} from "./report/view/certificatereport/certificatereport.component";
+import {CitizenskillreportComponent} from "./report/view/citizenskillreport/citizenskillreport.component";
 
 
 const routes: Routes = [
@@ -87,9 +91,14 @@ const routes: Routes = [
           { path: "citizenreport", component: CitizenreportComponent },
           { path: "householdreport", component: HouseholdreportComponent },
           { path: "voterregistryreport", component: VoterregistryreportComponent },
+          { path: "citizenskillreport", component: CitizenskillreportComponent },
+          { path: "certificatereport", component: CertificatereportComponent },
           { path: "announcementreport", component: AnnouncementreportComponent },
           { path: "complaintreport", component: ComplaintreportComponent },
-          { path: "idcardrequestreport", component: IdcardrequestreportComponent }
+          { path: "idcardrequestreport", component: IdcardrequestreportComponent },
+          { path: "cultivationreport", component: CultivationreportComponent },
+          { path: "harvestreport", component: HarvestreportComponent },
+
         ]},
 
     ]

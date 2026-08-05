@@ -75,6 +75,10 @@ import { VoterregistryreportComponent } from './report/view/voterregistryreport/
 import { AnnouncementreportComponent } from './report/view/announcementreport/announcementreport.component';
 import { ComplaintreportComponent } from './report/view/complaintreport/complaintreport.component';
 import { IdcardrequestreportComponent } from './report/view/idcardrequestreport/idcardrequestreport.component';
+import { CultivationreportComponent } from './report/view/cultivationreport/cultivationreport.component';
+import { HarvestreportComponent } from './report/view/harvestreport/harvestreport.component';
+import { CertificatereportComponent } from './report/view/certificatereport/certificatereport.component';
+import { CitizenskillreportComponent } from './report/view/citizenskillreport/citizenskillreport.component';
 
 
 
@@ -120,7 +124,11 @@ import { IdcardrequestreportComponent } from './report/view/idcardrequestreport/
     VoterregistryreportComponent,
     AnnouncementreportComponent,
     ComplaintreportComponent,
-    IdcardrequestreportComponent
+    IdcardrequestreportComponent,
+    CultivationreportComponent,
+    HarvestreportComponent,
+    CertificatereportComponent,
+    CitizenskillreportComponent
   ],
     imports: [
         MatDatepickerModule,

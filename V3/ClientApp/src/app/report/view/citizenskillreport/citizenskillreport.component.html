@@ -1,0 +1,82 @@
+<mat-grid-list [cols]="12" rowHeight="13rem">
+
+  <mat-grid-tile [colspan]="4" [rowspan]="3">
+    <mat-card>
+      <mat-card-header><mat-card-title>Filter by Profession / Experience / Income</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-form-field appearance="outline" style="margin-right: 16px; width: 100%;">
+          <mat-label>Profession</mat-label>
+          <mat-select [(ngModel)]="professionId">
+            <mat-option [value]="null">All</mat-option>
+            <mat-option *ngFor="let p of professions" [value]="p.id">{{ p.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Min Experience (yrs)</mat-label>
+          <input matInput type="number" [(ngModel)]="minExp">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Max Experience (yrs)</mat-label>
+          <input matInput type="number" [(ngModel)]="maxExp">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Min Income</mat-label>
+          <input matInput type="number" [(ngModel)]="minIncome">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Max Income</mat-label>
+          <input matInput type="number" [(ngModel)]="maxIncome">
+        </mat-form-field>
+
+        <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
+        <button mat-stroked-button class="brand-btn-outline" (click)="clearFilter()">Clear</button>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="8" [rowspan]="3">
+    <mat-card>
+      <mat-card-header><mat-card-title>Citizen Skill - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="data">
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ headers[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[binders[i]] }}</mat-cell>
+
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1 && i < 3">{{ total[i-2] }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 3"></mat-footer-cell>
+            </ng-container>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+        </mat-table>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="6" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Citizen Skill - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #columnchart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="6" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Citizen Skill - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #piechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+</mat-grid-list>
