@@ -114,8 +114,8 @@ export class ComplaintComponent implements OnInit {
     this.oldcomplaint = JSON.parse(JSON.stringify(c));
     this.stepper?.reset();
 
-    const selectedCitizen = this.citizens.find(x => x.id === this.complaint.citizen?.id);
-    const selectedEmployee = this.employees.find(x => x.id === this.complaint.employee?.id);
+    const selectedCitizen = (this.citizens ?? []).find(x => x.id === this.complaint.citizen?.id);
+    const selectedEmployee = (this.employees ?? []).find(x => x.id === this.complaint.employee?.id);
 
     this.form.patchValue({
       citizen:         selectedCitizen,

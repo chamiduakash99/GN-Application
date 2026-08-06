@@ -202,8 +202,17 @@ export class CertificateRequestComponent implements OnInit {
   }
 
   update() {
+    if (this.reqform.invalid) {
+      this.dg.open(MessageComponent, {
+        width: '400px',
+        data: {heading: 'Cannot update', message: 'Please fill in every required field before updating.'}
+      });
+      return;
+    }
     const raw = this.reqform.getRawValue();
     raw.id = this.oldcertificaterequest.id;
+    // the form control holds the status NAME for display; send the real object
+    raw.requeststatus = this.certificaterequest.requeststatus ?? null;
 
     this.crs.update(raw)
       .then(() => {
@@ -215,6 +224,13 @@ export class CertificateRequestComponent implements OnInit {
         if (!citizenString) { this.requests = []; return; }
         const citizen = JSON.parse(citizenString);
         this.loadTable(this.getUserQuery(citizen.id));
+      })
+      .catch((error: any) => {
+        this.dg.open(MessageComponent, {
+          width: '400px',
+          data: {heading: 'Update failed',
+                 message: error?.error?.errors || error?.error?.message || error?.message || 'The request could not be updated.'}
+        });
       });
   }
 
@@ -457,8 +473,8 @@ export class CertificateRequestComponent implements OnInit {
     this.oldcertificaterequest = JSON.parse(JSON.stringify(req));
     this.stepper?.reset();
 
-    const selectedCitizen = this.citizens.find(c => c.id === this.certificaterequest.citizen?.id);
-    const selectedType    = this.certificatetypes.find(t => t.id === this.certificaterequest.certificatetype?.id);
+    const selectedCitizen = (this.citizens ?? []).find(c => c.id === this.certificaterequest.citizen?.id) ?? null;
+    const selectedType    = (this.certificatetypes ?? []).find(t => t.id === this.certificaterequest.certificatetype?.id) ?? null;
 
     this.reqform.patchValue({
       citizen:         selectedCitizen,

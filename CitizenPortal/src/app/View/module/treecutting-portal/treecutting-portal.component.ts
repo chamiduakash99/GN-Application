@@ -77,7 +77,7 @@ export class TreecuttingPortalComponent implements OnInit {
 
     this.form = this.fb.group({
       citizen:              new FormControl('', [Validators.required]),
-      treetype:             new FormControl('', []),
+      treetype:             new FormControl(null, [Validators.required]),
       treepermissionstatus: new FormControl(''),
       deedno:               new FormControl('', [Validators.required, Validators.pattern(/^D\d{3}$/)]),
       treecount:            new FormControl('', [Validators.required]),
@@ -154,9 +154,9 @@ export class TreecuttingPortalComponent implements OnInit {
     this.treecuttingrequest    = JSON.parse(JSON.stringify(r));
     this.oldtreecuttingrequest = JSON.parse(JSON.stringify(r));
 
-    const selectedCitizen  = this.citizens.find(x => x.id === this.treecuttingrequest.citizen?.id);
-    const selectedEmployee = this.employees.find(x => x.id === this.treecuttingrequest.employee?.id);
-    const selectedType     = this.treetypes.find(x => x.id === this.treecuttingrequest.treetype?.id);
+    const selectedCitizen  = (this.citizens ?? []).find(x => x.id === this.treecuttingrequest.citizen?.id);
+    const selectedEmployee = (this.employees ?? []).find(x => x.id === this.treecuttingrequest.employee?.id);
+    const selectedType     = (this.treetypes ?? []).find(x => x.id === this.treecuttingrequest.treetype?.id);
 
     // Apply transport validators before patching
     this.onTransportToggle(r.needstransport);
@@ -215,7 +215,7 @@ export class TreecuttingPortalComponent implements OnInit {
       destination:      raw.needstransport ? raw.destination   : '',
       vehicletype:      raw.needstransport ? raw.vehicletype   : '',
       vehiclenumber:    raw.needstransport ? raw.vehiclenumber : '',
-      transportdate:    raw.needstransport ? raw.transportdate : '',
+      transportdate:    raw.needstransport ? this.localDate(raw.transportdate) : '',
     };
 
     this.tcrs.update(request.id, request).then((response) => {
@@ -280,11 +280,21 @@ export class TreecuttingPortalComponent implements OnInit {
       destination:          raw.needstransport ? raw.destination  : '',
       vehicletype:          raw.needstransport ? raw.vehicletype  : '',
       vehiclenumber:        raw.needstransport ? raw.vehiclenumber : '',
-      transportdate:        raw.needstransport ? raw.transportdate : '',
+      transportdate:        raw.needstransport ? this.localDate(raw.transportdate) : '',
     };
 
     this.tcrs.add(request)
-      .then(() => {
+      .then((response: any) => {
+        // the server answers 200 with an 'errors' string on validation failure,
+        // so a resolved promise is NOT proof the request was accepted
+        const serverErrors = response ? response['errors'] : 'Server Not Found';
+        if (serverErrors) {
+          this.dg.open(MessageComponent, {
+            width: '400px',
+            data: {heading: 'Could not submit', message: serverErrors}
+          });
+          return;
+        }
         this.dg.open(MessageComponent, {
           width: '400px',
           data: {heading: 'Success', message: 'Tree Cutting Permission Request submitted successfully.'}
@@ -322,6 +332,15 @@ export class TreecuttingPortalComponent implements OnInit {
   }
 
   // ── Clear ──────────────────────────────────────────────────────────────────
+  /** yyyy-MM-dd in LOCAL time. toISOString() converts to UTC, which in Sri Lanka
+   *  (UTC+5:30) rolls the date back a day - the server then rejects today as past. */
+  private localDate(d: any): string {
+    if (!d) { return ''; }
+    const dt = (d instanceof Date) ? d : new Date(d);
+    if (isNaN(dt.getTime())) { return String(d); }
+    return dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+  }
+
   clear(): void {
     this.form.reset();
     this.onTransportToggle(false);

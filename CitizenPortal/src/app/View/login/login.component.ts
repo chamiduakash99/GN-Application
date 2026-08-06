@@ -46,6 +46,20 @@ export class LoginComponent implements OnInit{
 
       this.citizens = c;
     })
+    .catch(() => {
+      // without this the list stays empty and every login says 'Wrong Credentials!'
+      this.citizens = [];
+      this.dg.open(ToastComponent, {
+        data: {
+          heading: 'Connection Error',
+          message: 'Cannot reach the server. Please make sure the application server is running.',
+          type: 'error'
+        },
+        panelClass: 'transparent-dialog',
+        hasBackdrop: false,
+        disableClose: true
+      });
+    })
   }
   // 🔥 Called when user clicks login button
   login() {
@@ -73,7 +87,7 @@ export class LoginComponent implements OnInit{
         });
         return;
       }
-      const citizen = this.citizens.find((c:Citizen) => { return c.nic === this.loginForm.value.nic} )
+      const citizen = (this.citizens ?? []).find((c:Citizen) => { return c.nic === this.loginForm.value.nic} )
       console.log(citizen);
       localStorage.setItem("citizen",JSON.stringify(citizen));
       console.log('ADULT LOGIN DATA:', this.loginForm.value);
@@ -111,8 +125,24 @@ export class LoginComponent implements OnInit{
         });
         return;
       }
-      const citizen = this.citizens.find((c:Citizen) => { return c.birthcetificateno === this.loginForm.value.birthcert} )
-      console.log(citizen);
+      const citizen = (this.citizens ?? []).find((c:Citizen) => { return c.birthcetificateno === this.loginForm.value.birthcert} )
+
+      // A citizen who already has a NIC is an adult on the register, so the child
+      // route must not be usable as a way around the adult login.
+      if (citizen && citizen.nic && String(citizen.nic).trim() !== '') {
+        this.dg.open(ToastComponent, {
+          data: {
+            heading: 'User Login',
+            message: 'This citizen has a NIC on record. Please log in using the Adult option.',
+            type: 'error'
+          },
+          panelClass: 'transparent-dialog',
+          hasBackdrop: false,
+          disableClose: true
+        });
+        return;
+      }
+
       localStorage.setItem("citizen",JSON.stringify(citizen));
       console.log('CHILD LOGIN DATA:', this.loginForm.value);
       this.dg.open(ToastComponent, {

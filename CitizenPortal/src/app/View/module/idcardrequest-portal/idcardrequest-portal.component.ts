@@ -181,8 +181,8 @@ export class IdcardrequestPortalComponent implements OnInit {
     this.oldidcardrequest = JSON.parse(JSON.stringify(r));
     this.stepper?.reset();
 
-    const selectedCitizen  = this.citizens.find(x => x.id === this.idcardrequest.citizen?.id);
-    const selectedReason   = this.reasons.find(x => x.id === this.idcardrequest.reason?.id);
+    const selectedCitizen  = (this.citizens ?? []).find(x => x.id === this.idcardrequest.citizen?.id);
+    const selectedReason   = (this.reasons ?? []).find(x => x.id === this.idcardrequest.reason?.id);
 
     // Set validators before patching so fields are enabled correctly
     if (selectedReason) this.onReasonChange(selectedReason);
