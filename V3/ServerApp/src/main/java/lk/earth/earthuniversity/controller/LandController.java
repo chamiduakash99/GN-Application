@@ -46,16 +46,16 @@ public class LandController {
         Stream<Land> landStream = lands.stream();
 
         if (street != null) {
-            landStream = landStream.filter(l -> l.getStreet().getFullname().equalsIgnoreCase(street));
+            landStream = landStream.filter(l -> l.getStreet() != null && l.getStreet().getFullname() != null && l.getStreet().getFullname().equalsIgnoreCase(street));
         }
         if (landtype != null) {
-            landStream = landStream.filter(l -> l.getLandtype().getName().equalsIgnoreCase(landtype));
+            landStream = landStream.filter(l -> l.getLandtype() != null && l.getLandtype().getName() != null && l.getLandtype().getName().equalsIgnoreCase(landtype));
         }
         if (citizen != null) {
-            landStream = landStream.filter(l -> l.getCitizen().getName().equalsIgnoreCase(citizen));
+            landStream = landStream.filter(l -> l.getCitizen() != null && l.getCitizen().getName() != null && l.getCitizen().getName().equalsIgnoreCase(citizen));
         }
         if (fencetype != null) {
-            landStream = landStream.filter(l -> l.getFencetype().getName().equalsIgnoreCase(fencetype));
+            landStream = landStream.filter(l -> l.getFencetype() != null && l.getFencetype().getName() != null && l.getFencetype().getName().equalsIgnoreCase(fencetype));
         }
         if (remarks != null) {
             landStream = landStream.filter(l -> l.getRemarks() != null && l.getRemarks().contains(remarks));
@@ -99,7 +99,7 @@ public class LandController {
 
     // 4️⃣ Update existing Land
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Land land) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -141,7 +141,7 @@ public class LandController {
 
     // 5️⃣ Delete Land
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

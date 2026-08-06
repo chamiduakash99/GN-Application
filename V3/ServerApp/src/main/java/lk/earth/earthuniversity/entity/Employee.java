@@ -17,15 +17,15 @@ public class Employee {
     private Integer id;
     @Basic
     @Column(name = "number")
-    @Pattern(regexp = "^\\d{4}$", message = "Invalid Number")
+    @Pattern(regexp = "^\\d{4}$", message = "Employee Number must be exactly 4 digits, e.g. 2103")
     private String number;
     @Basic
     @Column(name = "fullname")
-    @Pattern(regexp = "^([A-Z][a-z]*[.]?[\\s]?)*([A-Z][a-z]*)$", message = "Invalid Fullname")
+    @Pattern(regexp = "^([A-Z][a-z]*[.]?[\\s]?)*([A-Z][a-z]*)$", message = "Full Name must have each word capitalised, e.g. Ashan Pathum Dissanayake")
     private String fullname;
     @Basic
     @Column(name = "callingname")
-    @Pattern(regexp = "^([A-Z][a-z]+)$", message = "Invalid Calligname")
+    @Pattern(regexp = "^([A-Z][a-z]+)$", message = "Calling Name must be one capitalised word, e.g. Ashan")
     private String callingname;
     @Basic
     @Column(name = "photo")
@@ -36,30 +36,30 @@ public class Employee {
     private Date dobirth;
     @Basic
     @Column(name = "nic")
-    @Pattern(regexp = "^(([\\d]{9}[vVxX])|([\\d]{12}))$", message = "Invalid NIC")
+    @Pattern(regexp = "^(([\\d]{9}[vVxX])|([\\d]{12}))$", message = "NIC must be 9 digits followed by V or X, or 12 digits, e.g. 912345678V")
     private String nic;
     @Basic
     @Column(name = "address")
-    @Pattern(regexp = "^([\\w\\/\\-,\\s]{2,})$", message = "Invalid Address")
+    @Pattern(regexp = "^([\\w\\/\\-,\\s]{2,})$", message = "Address must be at least 2 characters: letters, digits, / - , and spaces")
     private String address;
     @Basic
     @Column(name = "mobile")
-    @Pattern(regexp = "^0\\d{9}$", message = "Invalid Mobile Number")
+    @Pattern(regexp = "^0\\d{9}$", message = "Mobile Number must be 10 digits starting with 0, e.g. 0771234567")
     private String mobile;
     @Basic
     @Column(name = "land")
-    @Pattern(regexp = "^\\d{0,10}$", message = "Invalid Landphone Number")
+    @Pattern(regexp = "^\\d{0,10}$", message = "Land Phone must be up to 10 digits, e.g. 0112345678")
     private String land;
     @Basic
     @Column(name = "email")
-    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid email Number")
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email must look like name@example.com")
     private String email;
     @Basic
     @Column(name = "doassignment")
     private Date doassignment;
     @Basic
     @Column(name = "description")
-    @Pattern(regexp = "^.*$", message = "Invalid Description")
+    @Pattern(regexp = "^.*$", message = "Description is not valid")
     private String description;
     @ManyToOne
     @JoinColumn(name = "gender_id", referencedColumnName = "id", nullable = false)

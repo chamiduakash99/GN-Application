@@ -51,7 +51,7 @@ class StreetmatierialController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Streetmatierial matierial) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -74,7 +74,7 @@ class StreetmatierialController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

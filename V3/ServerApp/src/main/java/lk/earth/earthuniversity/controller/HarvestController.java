@@ -44,10 +44,13 @@ public class HarvestController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Harvest harvest) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        if (harvest.getId() == null || harvestdao.findById(harvest.getId()).isEmpty())
+            errors = "<br> Harvest Does Not Exist";
 
         if (errors.equals(""))
             harvestdao.save(harvest);
@@ -61,7 +64,7 @@ public class HarvestController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

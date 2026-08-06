@@ -48,17 +48,17 @@ public class StreetController {
         Stream<Street> streetStream = streets.stream();
 
         if (codename != null){
-            streetStream = streetStream.filter(street -> street.getCodename().equalsIgnoreCase(codename));
+            streetStream = streetStream.filter(street -> street.getCodename() != null && street.getCodename().toLowerCase().contains(codename.toLowerCase()));
         }
         if (fullname != null){
-            streetStream = streetStream.filter(street -> street.getFullname().contains(fullname));
+            streetStream = streetStream.filter(street -> street.getFullname() != null && street.getFullname().toLowerCase().contains(fullname.toLowerCase()));
         }
         if (streetstatus != null){
-            streetStream = streetStream.filter(street -> street.getStreetstatus().getStatus().equals(streetstatus));
+            streetStream = streetStream.filter(street -> street.getStreetstatus() != null && street.getStreetstatus().getStatus() != null && street.getStreetstatus().getStatus().equals(streetstatus));
         }  if (streettype != null){
-            streetStream = streetStream.filter(street -> street.getStreettype().getName().equals(streettype));
+            streetStream = streetStream.filter(street -> street.getStreettype() != null && street.getStreettype().getName() != null && street.getStreettype().getName().equals(streettype));
         }  if (streetmatierial != null){
-            streetStream = streetStream.filter(street -> street.getStreetmatierial().getName().equals(streetmatierial));
+            streetStream = streetStream.filter(street -> street.getStreetmatierial() != null && street.getStreetmatierial().getName() != null && street.getStreetmatierial().getName().equals(streetmatierial));
         }
         return streetStream.collect(Collectors.toList());
     }
@@ -77,7 +77,7 @@ public class StreetController {
         if (extStreetCodeName != null){ errors = errors + "Existing Street Code Name <br>"; }
 //        if (extItemName != null){ errors = errors + "Existing Item Name <br>"; }
 
-        if (errors == ""){ streetDao.save(street); }
+        if (errors.isEmpty()){ streetDao.save(street); }
         else { errors = "Server Validation Errors : <br> " +  errors ;}
 
         response.put("ItemCode" , street.getCodename());
@@ -88,21 +88,25 @@ public class StreetController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Street street){
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
-        Street   extStreet = streetDao.findByCodename(street.getCodename());
-
-
-        if (extStreet == null){ errors = errors + "There is no any record which has a codename as  " + street.getCodename();}
-
-        if (extStreet != null && (!Objects.equals(street.getId(), extStreet.getId()))){
-            errors = errors + "Existing Street Code Name <br>";
+        // Look the record up by id. The old code searched by the NEW codename, which
+        // made renaming a street impossible - the new name never existed yet.
+        if (streetDao.findById(street.getId()).isEmpty()){
+            errors = errors + "Street Does Not Exist <br>";
         }
 
-        if (errors == ""){ streetDao.save(street); }
+        if (street.getCodename() != null && !street.getCodename().trim().isEmpty()){
+            Street extStreet = streetDao.findByCodename(street.getCodename().trim());
+            if (extStreet != null && !Objects.equals(street.getId(), extStreet.getId())){
+                errors = errors + "Existing Street Code Name <br>";
+            }
+        }
+
+        if (errors.isEmpty()){ streetDao.save(street); }
         else { errors = "Server Validation Errors : <br> " +  errors ;}
 
         response.put("ItemCode" , street.getCodename());
@@ -113,7 +117,7 @@ public class StreetController {
     }
 //
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id){
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

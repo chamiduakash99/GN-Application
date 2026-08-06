@@ -2,6 +2,7 @@ package lk.earth.earthuniversity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -209,6 +210,18 @@ public class Treecuttingrequest {
 
     public void setTransportpdf(byte[] transportpdf) {
         this.transportpdf = transportpdf;
+    }
+
+    @Transient
+    @JsonProperty("haspermitpdf")
+    public boolean hasPermitpdf() {
+        return this.permitpdf != null && this.permitpdf.length > 0;
+    }
+
+    @Transient
+    @JsonProperty("hastransportpdf")
+    public boolean hasTransportpdf() {
+        return this.transportpdf != null && this.transportpdf.length > 0;
     }
 
 

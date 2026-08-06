@@ -27,16 +27,34 @@ public class AnnouncementController {
     private UserDao userDao;
 
     // 1) VIEW LIST (SIMPLE)
+    /**
+     * Anything whose expiry date has passed is switched to inactive before the list
+     * is returned, so an expired notice never shows as active.
+     */
+    private List<Announcement> deactivateExpired(List<Announcement> list) {
+        java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+        List<Announcement> changed = new java.util.ArrayList<>();
+        for (Announcement a : list) {
+            if (a.getExpiredat() != null && a.getExpiredat().before(now)
+                    && a.getIsactive() != null && a.getIsactive() != 0) {
+                a.setIsactive((byte) 0);
+                changed.add(a);
+            }
+        }
+        if (!changed.isEmpty()) announcementDao.saveAll(changed);
+        return list;
+    }
+
     @GetMapping(path = "/list", produces = "application/json")
     public List<Announcement> getList() {
-        return announcementDao.findAll();
+        return deactivateExpired(announcementDao.findAll());
     }
 
     // 2) VIEW ALL + FILTER
     @GetMapping(produces = "application/json")
     public List<Announcement> get(@RequestParam HashMap<String, String> params) {
 
-        List<Announcement> announcements = announcementDao.findAll();
+        List<Announcement> announcements = deactivateExpired(announcementDao.findAll());
 
         if (params.isEmpty()) return announcements;
 
@@ -112,7 +130,7 @@ public class AnnouncementController {
 
     // 4) UPDATE
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Announcement announcement) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -143,7 +161,7 @@ public class AnnouncementController {
 
     // 5) DELETE
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
 
         HashMap<String, String> response = new HashMap<>();

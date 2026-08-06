@@ -78,10 +78,13 @@ public class CultivationController {
 
     // ── PUT ───────────────────────────────────────────────────────────────────
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Cultivation cultivation) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        if (cultivation.getId() == null || cultivationdao.findById(cultivation.getId()).isEmpty())
+            errors = "<br> Cultivation Does Not Exist";
 
         if (errors.equals(""))
             cultivationdao.save(cultivation);
@@ -96,7 +99,7 @@ public class CultivationController {
 
     // ── DELETE ────────────────────────────────────────────────────────────────
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

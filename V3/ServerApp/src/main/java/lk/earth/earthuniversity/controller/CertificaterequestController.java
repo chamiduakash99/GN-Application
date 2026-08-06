@@ -97,7 +97,7 @@ public class CertificaterequestController {
     // PUT  /certificaterequests/{id}
     // ──────────────────────────────────────────────────────────────
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@PathVariable Integer id,
                                           @RequestBody Certificaterequest certificaterequest) {
 
@@ -128,7 +128,7 @@ public class CertificaterequestController {
     // Changes status → Approved (id = 2)
     // ──────────────────────────────────────────────────────────────
     @PutMapping("/{id}/approve")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> approve(@PathVariable Integer id) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -163,7 +163,7 @@ public class CertificaterequestController {
     // Changes status → Rejected (id = 3)
     // ──────────────────────────────────────────────────────────────
     @PutMapping("/{id}/reject")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> reject(@PathVariable Integer id,
                                           @RequestParam String rejectReason) {
 
@@ -200,7 +200,7 @@ public class CertificaterequestController {
     // Changes status → Completed (id = 5) — called after citizen downloads PDF
     // ──────────────────────────────────────────────────────────────
     @PutMapping("/{id}/complete")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> complete(@PathVariable Integer id) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -234,7 +234,7 @@ public class CertificaterequestController {
     // DELETE  /certificaterequests/{id}
     // ──────────────────────────────────────────────────────────────
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
 
         HashMap<String, String> response = new HashMap<>();

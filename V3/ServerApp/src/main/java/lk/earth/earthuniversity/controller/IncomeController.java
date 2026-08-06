@@ -76,10 +76,13 @@ public class IncomeController {
 
     // ── PUT ───────────────────────────────────────────────────────────────────
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Income income) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        if (income.getId() == null || incomedao.findById(income.getId()).isEmpty())
+            errors = "<br> Income Does Not Exist";
 
         if (errors.equals(""))
             incomedao.save(income);
@@ -94,7 +97,7 @@ public class IncomeController {
 
     // ── DELETE ────────────────────────────────────────────────────────────────
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

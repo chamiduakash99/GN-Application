@@ -100,6 +100,12 @@ public class Citizen {
     @ManyToOne
     @JoinColumn(name = "citizenStatus_id", referencedColumnName = "id", nullable = false)
     private Citizenstatus citizenstatus;
+    // Breaks the Citizen -> Household -> citizensById -> Citizen JSON cycle.
+    // That cycle made Jackson throw an NPE on every request body containing a citizen
+    // (HTTP 400) and StackOverflow when serialising one. Nothing in either Angular
+    // app reads citizen.household; the Household module reads household.citizensById,
+    // which stays intact.
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "household_id", referencedColumnName = "id")
     private Household household;

@@ -76,6 +76,11 @@ public class    BuildingController {
         if (landdetail != null){
             buildingStream = buildingStream.filter(b -> b.getLanddetail().getId().toString().equals(landdetail));
         }
+        // Building No search: this filter was commented out, so the search box did nothing.
+        if (no != null && !no.trim().isEmpty()){
+            buildingStream = buildingStream.filter(b -> b.getNo() != null
+                    && b.getNo().toLowerCase().contains(no.trim().toLowerCase()));
+        }
 
 //        if (no != null){
 //            buildingStream = buildingStream.filter(b -> b.getNo().equalsIgnoreCase(no));
@@ -134,7 +139,7 @@ public class    BuildingController {
 
     // 4) Update
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Building building){
 
         HashMap<String, String> response = new HashMap<>();
@@ -165,7 +170,7 @@ public class    BuildingController {
 
     // 5) Delete
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id){
 
         HashMap<String, String> response = new HashMap<>();

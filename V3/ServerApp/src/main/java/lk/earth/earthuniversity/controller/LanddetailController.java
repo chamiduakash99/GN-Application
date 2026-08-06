@@ -47,16 +47,16 @@ public class LanddetailController {
         Stream<Landdetail> landStream = landdetails.stream();
 
         if (street != null) {
-            landStream = landStream.filter(l -> l.getStreet().getFullname().equalsIgnoreCase(street));
+            landStream = landStream.filter(l -> l.getStreet() != null && l.getStreet().getFullname() != null && l.getStreet().getFullname().equalsIgnoreCase(street));
         }
         if (landtype != null) {
-            landStream = landStream.filter(l -> l.getLandtype().getName().equalsIgnoreCase(landtype));
+            landStream = landStream.filter(l -> l.getLandtype() != null && l.getLandtype().getName() != null && l.getLandtype().getName().equalsIgnoreCase(landtype));
         }
         if (citizen != null) {
-            landStream = landStream.filter(l -> l.getCitizen().getName().equalsIgnoreCase(citizen));
+            landStream = landStream.filter(l -> l.getCitizen() != null && l.getCitizen().getName() != null && l.getCitizen().getName().equalsIgnoreCase(citizen));
         }
         if (fencetype != null) {
-            landStream = landStream.filter(l -> l.getFencetype().getName().equalsIgnoreCase(fencetype));
+            landStream = landStream.filter(l -> l.getFencetype() != null && l.getFencetype().getName() != null && l.getFencetype().getName().equalsIgnoreCase(fencetype));
         }
         if (landfeature != null) {
             landStream = landStream.filter(l -> l.getLandfeaturedetails() != null &&
@@ -68,7 +68,7 @@ public class LanddetailController {
             landStream = landStream.filter(l -> l.getRemarks() != null && l.getRemarks().contains(remarks));
         }
         if (deedno != null) {
-            landStream = landStream.filter(l -> l.getDeedno() != null && l.getDeedno().equalsIgnoreCase(deedno));
+            landStream = landStream.filter(l -> l.getDeedno() != null && l.getDeedno().toLowerCase().contains(deedno.trim().toLowerCase()));
         }
 
         return landStream.collect(Collectors.toList());
@@ -89,13 +89,11 @@ public class LanddetailController {
             }
         }
 
-        if (landdetail.getLandfeaturedetails() == null || landdetail.getLandfeaturedetails().isEmpty()) {
-            errors += "At least one Land Feature is required.<br>";
-        }
-
         if (errors.isEmpty()) {
-            for (LandfeatureHasLanddetail landfeatureHasLanddetail : landdetail.getLandfeaturedetails()){
-                landfeatureHasLanddetail.setLanddetail(landdetail);
+            if (landdetail.getLandfeaturedetails() != null) {
+                for (LandfeatureHasLanddetail landfeatureHasLanddetail : landdetail.getLandfeaturedetails()) {
+                    landfeatureHasLanddetail.setLanddetail(landdetail);
+                }
             }
             landdetailDao.save(landdetail);
         } else {
@@ -109,7 +107,7 @@ public class LanddetailController {
         return response;
     }
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Landdetail landdetail) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -131,17 +129,18 @@ public class LanddetailController {
             }
         }
 
-        if (landdetail.getLandfeaturedetails() == null || landdetail.getLandfeaturedetails().isEmpty()) {
-            errors += "At least one Land Feature is required.<br>";
-        }
-
         if (errors.isEmpty()) {
-            existingLand.get().getLandfeaturedetails().clear();
-            landdetail.getLandfeaturedetails().forEach(newlandfeaturedetails -> {
-                newlandfeaturedetails.setLanddetail(landdetail);
-                existingLand.get().getLandfeaturedetails().add(newlandfeaturedetails);
-                newlandfeaturedetails.setLanddetail(landdetail);
-            });
+            // Only replace the feature list when the client actually sent one.
+            // The Land form has no landfeature control, so an unconditional clear()
+            // silently deleted every landfeature_has_landDetail row on each update.
+            if (landdetail.getLandfeaturedetails() != null) {
+                existingLand.get().getLandfeaturedetails().clear();
+                landdetail.getLandfeaturedetails().forEach(newlandfeaturedetails -> {
+                    newlandfeaturedetails.setLanddetail(landdetail);
+                    existingLand.get().getLandfeaturedetails().add(newlandfeaturedetails);
+                    newlandfeaturedetails.setLanddetail(landdetail);
+                });
+            }
             BeanUtils.copyProperties(landdetail, existingLand.get(), "id","landfeaturedetails");
             landdetailDao.save(existingLand.get());
         } else {
@@ -155,7 +154,7 @@ public class LanddetailController {
         return response;
     }
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

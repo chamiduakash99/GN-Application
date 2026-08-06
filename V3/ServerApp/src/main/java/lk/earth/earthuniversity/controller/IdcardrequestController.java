@@ -69,10 +69,24 @@ public class IdcardrequestController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Idcardrequest idcardrequest) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        var existing = idcardrequest.getId() == null ? null : idcardrequestdao.findById(idcardrequest.getId()).orElse(null);
+        if (existing == null)
+            errors = "<br> ID Card Request Does Not Exist";
+
+        // The officer form only edits a few fields; anything it does not send must keep
+        // its stored value rather than being written back as NULL.
+        if (existing != null) {
+            if (idcardrequest.getCitizen() == null) idcardrequest.setCitizen(existing.getCitizen());
+            if (idcardrequest.getEmployee() == null) idcardrequest.setEmployee(existing.getEmployee());
+            if (idcardrequest.getApplieddate() == null) idcardrequest.setApplieddate(existing.getApplieddate());
+            if (idcardrequest.getBcnooridno() == null) idcardrequest.setBcnooridno(existing.getBcnooridno());
+            if (idcardrequest.getReason() == null) idcardrequest.setReason(existing.getReason());
+        }
 
         if (errors.equals(""))
             idcardrequestdao.save(idcardrequest);
@@ -86,7 +100,7 @@ public class IdcardrequestController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

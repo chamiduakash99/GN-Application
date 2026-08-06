@@ -58,10 +58,13 @@ public class CitizenskillController {
 
     // ── PUT ───────────────────────────────────────────────────────────────────
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Citizenskill citizenskill) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        if (citizenskill.getId() == null || citizenskilldao.findById(citizenskill.getId()).isEmpty())
+            errors = "<br> Citizen Skill Does Not Exist";
 
         if (errors.equals(""))
             citizenskilldao.save(citizenskill);
@@ -76,7 +79,7 @@ public class CitizenskillController {
 
     // ── DELETE ────────────────────────────────────────────────────────────────
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

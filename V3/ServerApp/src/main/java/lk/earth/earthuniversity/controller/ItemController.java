@@ -34,10 +34,10 @@ public class ItemController {
         Stream<Item> itemStream = items.stream();
 
         if (itemName != null){
-            itemStream = itemStream.filter(item -> item.getName().equalsIgnoreCase(itemName));
+            itemStream = itemStream.filter(item -> item.getName() != null && item.getName().equalsIgnoreCase(itemName));
         }
         if (brandName != null){
-            itemStream = itemStream.filter(item -> item.getBrand().getName().equalsIgnoreCase(brandName));
+            itemStream = itemStream.filter(item -> item.getBrand() != null && item.getBrand().getName() != null && item.getBrand().getName().equalsIgnoreCase(brandName));
         }
         return itemStream.collect(Collectors.toList());
     }
@@ -67,7 +67,7 @@ public class ItemController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Item item){
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -93,7 +93,7 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id){
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

@@ -32,8 +32,17 @@ public class ReportController {
     private CountByStreetMaterialDao countByStreetMaterialDao;
 
     @GetMapping(path = "/countbystreetmaterial", produces = "application/json")
-    public List<CountReport> countByStreetMaterial() {
-        return withPercentages(countByStreetMaterialDao.countByStreetMaterial());
+    public List<CountReport> countByStreetMaterial(
+            @RequestParam(value = "minLength", required = false) BigDecimal minLength,
+            @RequestParam(value = "maxLength", required = false) BigDecimal maxLength) {
+        return withPercentages(countByStreetMaterialDao.countByStreetMaterial(minLength, maxLength));
+    }
+
+    @GetMapping(path = "/streetstatusreport", produces = "application/json")
+    public List<CountReport> countByStreetStatus(
+            @RequestParam(value = "minLength", required = false) BigDecimal minLength,
+            @RequestParam(value = "maxLength", required = false) BigDecimal maxLength) {
+        return withPercentages(countByStreetMaterialDao.countByStreetStatus(minLength, maxLength));
     }
 
     //Land
@@ -118,56 +127,91 @@ public class ReportController {
 
     //citizen
     @GetMapping(path = "/religionreport", produces = "application/json")
-    public List<CountReport> countByReligion() {
-        return withPercentages(religionReportDao.countByReligion());
+    public List<CountReport> countByReligion(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(religionReportDao.countByReligionFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
     private MatiralstatusReportDao matiralstatusReportDao;
 
     @GetMapping(path = "/matiralstatusreport", produces = "application/json")
-    public List<CountReport> countByMatiralstatus() {
-        return withPercentages(matiralstatusReportDao.countByMatiralstatus());
+    public List<CountReport> countByMatiralstatus(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(matiralstatusReportDao.countByMatiralstatusFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
     private EducationlevelReportDao educationlevelReportDao;
 
     @GetMapping(path = "/educationlevelreport", produces = "application/json")
-    public List<CountReport> countByEducationlevel() {
-        return withPercentages(educationlevelReportDao.countByEducationlevel());
+    public List<CountReport> countByEducationlevel(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(educationlevelReportDao.countByEducationlevelFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
     private EthnicityReportDao ethnicityReportDao;
 
     @GetMapping(path = "/ethnicityreport", produces = "application/json")
-    public List<CountReport> countByEthnicity() {
-        return withPercentages(ethnicityReportDao.countByEthnicity());
+    public List<CountReport> countByEthnicity(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(ethnicityReportDao.countByEthnicityFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
     private GenderReportDao genderReportDao;
 
     @GetMapping(path = "/genderreport", produces = "application/json")
-    public List<CountReport> countByGender() {
-        return withPercentages(genderReportDao.countByGender());
+    public List<CountReport> countByGender(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(genderReportDao.countByGenderFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
     private CitizenstatusReportDao citizenstatusReportDao;
 
     @GetMapping(path = "/citizenstatusreport", produces = "application/json")
-    public List<CountReport> countByCitizenstatus() {
-        return withPercentages(citizenstatusReportDao.countByCitizenstatus());
+    public List<CountReport> countByCitizenstatus(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(citizenstatusReportDao.countByCitizenstatusFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
     private AidprogramReportDao aidprogramReportDao;
 
     @GetMapping(path = "/aidprogramreport", produces = "application/json")
-    public List<CountReport> countByAidprogram() {
-        return withPercentages(aidprogramReportDao.countByAidprogram());
+    public List<CountReport> countByAidprogram(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+        return withPercentages(aidprogramReportDao.countByAidprogramFiltered(
+                dobLowerBound(maxAge), dobUpperBound(minAge), genderId, citizenstatusId));
     }
 
     @Autowired
@@ -435,5 +479,20 @@ public class ReportController {
         return professionDao.findAll();
     }
 
+
+
+    // ── Citizen report filters ────────────────────────────────────────────────
+    // An age range is expressed against dateofbirth:
+    //   at least minAge  ->  born on or before today - minAge years
+    //   at most  maxAge  ->  born on or after  today - (maxAge + 1) years + 1 day
+    private java.sql.Date dobUpperBound(Integer minAge) {
+        if (minAge == null) return null;
+        return java.sql.Date.valueOf(java.time.LocalDate.now().minusYears(minAge));
+    }
+
+    private java.sql.Date dobLowerBound(Integer maxAge) {
+        if (maxAge == null) return null;
+        return java.sql.Date.valueOf(java.time.LocalDate.now().minusYears(maxAge + 1L).plusDays(1));
+    }
 
 }

@@ -101,7 +101,7 @@ public class TreecuttingrequestController {
 
     // ── PUT — citizen updates their own Pending request ────────────────────────
     @PutMapping("/{id}/citizenupdate")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> citizenUpdate(@PathVariable Integer id,
                                                  @RequestBody Treecuttingrequest incoming) {
         HashMap<String, String> response = new HashMap<>();
@@ -163,10 +163,13 @@ public class TreecuttingrequestController {
 
     // ── PUT — GN officer updates (approve / reject / status change) ───────────
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Treecuttingrequest treecuttingrequest) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        if (treecuttingrequest.getId() == null || treecuttingrequestdao.findById(treecuttingrequest.getId()).isEmpty())
+            errors = "<br> Tree Cutting Request Does Not Exist";
 
         if (errors.equals(""))
             treecuttingrequestdao.save(treecuttingrequest);
@@ -181,7 +184,7 @@ public class TreecuttingrequestController {
 
     // ── DELETE ────────────────────────────────────────────────────────────────
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -204,7 +207,7 @@ public class TreecuttingrequestController {
 
     // ── PUT approve ───────────────────────────────────────────────────────────
     @PutMapping("/{id}/approve")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> approve(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -226,7 +229,7 @@ public class TreecuttingrequestController {
 
     // ── PUT reject ────────────────────────────────────────────────────────────
     @PutMapping("/{id}/reject")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> reject(@PathVariable Integer id,
                                           @RequestParam String rejectReason) {
         HashMap<String, String> response = new HashMap<>();
@@ -250,7 +253,7 @@ public class TreecuttingrequestController {
 
     // ── PUT upload permit PDF ─────────────────────────────────────────────────
     @PutMapping("/{id}/uploadpermit")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> uploadPermit(@PathVariable Integer id,
                                                 @RequestBody byte[] pdfBytes) {
         HashMap<String, String> response = new HashMap<>();
@@ -277,7 +280,7 @@ public class TreecuttingrequestController {
 
     // ── PUT upload transport PDF ──────────────────────────────────────────────
     @PutMapping("/{id}/uploadtransport")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> uploadTransport(@PathVariable Integer id,
                                                    @RequestBody byte[] pdfBytes) {
         HashMap<String, String> response = new HashMap<>();

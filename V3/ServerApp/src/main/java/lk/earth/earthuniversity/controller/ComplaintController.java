@@ -39,13 +39,13 @@ public class ComplaintController {
         if (complaintstatusid != null)
             stream = stream.filter(c -> c.getComplaintstatus().getId() == Integer.parseInt(complaintstatusid));
         if (subject != null)
-            stream = stream.filter(c -> c.getSubject().toLowerCase().contains(subject.toLowerCase()));
+            stream = stream.filter(c -> c.getSubject() != null && c.getSubject().toLowerCase().contains(subject.toLowerCase()));
 
         return stream.collect(Collectors.toList());
     }
 
     @PutMapping("/{id}/citizenupdate")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> citizenUpdate(@PathVariable Integer id,
                                                  @RequestBody Complaint incoming) {
         HashMap<String, String> response = new HashMap<>();
@@ -102,10 +102,22 @@ public class ComplaintController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Complaint complaint) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
+
+        var existing = complaint.getId() == null ? null : complaintdao.findById(complaint.getId()).orElse(null);
+        if (existing == null)
+            errors = "<br> Complaint Does Not Exist";
+
+        // The officer form only edits a few fields; anything it does not send must keep
+        // its stored value rather than being written back as NULL.
+        if (existing != null) {
+            if (complaint.getCitizen() == null) complaint.setCitizen(existing.getCitizen());
+            if (complaint.getEmployee() == null) complaint.setEmployee(existing.getEmployee());
+            if (complaint.getComplaineddate() == null) complaint.setComplaineddate(existing.getComplaineddate());
+        }
 
         if (errors.equals(""))
             complaintdao.save(complaint);
@@ -119,7 +131,7 @@ public class ComplaintController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

@@ -16,11 +16,11 @@ public class User {
     private Integer id;
     @Basic
     @Column(name = "username")
-    @Pattern(regexp = "^([a-zA-Z0-9_.-]+)$", message = "Invalid Username")
+    @Pattern(regexp = "^([a-zA-Z0-9_.-]+)$", message = "Username may contain only letters, digits and . _ - e.g. ashan.d")
     private String username;
     @Basic
     @Column(name = "password")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Invalid Password")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Password needs at least one lowercase letter, one uppercase letter and one digit")
     private String password;
     @Basic
     @Column(name = "salt")
@@ -33,7 +33,7 @@ public class User {
     private Time tocreated;
     @Basic
     @Column(name = "description")
-    @Pattern(regexp = "^.*$", message = "Invalid Description")
+    @Pattern(regexp = "^.*$", message = "Description is not valid")
     private String description;
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)

@@ -76,13 +76,16 @@ public class OperationController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String,String> update(@RequestBody Operation operation){
 
         HashMap<String,String> responce = new HashMap<>();
         String errors="";
 
-        if(errors=="") operationDao.save(operation);
+        if (operation.getId() == null || operationDao.findById(operation.getId()).isEmpty())
+            errors = "<br> Operation Does Not Exist";
+
+        if (errors.equals("")) operationDao.save(operation);
         else errors = "Server Validation Errors : <br> "+errors;
 
         responce.put("id",String.valueOf(operation.getId()));
@@ -93,7 +96,7 @@ public class OperationController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         System.out.println(id);

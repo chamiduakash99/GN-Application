@@ -40,10 +40,10 @@ public class UserController {
         Stream<User> ustream = users.stream();
 
         if (employee != null) {
-            ustream = ustream.filter(u -> u.getEmployee().getCallingname().contains(employee));
+            ustream = ustream.filter(u -> u.getEmployee() != null && u.getEmployee().getCallingname() != null && u.getEmployee().getCallingname().contains(employee));
         }
         if (username != null) {
-            ustream = ustream.filter(u -> u.getUsername().contains(username));
+            ustream = ustream.filter(u -> u.getUsername() != null && u.getUsername().contains(username));
         }
         if (roleid != null) {
             ustream = ustream.filter(u -> u.getUserroles().stream().anyMatch(ur -> ur.getRole().getId() == Integer.parseInt(roleid)));
@@ -64,7 +64,7 @@ public class UserController {
            errors = errors+"<br> Existing Username";
 
         if(errors==""){
-            for(Userrole u : user.getUserroles()) u.setUser(user);
+            if (user.getUserroles() != null) for(Userrole u : user.getUserroles()) u.setUser(user);
 
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -92,7 +92,7 @@ public class UserController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody User user) {
         HashMap<String, String> response = new HashMap<>();
 
@@ -149,7 +149,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String,String> delete(@PathVariable String username){
 
         HashMap<String,String> responce = new HashMap<>();

@@ -2,6 +2,7 @@ package lk.earth.earthuniversity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -96,6 +97,12 @@ public class Certificate {
 
     public void setScannedcopy(byte[] scannedcopy) {
         this.scannedcopy = scannedcopy;
+    }
+
+    @Transient
+    @JsonProperty("hasscannedcopy")
+    public boolean hasScannedcopy() {
+        return this.scannedcopy != null && this.scannedcopy.length > 0;
     }
 
     public Byte getHardcopypicked() {

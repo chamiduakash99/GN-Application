@@ -91,7 +91,7 @@ public class CertificateController {
     // PUT /certificates/{id}
     // ──────────────────────────────────────────────────────────────
     @PutMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@PathVariable Integer id,
                                           @RequestBody Certificate certificate) {
         HashMap<String, String> response = new HashMap<>();
@@ -122,7 +122,7 @@ public class CertificateController {
     // Body: raw byte array (application/octet-stream)
     // ──────────────────────────────────────────────────────────────
     @PutMapping(value = "/{id}/upload", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> uploadScan(@PathVariable Integer id,
                                               @RequestBody byte[] scannedcopy) {
         HashMap<String, String> response = new HashMap<>();
@@ -164,7 +164,7 @@ public class CertificateController {
     // Marks that the physical hard copy has been picked up.
     // ──────────────────────────────────────────────────────────────
     @PutMapping("/{id}/pickup")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> markPickedUp(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
@@ -209,7 +209,7 @@ public class CertificateController {
     // DELETE /certificates/{id}
     // ──────────────────────────────────────────────────────────────
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

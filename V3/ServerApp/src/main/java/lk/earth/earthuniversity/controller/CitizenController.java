@@ -49,20 +49,31 @@ public class CitizenController {
 
         Stream<Citizen> citizenStream = citizens.stream();
 
-        if (name != null) {
-            citizenStream = citizenStream.filter(c -> c.getName().toLowerCase().contains(name.toLowerCase()));
+        // Every one of these fields is nullable - a child has no NIC, and religion /
+        // ethnicity / education level can be unset. Dereferencing them without a null
+        // check threw an NPE and returned 500 for the whole search.
+        if (name != null && !name.trim().isEmpty()) {
+            citizenStream = citizenStream.filter(c -> c.getName() != null
+                    && c.getName().toLowerCase().contains(name.trim().toLowerCase()));
         }
-        if (nic != null) {
-            citizenStream = citizenStream.filter(c -> c.getNic().equalsIgnoreCase(nic));
+        if (nic != null && !nic.trim().isEmpty()) {
+            citizenStream = citizenStream.filter(c -> c.getNic() != null
+                    && c.getNic().toLowerCase().contains(nic.trim().toLowerCase()));
         }
-        if (religion != null) {
-            citizenStream = citizenStream.filter(c -> c.getReligion().getName().equals(religion));
+        if (religion != null && !religion.trim().isEmpty()) {
+            citizenStream = citizenStream.filter(c -> c.getReligion() != null
+                    && c.getReligion().getName() != null
+                    && c.getReligion().getName().equalsIgnoreCase(religion.trim()));
         }
-        if (ethnicity != null) {
-            citizenStream = citizenStream.filter(c -> c.getEthnicity().getName().equals(ethnicity));
+        if (ethnicity != null && !ethnicity.trim().isEmpty()) {
+            citizenStream = citizenStream.filter(c -> c.getEthnicity() != null
+                    && c.getEthnicity().getName() != null
+                    && c.getEthnicity().getName().equalsIgnoreCase(ethnicity.trim()));
         }
-        if (educationlevel != null) {
-            citizenStream = citizenStream.filter(c -> c.getEducationlevel().getName().equals(educationlevel));
+        if (educationlevel != null && !educationlevel.trim().isEmpty()) {
+            citizenStream = citizenStream.filter(c -> c.getEducationlevel() != null
+                    && c.getEducationlevel().getName() != null
+                    && c.getEducationlevel().getName().equalsIgnoreCase(educationlevel.trim()));
         }
 
 
@@ -76,33 +87,48 @@ public class CitizenController {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
-        if (!isAdult(citizen.getDateofbirth()) && citizen.getBirthcetificateno() == null){
-            errors += "This child must  have a Birth Certificate Number !.<br>";
+        // Rule: under 18 -> Birth Certificate No + guardian required, NIC not required.
+        //       18 and over -> NIC required, Birth Certificate No optional.
+        boolean adult = isAdult(citizen.getDateofbirth());
+        String nic  = citizen.getNic() == null ? "" : citizen.getNic().trim();
+        String bcno = citizen.getBirthcetificateno() == null ? "" : citizen.getBirthcetificateno().trim();
 
+        if (!adult && bcno.isEmpty()) {
+            errors += "A citizen under 18 must have a Birth Certificate Number.<br>";
         }
-        if (!isAdult(citizen.getDateofbirth()) && citizen.getCitizenguardians() == null){
-            errors += "This child must be register with a guardian.<br>";
-
+        if (!adult && (citizen.getCitizenguardians() == null || citizen.getCitizenguardians().isEmpty())) {
+            errors += "A citizen under 18 must be registered with a guardian.<br>";
         }
-        if (isAdult(citizen.getDateofbirth()) && Objects.equals(citizen.getNic(), "")){
-            errors += "Adults must have a NIC.<br>";
-
+        if (adult && nic.isEmpty()) {
+            errors += "A citizen 18 or over must have a NIC.<br>";
         }
-        Citizen existingByNic = citizenDao.findByNic(citizen.getNic());
 
-        if (existingByNic != null) {
+        // @Pattern rejects "" but allows null, so blank optional fields must be nulled
+        // before they reach Hibernate or the flush throws ConstraintViolationException.
+        citizen.setNic(nic.isEmpty() ? null : nic);
+        citizen.setBirthcetificateno(bcno.isEmpty() ? null : bcno);
+        if (citizen.getMobileno() != null && citizen.getMobileno().trim().isEmpty()) citizen.setMobileno(null);
+        if (citizen.getEmail() != null && citizen.getEmail().trim().isEmpty()) citizen.setEmail(null);
+
+        // Duplicate checks only when a number was actually supplied,
+        // otherwise every blank value collides with every other blank value.
+        if (!nic.isEmpty() && citizenDao.findByNic(nic) != null) {
             errors += "Existing Citizen NIC already registered.<br>";
+        }
+        if (!bcno.isEmpty() && citizenDao.findCitizenByBirthcetificateno(bcno) != null) {
+            errors += "Existing Birth Certificate Number already registered.<br>";
         }
 
         if (errors.isEmpty()) {
-            for (Citizenaidprogram citizenaidprogram : citizen.getCitizenaidprograms()){
-                citizenaidprogram.setCitizen(citizen);
-                System.out.println("Success 1");
+            if (citizen.getCitizenaidprograms() != null) {
+                for (Citizenaidprogram citizenaidprogram : citizen.getCitizenaidprograms()){
+                    citizenaidprogram.setCitizen(citizen);
+                }
             }
-            for (Citizenguardian citizenguardian : citizen.getCitizenguardians()){
-                citizenguardian.setCitizen(citizen);
-                System.out.println("Success 2");
-
+            if (citizen.getCitizenguardians() != null) {
+                for (Citizenguardian citizenguardian : citizen.getCitizenguardians()){
+                    citizenguardian.setCitizen(citizen);
+                }
             }
             citizenDao.save(citizen);
         } else {
@@ -118,57 +144,68 @@ public class CitizenController {
 
     // 4️⃣ Update existing Citizen
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> update(@RequestBody Citizen citizen) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
-        Citizen existing = citizenDao.findById(citizen.getId()).get();
-        if (Objects.equals(existing,null)){
-            errors += "NO citizen registered with " +  citizen.getId() + "<br>";
-        }
-        Citizen existingByNic = null;
-        if (isAdult(citizen.getDateofbirth())){
-             existingByNic = citizenDao.findByNic(citizen.getNic());
+        Citizen existing = citizenDao.findById(citizen.getId()).orElse(null);
+        if (existing == null) {
+            errors += "No citizen registered with id " + citizen.getId() + "<br>";
         }
 
-        if (isAdult(citizen.getDateofbirth()) && existingByNic == null) {
-            errors += "No record found with NIC " + citizen.getNic() + "<br>";
+        // Same rule as save(): under 18 -> Birth Certificate No, 18+ -> NIC.
+        boolean adult = isAdult(citizen.getDateofbirth());
+        String nic  = citizen.getNic() == null ? "" : citizen.getNic().trim();
+        String bcno = citizen.getBirthcetificateno() == null ? "" : citizen.getBirthcetificateno().trim();
+
+        if (adult && nic.isEmpty()) {
+            errors += "A citizen 18 or over must have a NIC.<br>";
+        }
+        if (!adult && bcno.isEmpty()) {
+            errors += "A citizen under 18 must have a Birth Certificate Number.<br>";
+        }
+        if (!adult && (citizen.getCitizenguardians() == null || citizen.getCitizenguardians().isEmpty())) {
+            errors += "A citizen under 18 must be registered with a guardian.<br>";
         }
 
-        if (existingByNic != null && !Objects.equals(existingByNic.getId(), citizen.getId())) {
-            errors += "Duplicate NIC found for another record.<br>";
-        }
+        citizen.setNic(nic.isEmpty() ? null : nic);
+        citizen.setBirthcetificateno(bcno.isEmpty() ? null : bcno);
+        if (citizen.getMobileno() != null && citizen.getMobileno().trim().isEmpty()) citizen.setMobileno(null);
+        if (citizen.getEmail() != null && citizen.getEmail().trim().isEmpty()) citizen.setEmail(null);
 
-        Citizen existingByCertificate = null;
-        if (!isAdult(citizen.getDateofbirth())){
-            existingByCertificate = citizenDao.findCitizenByBirthcetificateno(citizen.getBirthcetificateno());
+        // Only reject when the number belongs to a DIFFERENT citizen.
+        // (The old code demanded the NIC already exist, which made it impossible to correct one.)
+        if (!nic.isEmpty()) {
+            Citizen existingByNic = citizenDao.findByNic(nic);
+            if (existingByNic != null && !Objects.equals(existingByNic.getId(), citizen.getId())) {
+                errors += "Duplicate NIC found for another record.<br>";
+            }
         }
-
-        if (!isAdult(citizen.getDateofbirth()) && existingByCertificate == null) {
-            errors += "No record found with Birth Certificate No " + citizen.getNic() + "<br>";
-        }
-
-        if (existingByCertificate != null && !Objects.equals(existingByCertificate.getId(), citizen.getId())) {
-            errors += "Duplicate Birth Certificate No found for another record.<br>";
+        if (!bcno.isEmpty()) {
+            Citizen existingByCertificate = citizenDao.findCitizenByBirthcetificateno(bcno);
+            if (existingByCertificate != null && !Objects.equals(existingByCertificate.getId(), citizen.getId())) {
+                errors += "Duplicate Birth Certificate No found for another record.<br>";
+            }
         }
 
 
 
         if (errors.isEmpty()) {
             existing.getCitizenaidprograms().clear();
-            citizen.getCitizenaidprograms().forEach(citizenaidprogram -> {
-                citizenaidprogram.setCitizen(citizen);
-                existing.getCitizenaidprograms().add(citizenaidprogram);
-                citizenaidprogram.setCitizen(citizen);
-
-            });
+            if (citizen.getCitizenaidprograms() != null) {
+                citizen.getCitizenaidprograms().forEach(citizenaidprogram -> {
+                    citizenaidprogram.setCitizen(existing);
+                    existing.getCitizenaidprograms().add(citizenaidprogram);
+                });
+            }
 
             existing.getCitizenguardians().clear();
-            citizen.getCitizenguardians().forEach(citizenguardian -> {
-                citizenguardian.setCitizen(citizen);
-                existing.getCitizenguardians().add(citizenguardian);
-                citizenguardian.setCitizen(citizen);
-            });
+            if (citizen.getCitizenguardians() != null) {
+                citizen.getCitizenguardians().forEach(citizenguardian -> {
+                    citizenguardian.setCitizen(existing);
+                    existing.getCitizenguardians().add(citizenguardian);
+                });
+            }
             BeanUtils.copyProperties(citizen,existing,"id","citizenaidprograms","citizenguardians");
             citizenDao.save(existing);
         } else {
@@ -184,7 +221,7 @@ public class CitizenController {
 
     // 5️⃣ Delete Citizen
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String, String> delete(@PathVariable Integer id) {
         HashMap<String, String> response = new HashMap<>();
         String errors = "";

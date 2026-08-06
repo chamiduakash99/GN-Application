@@ -38,9 +38,9 @@ public class EmployeeController {
 
         if(designationid!=null) estream = estream.filter(e -> e.getDesignation().getId()==Integer.parseInt(designationid));
         if(genderid!=null) estream = estream.filter(e -> e.getGender().getId()==Integer.parseInt(genderid));
-        if(number!=null) estream = estream.filter(e -> e.getNumber().equals(number));
-        if(nic!=null) estream = estream.filter(e -> e.getNic().contains(nic));
-        if(fullname!=null) estream = estream.filter(e -> e.getFullname().contains(fullname));
+        if(number!=null) estream = estream.filter(e -> e.getNumber() != null && e.getNumber().equals(number));
+        if(nic!=null) estream = estream.filter(e -> e.getNic() != null && e.getNic().contains(nic));
+        if(fullname!=null) estream = estream.filter(e -> e.getFullname() != null && e.getFullname().contains(fullname));
 
         return estream.collect(Collectors.toList());
 
@@ -76,7 +76,6 @@ public class EmployeeController {
         if(employeedao.findByNic(employee.getNic())!=null)
             errors = errors+"<br> Existing NIC";
 
-        System.out.println(employee.getDoassignment());
 
         if(errors=="")
         employeedao.save(employee);
@@ -90,7 +89,7 @@ public class EmployeeController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("hasAuthority('Employee-Update')")
     public HashMap<String,String> update(@RequestBody Employee employee){
 
@@ -100,12 +99,11 @@ public class EmployeeController {
         Employee emp1 = employeedao.findByNumber(employee.getNumber());
         Employee emp2 = employeedao.findByNic(employee.getNic());
 
-        if(emp1!=null && employee.getId()!=emp1.getId())
+        if(emp1!=null && !java.util.Objects.equals(employee.getId(), emp1.getId()))
             errors = errors+"<br> Existing Number";
-        if(emp2!=null && employee.getId()!=emp2.getId())
+        if(emp2!=null && !java.util.Objects.equals(employee.getId(), emp2.getId()))
             errors = errors+"<br> Existing NIC";
 
-        System.out.println(employee.getPhoto().length);
 
         if(errors=="") employeedao.save(employee);
         else errors = "Server Validation Errors : <br> "+errors;
@@ -119,7 +117,7 @@ public class EmployeeController {
 
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         System.out.println(id);

@@ -63,13 +63,16 @@ public class PrivilegeController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String,String> update(@RequestBody Privilege privilege){
 
         HashMap<String,String> responce = new HashMap<>();
         String errors="";
 
-        if(errors=="") privilegedao.save(privilege);
+        if (privilege.getId() == null || privilegedao.findById(privilege.getId()).isEmpty())
+            errors = "<br> Privilege Does Not Exist";
+
+        if (errors.equals("")) privilegedao.save(privilege);
         else errors = "Server Validation Errors : <br> "+errors;
 
         responce.put("id",String.valueOf(privilege.getId()));
@@ -80,7 +83,7 @@ public class PrivilegeController {
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         System.out.println(id);
