@@ -291,10 +291,10 @@ export class StreetComponent implements OnInit{
     this.districts = this.districts.filter((di:District)=>{
       return di.province.id === this.street.gnd.division.district.province.id;
     });
-    const tempgnd = this.gnds.find(g => g.id === this.street.gnd.id);
-    const tempdiv = this.divisions.find(dv => dv.id === this.street.gnd.division.id);
-    const tempdit = this.districts.find(dv => dv.id === this.street.gnd.division.district.id);
-    const temppv = this.provinces.find(p => p.id === this.street.gnd.division.district.province.id);
+    const tempgnd = (this.gnds ?? []).find(g => g.id === this.street.gnd.id);
+    const tempdiv = (this.divisions ?? []).find(dv => dv.id === this.street.gnd.division.id);
+    const tempdit = (this.districts ?? []).find(dv => dv.id === this.street.gnd.division.district.id);
+    const temppv = (this.provinces ?? []).find(p => p.id === this.street.gnd.division.district.province.id);
 
     this.innerform.patchValue({
       province:temppv,
@@ -319,11 +319,11 @@ export class StreetComponent implements OnInit{
 
     // Link select dropdowns
     // @ts-ignore
-    this.street.streetstatus = this.streetstatuses.find(s => s.id === this.street.streetstatus.id);
+    this.street.streetstatus = (this.streetstatuses ?? []).find(s => s.id === this.street.streetstatus.id);
     // @ts-ignore
-    this.street.streettype = this.streettypes.find(s => s.id === this.street.streettype.id);
+    this.street.streettype = (this.streettypes ?? []).find(s => s.id === this.street.streettype.id);
     // @ts-ignore
-    this.street.streetmatierial = this.streetmatierials.find(s => s.id === this.street.streetmatierial.id);
+    this.street.streetmatierial = (this.streetmatierials ?? []).find(s => s.id === this.street.streetmatierial.id);
 
     // Patch values to form
     this.form.patchValue(this.street);
@@ -689,7 +689,13 @@ export class StreetComponent implements OnInit{
             delmessage = "Content Not Found";
           }
 
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
 
           if (delstatus) {
             delmessage = "Successfully Deleted";
@@ -734,7 +740,9 @@ export class StreetComponent implements OnInit{
 
   clearImage(): void {
     this.imagestreeturl = 'assets/default.png';
-    this.form.controls['mapimage'].setErrors({'required': true});
+    // the mapimage file input is commented out of the template, so this error
+    // could never be cleared and blocked every Add after the first
+    this.form.controls['mapimage'].setErrors(null);
   }
   // INNER FORM CHANGES (FILTER INNER FORM)
   selectProvineChnage(event: MatSelectChange) {

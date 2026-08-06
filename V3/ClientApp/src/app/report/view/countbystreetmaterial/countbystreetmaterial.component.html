@@ -1,8 +1,28 @@
-<mat-grid-list [cols]="1" rowHeight="13rem">
 
 
+<mat-grid-list [cols]="12" rowHeight="13rem">
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="3" [rowspan]="2">
+  <div style="padding: 16px 16px 0 16px; display: flex; align-items: center; flex-wrap: wrap;">
+
+    <mat-form-field appearance="outline" style="margin-right: 16px;">
+      <mat-label>Min Length (km)</mat-label>
+      <input matInput type="number" min="0" [(ngModel)]="minLength" placeholder="e.g. 0.20">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" style="margin-right: 16px;">
+      <mat-label>Max Length (km)</mat-label>
+      <input matInput type="number" min="0" [(ngModel)]="maxLength" placeholder="e.g. 1.25">
+    </mat-form-field>
+
+    <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
+    <button mat-raised-button (click)="clearFilter()">Clear</button>
+
+  </div>
+  </mat-grid-tile>
+
+
+  <mat-grid-tile [colspan]="9" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Street Material - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -28,7 +48,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Street Material - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #columnchart></canvas></mat-card-content>
@@ -38,16 +58,46 @@
       <mat-card-content><canvas #piechart></canvas></mat-card-content>
     </mat-card>
   </mat-grid-tile>
-<!--  <mat-grid-tile [colspan]="1" [rowspan]="2">-->
-<!--    <mat-card>-->
-<!--      <mat-card-header><mat-card-title>Column Chart</mat-card-title></mat-card-header>-->
-<!--      <mat-card-content><div #columnchart></div></mat-card-content>-->
-<!--    </mat-card>-->
 
-<!--    <mat-card>-->
-<!--      <mat-card-header><mat-card-title>Pie Chart View</mat-card-title></mat-card-header>-->
-<!--      <mat-card-content><div #piechart></div></mat-card-content>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- street status -->
+
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Street Status - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+        <mat-table [dataSource]="statusData">
+          <ng-container *ngFor="let column of statusColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ statusHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[statusBinders[i]] }}</mat-cell>
+
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">{{ ftext }}</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ statusTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="statusColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: statusColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="statusColumns"></mat-footer-row>
+        </mat-table>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Street Status - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #statuscolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Street Status - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #statuspiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
 
 </mat-grid-list>

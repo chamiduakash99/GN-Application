@@ -151,8 +151,8 @@ export class VoterregistryComponent implements OnInit {
   filterHouseholdTable(): void {
     const cs = this.cshhsearch.getRawValue();
     this.hhdata.filterPredicate = (h: any) => {
-      return (cs.cshhno == null || h.householdno?.toLowerCase().includes(cs.cshhno)) &&
-        (cs.csaddr == null || h.address?.toLowerCase().includes(cs.csaddr));
+      return (cs.cshhno == null || h.householdno?.toLowerCase().includes((cs.cshhno ?? '').toLowerCase())) &&
+        (cs.csaddr == null || h.address?.toLowerCase().includes((cs.csaddr ?? '').toLowerCase()));
     };
     this.hhdata.filter = 'xx';
   }
@@ -161,9 +161,9 @@ export class VoterregistryComponent implements OnInit {
   filterVoterTable(): void {
     const cs = this.csvotersearch.getRawValue();
     this.voterdata.filterPredicate = (v: Voterregistry) => {
-      return (cs.csserial == null || String(v.serialno).includes(cs.csserial)) &&
-        (!cs.csname || v.citizen?.name.toLowerCase().includes(cs.csname.toLowerCase())   == null || v.citizen?.name.toLowerCase().includes(cs.csname)) &&
-        (cs.csnic    == null || (v.citizen?.nic ?? '').toLowerCase().includes(cs.csnic)) &&
+      return (cs.csserial == null || String(v.serialno).includes((cs.csserial ?? '').toLowerCase())) &&
+        (!cs.csname || v.citizen?.name.toLowerCase().includes(cs.csname.toLowerCase())   == null || v.citizen?.name.toLowerCase().includes((cs.csname ?? '').toLowerCase())) &&
+        (cs.csnic    == null || (v.citizen?.nic ?? '').toLowerCase().includes((cs.csnic ?? '').toLowerCase())) &&
         (cs.csdob == null ||
           new Date(v.citizen!.dateofbirth).toDateString() ===
           new Date(cs.csdob).toDateString())
@@ -239,7 +239,13 @@ export class VoterregistryComponent implements OnInit {
           } else {
             delstatus = false; delmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (delstatus) {
             delmessage = entry.citizen?.name + ' removed from registry.';
             this.loadHouseholdSummary();

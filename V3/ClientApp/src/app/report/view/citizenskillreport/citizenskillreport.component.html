@@ -14,22 +14,22 @@
 
         <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Min Experience (yrs)</mat-label>
-          <input matInput type="number" [(ngModel)]="minExp">
+          <input matInput type="number" min="0" [(ngModel)]="minExp">
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Max Experience (yrs)</mat-label>
-          <input matInput type="number" [(ngModel)]="maxExp">
+          <input matInput type="number" min="0" [(ngModel)]="maxExp">
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Min Income</mat-label>
-          <input matInput type="number" [(ngModel)]="minIncome">
+          <input matInput type="number" min="0" [(ngModel)]="minIncome">
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Max Income</mat-label>
-          <input matInput type="number" [(ngModel)]="maxIncome">
+          <input matInput type="number" min="0" [(ngModel)]="maxIncome">
         </mat-form-field>
 
         <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>

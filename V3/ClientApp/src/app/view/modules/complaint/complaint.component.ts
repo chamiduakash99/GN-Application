@@ -98,7 +98,7 @@ export class ComplaintComponent {
     // Main form
     this.form = this.fb.group({
       'citizen':          new FormControl('', [Validators.required]),
-      'complaintstatus':  new FormControl(''),
+      'complaintstatus':  new FormControl(null),
       'subject':          new FormControl('', [Validators.required]),
       'description':      new FormControl('', [Validators.required]),
       'complaineddate':   new FormControl(''),
@@ -187,11 +187,11 @@ export class ComplaintComponent {
   filterTable(): void {
     const cs = this.cssearch.getRawValue();
     this.data.filterPredicate = (c: Complaint) => {
-      return (cs.cscitizen  == null || c.citizen?.name.toLowerCase().includes(cs.cscitizen)) &&
-        (cs.cssubject  == null || c.subject?.toLowerCase().includes(cs.cssubject)) &&
-        (cs.csstatus   == null || c.complaintstatus?.name.toLowerCase().includes(cs.csstatus)) &&
-        (cs.csdate     == null || c.complaineddate?.includes(cs.csdate)) &&
-        (cs.csreferred == null || (c.referredto ?? '').toLowerCase().includes(cs.csreferred));
+      return (cs.cscitizen  == null || c.citizen?.name.toLowerCase().includes((cs.cscitizen ?? '').toLowerCase())) &&
+        (cs.cssubject  == null || c.subject?.toLowerCase().includes((cs.cssubject ?? '').toLowerCase())) &&
+        (cs.csstatus   == null || c.complaintstatus?.name.toLowerCase().includes((cs.csstatus ?? '').toLowerCase())) &&
+        (cs.csdate     == null || c.complaineddate?.includes((cs.csdate ?? '').toLowerCase())) &&
+        (cs.csreferred == null || (c.referredto ?? '').toLowerCase().includes((cs.csreferred ?? '').toLowerCase()));
     };
     this.data.filter = 'xx';
   }
@@ -227,12 +227,11 @@ export class ComplaintComponent {
     this.oldcomplaint = JSON.parse(JSON.stringify(c));
 
     // @ts-ignore
-    this.complaint.citizen         = this.citizens.find(x => x.id === this.complaint.citizen.id);
+    this.complaint.citizen         = (this.citizens ?? []).find(x => x.id === this.complaint.citizen.id);
     // @ts-ignore
-    this.complaint.employee = this.complaint.employee ? this.employees.find(x => x.id === this.complaint.employee!.id) : undefined;
+    this.complaint.employee = this.complaint.employee ? (this.employees ?? []).find(x => x.id === this.complaint.employee!.id) : undefined;
     // @ts-ignore
-    this.complaint.complaintstatus = this.complaintstatuses.find(x => x.id === this.complaint.complaintstatus.id);
-
+    this.complaint.complaintstatus = (this.complaintstatuses ?? []).find(x => x.id === this.complaint.complaintstatus.id) ?? null;
     this.form.patchValue(this.complaint);
     this.form.markAsPristine();
 
@@ -303,7 +302,13 @@ export class ComplaintComponent {
             addstatus = false;
             addmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          addstatus = false;
+          addmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (addstatus) {
             addmessage = 'Complaint Added Successfully';
             this.form.reset();
@@ -350,7 +355,13 @@ export class ComplaintComponent {
             updstatus = false;
             updmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          updstatus = false;
+          updmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (updstatus) {
             updmessage = 'Complaint Updated Successfully';
             this.form.reset();
@@ -388,7 +399,13 @@ export class ComplaintComponent {
             delstatus = false;
             delmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (delstatus) {
             delmessage = 'Complaint Deleted Successfully';
             this.form.reset();

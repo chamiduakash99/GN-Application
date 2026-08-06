@@ -8,6 +8,7 @@ export class Certificate {
   public issueddate !: string;
   public expirydate !: string;
   public scannedcopy !: string;
+  public hasscannedcopy!: boolean;
   public hardcopypicked !: number;
   public pickeddate !: string;
 

@@ -126,12 +126,12 @@ export class CitizenskillComponent implements OnInit {
     // Skill form
     this.skillform = this.fb.group({
       'profession':     new FormControl('', [Validators.required]),
-      'experienceyears':new FormControl('', [Validators.required]),
+      'experienceyears':new FormControl('', [Validators.required, Validators.min(1)]),
     }, {updateOn: 'change'});
 
     // Income form
     this.incomeform = this.fb.group({
-      'monthlyaverageincome': new FormControl('', [Validators.required]),
+      'monthlyaverageincome': new FormControl('', [Validators.required, Validators.min(0)]),
       'incomesource':         new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
   }
@@ -221,10 +221,10 @@ export class CitizenskillComponent implements OnInit {
   filterCitizenTable(): void {
     const cs = this.cscitsearch.getRawValue();
     this.citdata.filterPredicate = (c: Citizen) => {
-      return (cs.csname   == null || c.name?.toLowerCase().includes(cs.csname)) &&
-        (cs.csnic    == null || (c.nic ?? '').toLowerCase().includes(cs.csnic)) &&
-        (cs.csmobile == null || (c.mobileno ?? '').includes(cs.csmobile)) &&
-        (cs.csemail  == null || (c.email ?? '').toLowerCase().includes(cs.csemail));
+      return (cs.csname   == null || c.name?.toLowerCase().includes((cs.csname ?? '').toLowerCase())) &&
+        (cs.csnic    == null || (c.nic ?? '').toLowerCase().includes((cs.csnic ?? '').toLowerCase())) &&
+        (cs.csmobile == null || (c.mobileno ?? '').includes((cs.csmobile ?? '').toLowerCase())) &&
+        (cs.csemail  == null || (c.email ?? '').toLowerCase().includes((cs.csemail ?? '').toLowerCase()));
     };
     this.citdata.filter = 'xx';
   }
@@ -232,8 +232,8 @@ export class CitizenskillComponent implements OnInit {
   filterSkillTable(): void {
     const cs = this.csskillsearch.getRawValue();
     this.skilldata.filterPredicate = (s: Citizenskill) => {
-      return (cs.csprofession == null || s.profession?.name.toLowerCase().includes(cs.csprofession)) &&
-        (cs.csexperience == null || String(s.experienceyears).includes(cs.csexperience));
+      return (cs.csprofession == null || s.profession?.name.toLowerCase().includes((cs.csprofession ?? '').toLowerCase())) &&
+        (cs.csexperience == null || String(s.experienceyears).includes((cs.csexperience ?? '').toLowerCase()));
     };
     this.skilldata.filter = 'xx';
   }
@@ -281,7 +281,7 @@ export class CitizenskillComponent implements OnInit {
     this.selectedskill    = JSON.parse(JSON.stringify(s));
 
     // @ts-ignore
-    this.selectedskill.profession = this.professions.find(p => p.id === s.profession.id);
+    this.selectedskill.profession = (this.professions ?? []).find(p => p.id === s.profession.id);
 
     if (this.selectedskill) {
       this.skillform.patchValue(this.selectedskill);
@@ -369,7 +369,13 @@ export class CitizenskillComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Skill Added Successfully';
             this.skillform.reset();
@@ -410,7 +416,13 @@ export class CitizenskillComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Skill Updated Successfully';
             this.skillform.reset();
@@ -438,7 +450,13 @@ export class CitizenskillComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Skill Deleted Successfully';
             this.skillform.reset();
@@ -485,7 +503,13 @@ export class CitizenskillComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Income Record Added Successfully';
             this.loadIncome(this.selectedcitizen!.id);
@@ -523,7 +547,13 @@ export class CitizenskillComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Income Record Updated Successfully';
             this.loadIncome(this.selectedcitizen!.id);
@@ -548,7 +578,13 @@ export class CitizenskillComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Income Record Deleted Successfully';
             this.loadIncome(this.selectedcitizen!.id);

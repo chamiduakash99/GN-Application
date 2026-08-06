@@ -18,6 +18,7 @@ import {CroptypeService} from '../../../service/CroptypeService';
 import {CultivationstatusService} from '../../../service/CultivationstatusService';
 import {AreaunitService} from '../../../service/AreaunitService';
 import {CitizenService} from '../../../service/CitizenService';
+import {LandService} from '../../../service/land.service';
 import {AuthorizationManager} from '../../../service/authorizationmanager';
 
 import {UiAssist} from '../../../util/ui/ui.assist';
@@ -106,7 +107,7 @@ export class CultivationComponent implements OnInit {
     private css2: CultivationstatusService,
     private aus: AreaunitService,
     private cits: CitizenService,
-    // private lds: LanddetailService,
+    private lds: LandService,
     private fb: FormBuilder,
     private dg: MatDialog,
     public authService: AuthorizationManager,
@@ -139,9 +140,9 @@ export class CultivationComponent implements OnInit {
       'citizen':             new FormControl('', [Validators.required]),
       'landdetail':          new FormControl('', [Validators.required]),
       'croptype':            new FormControl('', [Validators.required]),
-      'cultivationstatus':   new FormControl(''),
+      'cultivationstatus':   new FormControl(null),
       'areaunit':            new FormControl('', [Validators.required]),
-      'cultivatedarea':      new FormControl('', [Validators.required]),
+      'cultivatedarea':      new FormControl('', [Validators.required, Validators.min(0)]),
       'plantingdate':        new FormControl('', [Validators.required]),
       'expectedharvestdate': new FormControl('', [Validators.required]),
       'remarks':             new FormControl(''),
@@ -177,7 +178,7 @@ export class CultivationComponent implements OnInit {
     this.css2.getAllList().then(res => this.cultivationstatuses = res);
     this.aus.getAllList().then(res  => this.areaunits = res);
     this.cits.getAllListNameId().then(res => this.citizens = res);
-    // this.lds.getAllList().then(res => this.landdetails = res);
+    this.lds.getAllListNameId().then((res: Land[]) => this.landdetails = res);
 
     this.enableHarButtons(false, false, false);
 
@@ -255,10 +256,10 @@ export class CultivationComponent implements OnInit {
   filterCultivationTable(): void {
     const cs = this.cssearch.getRawValue();
     this.culdata.filterPredicate = (c: Cultivation) => {
-      return (cs.csculno   == null || c.cultivationno?.toLowerCase().includes(cs.csculno)) &&
-        (cs.csfarmer  == null || c.citizen?.name.toLowerCase().includes(cs.csfarmer)) &&
-        (cs.csland    == null || c.landdetail?.deed.toLowerCase().includes(cs.csland)) &&
-        (cs.cscrop    == null || c.croptype?.name.toLowerCase().includes(cs.cscrop)) &&
+      return (cs.csculno   == null || c.cultivationno?.toLowerCase().includes((cs.csculno ?? '').toLowerCase())) &&
+        (cs.csfarmer  == null || c.citizen?.name.toLowerCase().includes((cs.csfarmer ?? '').toLowerCase())) &&
+        (cs.csland    == null || (c.landdetail?.deedno ?? '').toLowerCase().includes((cs.csland ?? '').toLowerCase())) &&
+        (cs.cscrop    == null || c.croptype?.name.toLowerCase().includes((cs.cscrop ?? '').toLowerCase())) &&
         (cs.csstatus  == null || c.cultivationstatus?.name.toLowerCase().includes(cs.csstatus.toLowerCase()));
     };
     this.culdata.filter = 'xx';
@@ -267,9 +268,9 @@ export class CultivationComponent implements OnInit {
   filterHarvestTable(): void {
     const cs = this.csharform.getRawValue();
     this.hardata.filterPredicate = (h: Harvest) => {
-      return (cs.cshardate == null || h.harvestdate?.includes(cs.cshardate)) &&
-        (cs.csqty     == null || String(h.quantity).includes(cs.csqty)) &&
-        (cs.csquality == null || (h.qualityremarks ?? '').toLowerCase().includes(cs.csquality));
+      return (cs.cshardate == null || h.harvestdate?.includes((cs.cshardate ?? '').toLowerCase())) &&
+        (cs.csqty     == null || String(h.quantity).includes((cs.csqty ?? '').toLowerCase())) &&
+        (cs.csquality == null || (h.qualityremarks ?? '').toLowerCase().includes((cs.csquality ?? '').toLowerCase()));
     };
     this.hardata.filter = 'xx';
   }
@@ -303,13 +304,15 @@ export class CultivationComponent implements OnInit {
     this.oldcultivation  = JSON.parse(JSON.stringify(c));
 
     // @ts-ignore
-    this.cultivation.citizen           = this.citizens.find(x => x.id === this.cultivation.citizen.id);
+    this.cultivation.citizen           = (this.citizens ?? []).find(x => x.id === this.cultivation.citizen.id);
     // @ts-ignore
-    this.cultivation.croptype          = this.croptypes.find(x => x.id === this.cultivation.croptype.id);
+    this.cultivation.croptype          = (this.croptypes ?? []).find(x => x.id === this.cultivation.croptype.id);
     // @ts-ignore
-    this.cultivation.cultivationstatus = this.cultivationstatuses.find(x => x.id === this.cultivation.cultivationstatus.id);
+    this.cultivation.cultivationstatus = (this.cultivationstatuses ?? []).find(x => x.id === this.cultivation.cultivationstatus.id) ?? null;
     // @ts-ignore
-    this.cultivation.areaunit          = this.areaunits.find(x => x.id === this.cultivation.areaunit.id);
+    this.cultivation.areaunit          = (this.areaunits ?? []).find(x => x.id === this.cultivation.areaunit.id);
+    // @ts-ignore
+    this.cultivation.landdetail        = (this.landdetails ?? []).find(x => x.id === this.cultivation.landdetail?.id) ?? null;
 
     this.culform.patchValue(this.cultivation);
     this.culform.markAsPristine();
@@ -401,7 +404,13 @@ export class CultivationComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) { message = 'Cultivation Added Successfully'; this.culform.reset(); this.loadCultivationTable(''); }
           this.dg.open(MessageComponent, {width: '500px', data: {heading: 'Status - Add Cultivation', message}});
         });
@@ -427,7 +436,13 @@ export class CultivationComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Cultivation Updated Successfully';
             this.culform.reset(); this.loadCultivationTable('');
@@ -465,7 +480,13 @@ export class CultivationComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Cultivation Deleted Successfully';
             this.culform.reset(); this.loadCultivationTable('');
@@ -503,7 +524,13 @@ export class CultivationComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Harvest Recorded Successfully';
             this.harform.reset();
@@ -535,7 +562,13 @@ export class CultivationComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Harvest Updated Successfully';
             this.harform.reset();
@@ -559,7 +592,13 @@ export class CultivationComponent implements OnInit {
             // @ts-ignore
             status = res['errors'] == ''; if (!status) message = res['errors'];
           } else { status = false; message = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          status = false;
+          message = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (status) {
             message = 'Harvest Deleted Successfully';
             this.harform.reset();

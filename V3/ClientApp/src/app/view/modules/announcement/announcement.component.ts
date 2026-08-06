@@ -19,6 +19,7 @@ import {AuthorizationManager} from "../../../service/authorizationmanager";
 })
 
 export class AnnouncementComponent {
+  today: Date = new Date();   // datepickers use this as their minimum
 
   columns: string[] = ['title', 'content', 'isactive', 'publishedat', 'expiredat'];
   headers: string[] = ['Title', 'Content', 'Active', 'Published At', 'Expired At'];
@@ -188,12 +189,12 @@ export class AnnouncementComponent {
     const cserchdata = this.csearch.getRawValue();
 
     this.data.filterPredicate = (announcement: Announcement, filter: string) => {
-      return (cserchdata.cstitle == null || announcement.title.toLowerCase().includes(cserchdata.cstitle)) &&
-        (cserchdata.cscontent == null || announcement.content.toLowerCase().includes(cserchdata.cscontent)) &&
-        (cserchdata.csisactive == null || this.getActive(announcement).toLowerCase().includes(cserchdata.csisactive)) &&
-        (cserchdata.cspublishedat == null || (announcement.publishedat + '').toLowerCase().includes(cserchdata.cspublishedat)) &&
-        (cserchdata.csexpiredat == null || (announcement.expiredat + '').toLowerCase().includes(cserchdata.csexpiredat)) &&
-        (cserchdata.csmodi == null || this.getModi(announcement).toLowerCase().includes(cserchdata.csmodi));
+      return (cserchdata.cstitle == null || announcement.title.toLowerCase().includes((cserchdata.cstitle ?? '').toLowerCase())) &&
+        (cserchdata.cscontent == null || (announcement.content ?? '').toLowerCase().includes((cserchdata.cscontent ?? '').toLowerCase())) &&
+        (cserchdata.csisactive == null || this.getActive(announcement).toLowerCase().includes((cserchdata.csisactive ?? '').toLowerCase())) &&
+        (cserchdata.cspublishedat == null || (announcement.publishedat + '').toLowerCase().includes((cserchdata.cspublishedat ?? '').toLowerCase())) &&
+        (cserchdata.csexpiredat == null || (announcement.expiredat + '').toLowerCase().includes((cserchdata.csexpiredat ?? '').toLowerCase())) &&
+        (cserchdata.csmodi == null || this.getModi(announcement).toLowerCase().includes((cserchdata.csmodi ?? '').toLowerCase()));
     };
 
     this.data.filter = 'xx';

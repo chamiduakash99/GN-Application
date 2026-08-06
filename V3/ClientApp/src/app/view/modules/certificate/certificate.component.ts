@@ -53,6 +53,8 @@ export class CertificateComponent implements OnInit {
   currentemployee!: Employee;
   imageurl: string = '';
   scannedimageurl: string = 'assets/default.png';
+  today: Date = new Date();   // datepickers use this as their minimum
+  hasstoredscan: boolean = false;
   @ViewChild('certpaginator') certpaginator!: MatPaginator;
 
   // ── Button states ─────────────────────────────────────────────────────────
@@ -180,6 +182,7 @@ export class CertificateComponent implements OnInit {
     this.selectedcertrow = null;
     this.certform.reset();
     this.scannedimageurl = 'assets/default.png';
+    this.hasstoredscan = false;
   }
 
   // ── Certificate table loader (loads ALL certificates when query is empty) ──
@@ -225,9 +228,9 @@ export class CertificateComponent implements OnInit {
   filterCertTable(): void {
     const cs = this.cscertsearch.getRawValue();
     this.certdata.filterPredicate = (cert: Certificate, filter: string) => {
-      return (cs.cscertno == null || cert.certificateno?.toLowerCase().includes(cs.cscertno)) &&
-        (cs.cscertissued == null || cert.issueddate?.includes(cs.cscertissued)) &&
-        (cs.cscertexpiry == null || cert.expirydate?.includes(cs.cscertexpiry)) &&
+      return (cs.cscertno == null || cert.certificateno?.toLowerCase().includes((cs.cscertno ?? '').toLowerCase())) &&
+        (cs.cscertissued == null || cert.issueddate?.includes((cs.cscertissued ?? '').toLowerCase())) &&
+        (cs.cscertexpiry == null || cert.expirydate?.includes((cs.cscertexpiry ?? '').toLowerCase())) &&
         (cs.cscertpicked == null || cs.cscertpicked === '' ||
           this.isPicked(cert.hardcopypicked) === (cs.cscertpicked === 'true'));
     };
@@ -277,11 +280,11 @@ export class CertificateComponent implements OnInit {
     this.selectedcertrow = cert;
     this.certificate = JSON.parse(JSON.stringify(cert));
     this.oldcertificate = JSON.parse(JSON.stringify(cert));
-    if (this.certificate.scannedcopy != null) {
-      this.scannedimageurl = atob(this.certificate.scannedcopy);
+    this.hasstoredscan = !!cert.hasscannedcopy;
+    this.scannedimageurl = 'assets/default.png';
+    if (this.hasstoredscan) {
       this.certform.controls['scannedcopy'].clearValidators();
-    } else {
-      this.scannedimageurl = 'assets/default.png';
+      this.certform.controls['scannedcopy'].updateValueAndValidity();
     }
     this.certform.patchValue(this.certificate);
     this.certform.markAsPristine();
@@ -302,7 +305,25 @@ export class CertificateComponent implements OnInit {
 
   clearScan(): void {
     this.scannedimageurl = 'assets/default.png';
+    this.hasstoredscan = false;
     this.certform.controls['scannedcopy'].setErrors({'required': true});
+  }
+
+  // ── View the stored scanned copy (PDF) ────────────────────────────────────
+  downloadScan(): void {
+    this.cs.downloadScannedCopy(this.certificate.id).then(buffer => {
+      if (!buffer) { this.noScanMessage(); return; }
+      const url = URL.createObjectURL(new Blob([buffer], {type: 'application/pdf'}));
+      window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+    }).catch(() => this.noScanMessage());
+  }
+
+  private noScanMessage(): void {
+    this.dg.open(MessageComponent, {
+      width: '500px',
+      data: {heading: 'Scanned Certificate', message: 'No scanned copy stored for this certificate.'}
+    });
   }
 
   // ── Clear ─────────────────────────────────────────────────────────────────
@@ -351,7 +372,12 @@ export class CertificateComponent implements OnInit {
     // so convert to plain yyyy-MM-dd before sending.
     const expiry: any = this.certificate.expirydate;
     if (expiry instanceof Date) {
-      this.certificate.expirydate = expiry.toISOString().split('T')[0];
+      // Format in LOCAL time. toISOString() converts to UTC, which in UTC+5:30
+      // rolls the date back a day for anything before 05:30 local.
+      const y = expiry.getFullYear();
+      const m = String(expiry.getMonth() + 1).padStart(2, '0');
+      const d = String(expiry.getDate()).padStart(2, '0');
+      this.certificate.expirydate = y + '-' + m + '-' + d;
     }
 
     let certdata = '<br>Certificate No : ' + this.certificate.certificateno;
@@ -433,9 +459,18 @@ export class CertificateComponent implements OnInit {
             uplstatus = false;
             uplmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          uplstatus = false;
+          uplmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (uplstatus) {
             uplmessage = 'Scanned Copy Uploaded — Status changed to Certificate Ready';
+            // the panel still said 'No scanned copy' until the row was re-selected
+            this.hasstoredscan = true;
+            if (this.certificate) { (this.certificate as any).hasscannedcopy = true; }
             this.loadCertificateTable('');
             this.enableCertButtons(false, true);
             // The request status just flipped to "Certificate Ready" (4), so it
@@ -472,7 +507,13 @@ export class CertificateComponent implements OnInit {
             pkpstatus = false;
             pkpmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          pkpstatus = false;
+          pkpmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (pkpstatus) {
             pkpmessage = 'Certificate Marked as Picked Up';
             this.loadCertificateTable('');

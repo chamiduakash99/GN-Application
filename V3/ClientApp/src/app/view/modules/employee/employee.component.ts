@@ -29,12 +29,12 @@ import {Emptypeservice} from "../../../service/emptypeservice";
 
 export class EmployeeComponent {
 
-    columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname', 'modi'];
-    headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name', 'Modification'];
-    binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname', 'getModi()'];
+    columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname'];
+    headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name'];
+    binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname'];
 
-  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname', 'csmodi'];
-  csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender', 'Search by Designation', 'Search by Full Name', 'Search by Modi'];
+  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname'];
+  csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender', 'Search by Designation', 'Search by Full Name'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -264,12 +264,12 @@ export class EmployeeComponent {
     const cserchdata = this.csearch.getRawValue();
 
     this.data.filterPredicate = (employee: Employee, filter: string) => {
-      return (cserchdata.csnumber == null || employee.number.toLowerCase().includes(cserchdata.csnumber)) &&
-        (cserchdata.cscallingname == null || employee.callingname.toLowerCase().includes(cserchdata.cscallingname)) &&
-        (cserchdata.csgender == null || employee.gender.name.toLowerCase().includes(cserchdata.csgender)) &&
-        (cserchdata.csdesignation == null || employee.designation.name.toLowerCase().includes(cserchdata.csdesignation)) &&
-        (cserchdata.csname == null || employee.fullname.toLowerCase().includes(cserchdata.csname)) &&
-        (cserchdata.csmodi == null || this.getModi(employee).toLowerCase().includes(cserchdata.csmodi));
+      return (cserchdata.csnumber == null || employee.number.toLowerCase().includes((cserchdata.csnumber ?? '').toLowerCase())) &&
+        (cserchdata.cscallingname == null || employee.callingname.toLowerCase().includes((cserchdata.cscallingname ?? '').toLowerCase())) &&
+        (cserchdata.csgender == null || employee.gender.name.toLowerCase().includes((cserchdata.csgender ?? '').toLowerCase())) &&
+        (cserchdata.csdesignation == null || employee.designation.name.toLowerCase().includes((cserchdata.csdesignation ?? '').toLowerCase())) &&
+        (cserchdata.csname == null || employee.fullname.toLowerCase().includes((cserchdata.csname ?? '').toLowerCase())) &&
+        (cserchdata.csmodi == null || this.getModi(employee).toLowerCase().includes((cserchdata.csmodi ?? '').toLowerCase()));
     };
 
     this.data.filter = 'xx';
@@ -460,13 +460,13 @@ export class EmployeeComponent {
     this.employee.photo = "";
 
     //@ts-ignore
-    this.employee.gender = this.genders.find(g => g.id === this.employee.gender.id);
+    this.employee.gender = (this.genders ?? []).find(g => g.id === this.employee.gender.id);
     //@ts-ignore
-    this.employee.designation = this.designations.find(d => d.id === this.employee.designation.id);
+    this.employee.designation = (this.designations ?? []).find(d => d.id === this.employee.designation.id);
     //@ts-ignore
-    this.employee.empstatus = this.employeestatuses.find(s => s.id === this.employee.empstatus.id);
+    this.employee.empstatus = (this.employeestatuses ?? []).find(s => s.id === this.employee.empstatus.id);
     //@ts-ignore
-    this.employee.emptype = this.employeetypes.find(s => s.id === this.employee.emptype.id);
+    this.employee.emptype = (this.employeetypes ?? []).find(s => s.id === this.employee.emptype.id);
 
     this.form.patchValue(this.employee);
     this.form.markAsPristine();

@@ -349,14 +349,14 @@
           <mat-form [formGroup]="incomeform">
 
             <mat-form-field appearance="outline">
-              <mat-label>Monthly Average Income (Rs.)</mat-label>
-              <input matInput type="number" formControlName="monthlyaverageincome"
+              <mat-label>Average Income (Rs.)</mat-label>
+              <input matInput type="number" min="0" formControlName="monthlyaverageincome"
                      placeholder="e.g. 45000">
               <mat-icon matPrefix>payments</mat-icon>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
-              <mat-label>Income Source</mat-label>
+              <mat-label>Main Income Source</mat-label>
               <input matInput formControlName="incomesource"
                      placeholder="e.g. Farming, Government Teaching, Fishing">
               <mat-icon matPrefix>work</mat-icon>

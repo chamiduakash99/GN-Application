@@ -119,7 +119,7 @@ export class UserComponent implements OnInit{
       "password": new FormControl('',[Validators.required]),
       "confirmpassword": new FormControl(),
       "docreated": new FormControl('',[Validators.required]),
-      "tocreated": new FormControl(this.dp.transform(Date.now(),"hh:mm:ss"),[Validators.required]),
+      "tocreated": new FormControl(this.dp.transform(Date.now(),"HH:mm:ss"),[Validators.required]),
       "usestatus": new FormControl('',[Validators.required]),
       "usetype": new FormControl('',[Validators.required]),
       "description": new FormControl(),
@@ -135,7 +135,7 @@ export class UserComponent implements OnInit{
   }
 
   resetTimeCreated(): void {
-    this.form.controls['tocreated'].setValue(this.dp.transform(Date.now(), 'hh:mm:ss'));
+    this.form.controls['tocreated'].setValue(this.dp.transform(Date.now(), 'HH:mm:ss'));
   }
   async ngOnInit(): Promise<void> {
     this.initialize();
@@ -282,7 +282,7 @@ export class UserComponent implements OnInit{
     selectedOptions.forEach(option => {
       const extUserRoles = option.value;
       this.userroles = this.userroles.filter(role => role !== extUserRoles);
-      if (!this.roles.includes(extUserRoles.role)) {
+      if (!this.roles.includes((extUserRoles.role ?? '').toLowerCase())) {
         this.roles.push(extUserRoles.role);
       }
     });
@@ -314,10 +314,14 @@ export class UserComponent implements OnInit{
     const csearchdata = this.csearch.getRawValue();
 
     this.data.filterPredicate = (user: User, filter: string) => {
-      return (csearchdata.csemployee == null || user.employee.callingname.toLowerCase().includes(csearchdata.csemployee)) &&
-        (csearchdata.csusername == null || user.username.toLowerCase().includes(csearchdata.csusername)) &&
-        (csearchdata.csdocreated == null || user.docreated.toLowerCase().includes(csearchdata.csdocreated)) &&
-        (csearchdata.csuserstatus == null || user.usestatus.name.toLowerCase().includes(csearchdata.csuserstatus));
+      // the visible search row is Employee / Username / Role / Description, so the
+      // predicate has to test those - it used to test docreated and userstatus, which
+      // are not even columns, so Role and Description never filtered anything
+      const roleNames = (user.userroles ?? []).map(ur => ur.role?.name ?? '').join(' ').toLowerCase();
+      return (csearchdata.csemployee == null || (user.employee?.callingname ?? '').toLowerCase().includes(String(csearchdata.csemployee ?? '').toLowerCase())) &&
+        (csearchdata.csusername == null || (user.username ?? '').toLowerCase().includes(String(csearchdata.csusername ?? '').toLowerCase())) &&
+        (csearchdata.csrole == null || csearchdata.csrole === '' || roleNames.includes(String(csearchdata.csrole ?? '').toLowerCase())) &&
+        (csearchdata.csdescription == null || (user.description ?? '').toLowerCase().includes(String(csearchdata.csdescription ?? '').toLowerCase()));
     };
     this.data.filter = 'xx';
 
@@ -531,13 +535,13 @@ export class UserComponent implements OnInit{
     this.olduser = JSON.parse(JSON.stringify(user));
 
     //@ts-ignore
-    this.user.employee = this.employees.find(e => e.id === this.user.employee.id);
+    this.user.employee = (this.employees ?? []).find(e => e.id === this.user.employee.id);
 
     //@ts-ignore
-    this.user.usestatus = this.userstatues.find(s => s.id === this.user?.usestatus?.id);
+    this.user.usestatus = (this.userstatues ?? []).find(s => s.id === this.user?.usestatus?.id);
 
     //@ts-ignore
-    this.user.usetype = this.usertypes.find(s => s.id === this.user?.usetype?.id);
+    this.user.usetype = (this.usertypes ?? []).find(s => s.id === this.user?.usetype?.id);
 
     this.userroles = this.user.userroles; // Load User Roles
 

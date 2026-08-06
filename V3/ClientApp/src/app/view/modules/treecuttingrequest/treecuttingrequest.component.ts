@@ -58,6 +58,8 @@ export class TreecuttingrequestComponent implements OnInit {
   imageurl: string = '';
   permitimageurl: string  = 'assets/default.png';
   transportimageurl: string = 'assets/default.png';
+  hasstoredpermit: boolean = false;
+  hasstoredtransport: boolean = false;
 
   @ViewChild('paginator') paginator!: MatPaginator;
 
@@ -206,11 +208,13 @@ export class TreecuttingrequestComponent implements OnInit {
   filterTable(): void {
     const cs = this.cssearch.getRawValue();
     this.data.filterPredicate = (r: Treecuttingrequest) => {
-      return (cs.cscitizen  == null || r.citizen?.name.toLowerCase().includes(cs.cscitizen)) &&
-        (cs.cstreetype == null || r.treetype?.name.toLowerCase().includes(cs.cstreetype)) &&
-        (cs.csstatus   == null || r.treepermissionstatus?.name.toLowerCase().includes(cs.csstatus)) &&
-        (cs.csdate     == null || r.requesteddate?.includes(cs.csdate)) &&
-        (cs.csdeed     == null || (r.deedno ?? '').toLowerCase().includes(cs.csdeed));
+      return (cs.cscitizen  == null || r.citizen?.name.toLowerCase().includes((cs.cscitizen ?? '').toLowerCase())) &&
+        (cs.cstreetype == null || r.treetype?.name.toLowerCase().includes((cs.cstreetype ?? '').toLowerCase())) &&
+        (cs.csstatus   == null || r.treepermissionstatus?.name.toLowerCase().includes((cs.csstatus ?? '').toLowerCase())) &&
+        (cs.csdate     == null || r.requesteddate?.includes((cs.csdate ?? '').toLowerCase())) &&
+        (cs.csdeed     == null || (r.deedno ?? '').toLowerCase().includes((cs.csdeed ?? '').toLowerCase())) &&
+        (cs.cstransport == null || String(cs.cstransport).trim() === '' ||
+          (r.needstransport ? 'yes required' : 'no not required').includes(String(cs.cstransport).toLowerCase()));
     };
     this.data.filter = 'xx';
   }
@@ -244,15 +248,15 @@ export class TreecuttingrequestComponent implements OnInit {
     this.oldtreecuttingrequest = JSON.parse(JSON.stringify(r));
 
     // @ts-ignore
-    this.treecuttingrequest.citizen              = this.citizens.find(x => x.id === this.treecuttingrequest.citizen.id);
+    this.treecuttingrequest.citizen              = (this.citizens ?? []).find(x => x.id === this.treecuttingrequest.citizen.id);
     // @ts-ignore
     this.treecuttingrequest.employee = this.treecuttingrequest.employee
-      ? this.employees.find(x => x.id === this.treecuttingrequest.employee!.id)
+      ? (this.employees ?? []).find(x => x.id === this.treecuttingrequest.employee!.id)
       : undefined;
     // @ts-ignore
-    this.treecuttingrequest.treetype             = this.treetypes.find(x => x.id === this.treecuttingrequest.treetype.id);
+    this.treecuttingrequest.treetype             = (this.treetypes ?? []).find(x => x.id === this.treecuttingrequest.treetype.id);
     // @ts-ignore
-    this.treecuttingrequest.treepermissionstatus = this.treepermissionstatuses.find(x => x.id === this.treecuttingrequest.treepermissionstatus.id);
+    this.treecuttingrequest.treepermissionstatus = (this.treepermissionstatuses ?? []).find(x => x.id === this.treecuttingrequest.treepermissionstatus.id);
 
     this.form.patchValue(this.treecuttingrequest);
     this.form.markAsPristine();
@@ -261,8 +265,10 @@ export class TreecuttingrequestComponent implements OnInit {
     this.onTransportToggle(r.needstransport);
 
     // Set PDF previews
-    this.permitimageurl    = r.permitpdf    ? atob(r.permitpdf)    : 'assets/default.png';
-    this.transportimageurl = r.transportpdf ? atob(r.transportpdf) : 'assets/default.png';
+    this.hasstoredpermit    = !!r.haspermitpdf;
+    this.hasstoredtransport = !!r.hastransportpdf;
+    this.permitimageurl     = 'assets/default.png';
+    this.transportimageurl  = 'assets/default.png';
 
     // Drive button states
     const status = r.treepermissionstatus?.name;
@@ -305,6 +311,8 @@ export class TreecuttingrequestComponent implements OnInit {
         this.enauploadpermit = false; this.enauploadtransport = false;
         this.permitimageurl = 'assets/default.png';
         this.transportimageurl = 'assets/default.png';
+        this.hasstoredpermit = false;
+        this.hasstoredtransport = false;
         this.loadTable('');
       }
     });
@@ -330,7 +338,13 @@ export class TreecuttingrequestComponent implements OnInit {
             // @ts-ignore
             if (!appstatus) appmessage = response['errors'];
           } else { appstatus = false; appmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          appstatus = false;
+          appmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (appstatus) {
             appmessage = 'Request Approved Successfully';
             this.loadTable('');
@@ -370,7 +384,13 @@ export class TreecuttingrequestComponent implements OnInit {
             // @ts-ignore
             if (!rejstatus) rejmessage = response['errors'];
           } else { rejstatus = false; rejmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          rejstatus = false;
+          rejmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (rejstatus) {
             rejmessage = 'Request Rejected Successfully';
             this.loadTable('');
@@ -414,7 +434,13 @@ export class TreecuttingrequestComponent implements OnInit {
             // @ts-ignore
             if (!uplstatus) uplmessage = response['errors'];
           } else { uplstatus = false; uplmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          uplstatus = false;
+          uplmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (uplstatus) {
             uplmessage = 'Permit PDF Uploaded Successfully — Status set to Permit Issued';
             this.loadTable('');
@@ -458,7 +484,13 @@ export class TreecuttingrequestComponent implements OnInit {
             // @ts-ignore
             if (!uplstatus) uplmessage = response['errors'];
           } else { uplstatus = false; uplmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          uplstatus = false;
+          uplmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (uplstatus) {
             uplmessage = 'Transport Permit PDF Uploaded Successfully';
             this.loadTable('');
@@ -468,6 +500,32 @@ export class TreecuttingrequestComponent implements OnInit {
         });
       }
     });
+  }
+
+  // ── View stored permit PDFs ────────────────────────────────────────────────
+  private openPdf(buffer: ArrayBuffer | undefined, label: string): void {
+    if (!buffer) {
+      this.dg.open(MessageComponent, {
+        width: '500px',
+        data: {heading: label, message: 'No ' + label + ' stored for this request.'}
+      });
+      return;
+    }
+    const url = URL.createObjectURL(new Blob([buffer], {type: 'application/pdf'}));
+    window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
+  }
+
+  downloadPermit(): void {
+    this.tcrs.downloadPermitPdf(this.treecuttingrequest.id)
+      .then(b => this.openPdf(b, 'Cutting Permit'))
+      .catch(() => this.openPdf(undefined, 'Cutting Permit'));
+  }
+
+  downloadTransport(): void {
+    this.tcrs.downloadTransportPdf(this.treecuttingrequest.id)
+      .then(b => this.openPdf(b, 'Transport Permit'))
+      .catch(() => this.openPdf(undefined, 'Transport Permit'));
   }
 
   // ── Template helpers ───────────────────────────────────────────────────────

@@ -29,12 +29,12 @@ import {ConfirmComponent} from '../../../util/dialog/confirm/confirm.component';
 export class IdcardrequestComponent implements OnInit {
 
   // ── Table ──────────────────────────────────────────────────────────────────
-  columns: string[]  = ['citizen', 'reason', 'status', 'applieddate', 'bcnooridno', 'modi'];
-  headers: string[]  = ['Citizen', 'Reason', 'Status', 'Applied Date', 'BC/ID No', 'Modification'];
-  binders: string[]  = ['citizen.name', 'reason.name', 'idcardrequeststatus.name', 'applieddate', 'bcnooridno', 'getModi()'];
+  columns: string[]  = ['citizen', 'reason', 'status', 'applieddate', 'bcnooridno'];
+  headers: string[]  = ['Citizen', 'Reason', 'Status', 'Applied Date', 'BC/ID No'];
+  binders: string[]  = ['citizen.name', 'reason.name', 'idcardrequeststatus.name', 'applieddate', 'bcnooridno'];
 
-  cscolumns: string[] = ['cscitizen', 'csreason', 'csstatus', 'csdate', 'csbcno', 'csmodi'];
-  csprompts: string[] = ['Search Citizen', 'Search Reason', 'Search Status', 'Search Date', 'Search BC/ID No', 'Search'];
+  cscolumns: string[] = ['cscitizen', 'csreason', 'csstatus', 'csdate', 'csbcno'];
+  csprompts: string[] = ['Search Citizen', 'Search Reason', 'Search Status', 'Search Date', 'Search BC/ID No'];
 
   // ── Forms ──────────────────────────────────────────────────────────────────
   cssearch!: FormGroup;
@@ -103,7 +103,7 @@ export class IdcardrequestComponent implements OnInit {
     this.form = this.fb.group({
       'citizen':               new FormControl('', [Validators.required]),
       'reason':                new FormControl('', [Validators.required]),
-      'idcardrequeststatus':   new FormControl(''),
+      'idcardrequeststatus':   new FormControl(null),
       'bcnooridno':            new FormControl(''),
       'applieddate':           new FormControl(''),
       'complaintdate':         new FormControl(''),
@@ -165,9 +165,9 @@ export class IdcardrequestComponent implements OnInit {
   }
 
   buttonStates(authorities: { module: string; operation: string }[]): void {
-    this.hasInsertAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'insert');
-    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'update');
-    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'delete');
+    this.hasInsertAuthority = authorities.some(authority => authority.module === 'idcardrequest' && authority.operation === 'insert');
+    this.hasUpdateAuthority = authorities.some(authority => authority.module === 'idcardrequest' && authority.operation === 'update');
+    this.hasDeleteAuthority = authorities.some(authority => authority.module === 'idcardrequest' && authority.operation === 'delete');
 
   }
 
@@ -250,11 +250,11 @@ export class IdcardrequestComponent implements OnInit {
   filterTable(): void {
     const cs = this.cssearch.getRawValue();
     this.data.filterPredicate = (r: Idcardrequest) => {
-      return (cs.cscitizen == null || r.citizen?.name.toLowerCase().includes(cs.cscitizen)) &&
-        (cs.csreason  == null || r.reason?.name.toLowerCase().includes(cs.csreason)) &&
-        (cs.csstatus  == null || r.idcardrequeststatus?.name.toLowerCase().includes(cs.csstatus)) &&
-        (cs.csdate    == null || r.applieddate?.includes(cs.csdate)) &&
-        (cs.csbcno    == null || (r.bcnooridno ?? '').toLowerCase().includes(cs.csbcno));
+      return (cs.cscitizen == null || r.citizen?.name.toLowerCase().includes((cs.cscitizen ?? '').toLowerCase())) &&
+        (cs.csreason  == null || r.reason?.name.toLowerCase().includes((cs.csreason ?? '').toLowerCase())) &&
+        (cs.csstatus  == null || r.idcardrequeststatus?.name.toLowerCase().includes((cs.csstatus ?? '').toLowerCase())) &&
+        (cs.csdate    == null || r.applieddate?.includes((cs.csdate ?? '').toLowerCase())) &&
+        (cs.csbcno    == null || (r.bcnooridno ?? '').toLowerCase().includes((cs.csbcno ?? '').toLowerCase()));
     };
     this.data.filter = 'xx';
   }
@@ -290,12 +290,11 @@ export class IdcardrequestComponent implements OnInit {
     this.oldidcardrequest = JSON.parse(JSON.stringify(r));
 
     // @ts-ignore
-    this.idcardrequest.citizen           = this.citizens.find(x => x.id === this.idcardrequest.citizen.id);
+    this.idcardrequest.citizen           = (this.citizens ?? []).find(x => x.id === this.idcardrequest.citizen.id);
     // @ts-ignore
-    this.idcardrequest.reason            = this.reasons.find(x => x.id === this.idcardrequest.reason.id);
+    this.idcardrequest.reason            = (this.reasons ?? []).find(x => x.id === this.idcardrequest.reason.id);
     // @ts-ignore
-    this.idcardrequest.idcardrequeststatus = this.idcardrequeststatus.find(x => x.id === this.idcardrequest.idcardrequeststatus.id);
-
+    this.idcardrequest.idcardrequeststatus = (this.idcardrequeststatus ?? []).find(x => x.id === this.idcardrequest.idcardrequeststatus.id) ?? null;
     // Apply validators before patching so fields enable/disable correctly
     this.onReasonChange(this.idcardrequest.reason);
 
@@ -375,7 +374,13 @@ export class IdcardrequestComponent implements OnInit {
           } else {
             addstatus = false; addmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          addstatus = false;
+          addmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (addstatus) {
             addmessage = 'ID Card Request Added Successfully';
             this.form.reset();
@@ -423,7 +428,13 @@ export class IdcardrequestComponent implements OnInit {
           } else {
             updstatus = false; updmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          updstatus = false;
+          updmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (updstatus) {
             updmessage = 'ID Card Request Updated Successfully';
             this.form.reset();
@@ -460,7 +471,13 @@ export class IdcardrequestComponent implements OnInit {
           } else {
             delstatus = false; delmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (delstatus) {
             delmessage = 'ID Card Request Deleted Successfully';
             this.form.reset();

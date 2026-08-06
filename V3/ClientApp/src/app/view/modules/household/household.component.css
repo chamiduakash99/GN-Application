@@ -134,10 +134,10 @@ button:disabled {
 
 #hhform mat-form-field .ng-valid,
 .ng-valid.required {
-  background-color: white;
+  background-color: #ffffff;
 }
 #hhform mat-form-field .ng-dirty {
-  background-color: #f1bdbd;
+  background-color: #ffffff;
 }
 
 mat-divider {

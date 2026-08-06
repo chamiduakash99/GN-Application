@@ -38,7 +38,8 @@
             <mat-label>Head of Household</mat-label>
             <mat-select formControlName="headcitizenId">
               <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let c of citizens" [value]="c.id">
+              <!-- the head must be someone who actually lives in this household -->
+              <mat-option *ngFor="let c of (members.length ? members : citizens)" [value]="c.id">
                 {{c.name}} (ID: {{c.id}})
               </mat-option>
             </mat-select>
@@ -170,11 +171,40 @@
           This household has no registered members yet.
         </div>
 
+        <!-- Add a citizen to this household -->
+        <div class="add-member-row" *ngIf="selectedrow"
+             style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <mat-form-field appearance="outline" style="flex:1;">
+            <mat-label>Add a citizen to this household</mat-label>
+            <mat-select [(ngModel)]="membertoadd" [ngModelOptions]="{standalone: true}">
+              <mat-option [value]="null">Not Selected</mat-option>
+              <mat-option *ngFor="let c of unassigned" [value]="c">
+                {{c.name}}<span *ngIf="c.nic"> — {{c.nic}}</span>
+              </mat-option>
+            </mat-select>
+            <mat-hint>Only citizens who are not already in a household are listed</mat-hint>
+          </mat-form-field>
+          <button mat-raised-button (click)="addMember()" [disabled]="!membertoadd">
+            <mat-icon>person_add</mat-icon> Add Member
+          </button>
+        </div>
+
         <mat-table [dataSource]="memdata" *ngIf="members.length > 0">
 
           <ng-container *ngFor="let col of memcolumns; let i = index" [matColumnDef]="col">
             <mat-header-cell *matHeaderCellDef>{{memheaders[i]}}</mat-header-cell>
-            <mat-cell *matCellDef="let element">{{uiassist.getProperty(element, membinders[i])}}</mat-cell>
+            <mat-cell *matCellDef="let element">
+              <ng-container *ngIf="col !== 'memremove'; else removeCell">
+                {{uiassist.getProperty(element, membinders[i])}}
+              </ng-container>
+              <ng-template #removeCell>
+                <button mat-icon-button color="warn" (click)="removeMember(element)"
+                        [disabled]="element.id === household?.headcitizenId"
+                        [title]="element.id === household?.headcitizenId ? 'Change the head of household first' : 'Remove from household'">
+                  <mat-icon>person_remove</mat-icon>
+                </button>
+              </ng-template>
+            </mat-cell>
           </ng-container>
 
           <mat-header-row *matHeaderRowDef="memcolumns"></mat-header-row>

@@ -6,12 +6,12 @@
       <mat-card-content>
         <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Min Members</mat-label>
-          <input matInput type="number" [(ngModel)]="minMembers" min="0">
+          <input matInput type="number" min="0" [(ngModel)]="minMembers" min="0">
         </mat-form-field>
 
         <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Max Members</mat-label>
-          <input matInput type="number" [(ngModel)]="maxMembers" min="0">
+          <input matInput type="number" min="0" [(ngModel)]="maxMembers" min="0">
         </mat-form-field>
 
         <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>

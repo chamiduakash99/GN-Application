@@ -38,6 +38,14 @@ export class CertificateService {
     return this.http.put<[]>(`${this.url}/${id}/pickup`, {}).toPromise();
   }
 
+  // Returns raw PDF bytes for the stored scanned copy
+  downloadScannedCopy(id: number): Promise<ArrayBuffer | undefined> {
+    return this.http.get(
+      `${this.url}/${id}/scannedcopy`,
+      {responseType: 'arraybuffer'}
+    ).toPromise();
+  }
+
   delete(id: number): Promise<[] | undefined> {
     return this.http.delete<[]>(`${this.url}/${id}`).toPromise();
   }

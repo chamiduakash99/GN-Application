@@ -12,6 +12,8 @@ export class Treecuttingrequest {
   public rejectreason!: string;
   public permitpdf!: string;
   public transportpdf!: string;
+  public haspermitpdf!: boolean;
+  public hastransportpdf!: boolean;
   public needstransport!: boolean;
   public destination!: string;
   public vehicletype!: string;

@@ -124,11 +124,13 @@
           <div class="pdf-panel">
             <p class="pdflabel">Tree Cutting Permit</p>
             <div class="pdf-preview">
-              <mat-icon class="pdf-icon" [class.has-pdf]="permitimageurl !== 'assets/default.png'">
-                {{ permitimageurl !== 'assets/default.png' ? 'picture_as_pdf' : 'upload_file' }}
+              <mat-icon class="pdf-icon" [class.has-pdf]="hasstoredpermit || permitimageurl !== 'assets/default.png'">
+                {{ (hasstoredpermit || permitimageurl !== 'assets/default.png') ? 'picture_as_pdf' : 'upload_file' }}
               </mat-icon>
               <span class="pdf-status">
-                {{ permitimageurl !== 'assets/default.png' ? 'PDF selected' : 'No file selected' }}
+                {{ permitimageurl !== 'assets/default.png'
+                     ? 'New PDF selected — not yet uploaded'
+                     : (hasstoredpermit ? 'Permit PDF stored' : 'No file selected') }}
               </span>
             </div>
             <input id="permitFile" hidden type="file" accept=".pdf"
@@ -137,17 +139,23 @@
             <button mat-raised-button (click)="uploadPermit()" [disabled]="!(enauploadpermit && hasUploadPermitAuthority)">
               <mat-icon>upload</mat-icon> Upload Permit
             </button>
+
+            <button mat-raised-button (click)="downloadPermit()" [disabled]="!hasstoredpermit">
+              <mat-icon>download</mat-icon> View Permit
+            </button>
           </div>
 
           <!-- Transport Permit PDF (only shown if transport needed) -->
           <div class="pdf-panel" *ngIf="needsTransportChecked">
             <p class="pdflabel">Wood Transport Permit</p>
             <div class="pdf-preview">
-              <mat-icon class="pdf-icon" [class.has-pdf]="transportimageurl !== 'assets/default.png'">
-                {{ transportimageurl !== 'assets/default.png' ? 'picture_as_pdf' : 'upload_file' }}
+              <mat-icon class="pdf-icon" [class.has-pdf]="hasstoredtransport || transportimageurl !== 'assets/default.png'">
+                {{ (hasstoredtransport || transportimageurl !== 'assets/default.png') ? 'picture_as_pdf' : 'upload_file' }}
               </mat-icon>
               <span class="pdf-status">
-                {{ transportimageurl !== 'assets/default.png' ? 'PDF selected' : 'No file selected' }}
+                {{ transportimageurl !== 'assets/default.png'
+                     ? 'New PDF selected — not yet uploaded'
+                     : (hasstoredtransport ? 'Transport PDF stored' : 'No file selected') }}
               </span>
             </div>
             <input id="transportFile" hidden type="file" accept=".pdf"
@@ -155,6 +163,10 @@
             <label for="transportFile" class="file-select-btn">Select PDF</label>
             <button mat-raised-button (click)="uploadTransport()" [disabled]="!(enauploadtransport && hasUploadTransportAuthority)">
               <mat-icon>upload</mat-icon> Upload Transport
+            </button>
+
+            <button mat-raised-button (click)="downloadTransport()" [disabled]="!hasstoredtransport">
+              <mat-icon>download</mat-icon> View Transport
             </button>
           </div>
 

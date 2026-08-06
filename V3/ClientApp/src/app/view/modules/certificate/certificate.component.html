@@ -51,14 +51,17 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Expiry Date</mat-label>
-            <input matInput [matDatepicker]="expdate" formControlName="expirydate">
+            <input matInput [matDatepicker]="expdate" [min]="today" formControlName="expirydate">
             <mat-datepicker-toggle matSuffix [for]="expdate"></mat-datepicker-toggle>
             <mat-datepicker #expdate></mat-datepicker>
           </mat-form-field>
 
           <!-- Scan upload -->
           <div id="scanpanel">
-            <img [src]="scannedimageurl" alt="Scanned certificate preview">
+            <div class="scanstatus">
+              <mat-icon>{{ hasstoredscan ? 'picture_as_pdf' : 'upload_file' }}</mat-icon>
+              <span>{{ hasstoredscan ? 'Scanned copy stored' : 'No scanned copy' }}</span>
+            </div>
             <div id="scanbuttons">
               <input id="scanImage" hidden="hidden" (change)="selectScan($event)" type="file" formControlName="scannedcopy">
               <label for="scanImage" id="scanselectbutton">Select Scan</label>
@@ -72,6 +75,10 @@
             </button>
             <button mat-raised-button (click)="uploadScan()" [disabled]="!(enaupload && hasUploadAuthority)">
               <mat-icon>upload</mat-icon> Upload Scan
+            </button>
+
+            <button mat-raised-button (click)="downloadScan()" [disabled]="!hasstoredscan">
+              <mat-icon>download</mat-icon> View Scan
             </button>
             <button mat-raised-button (click)="clear()">
               <mat-icon>clear</mat-icon> Clear

@@ -103,13 +103,13 @@
             </mat-select>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Assigned Officer</mat-label>
-            <mat-select formControlName="ssemployee">
-              <mat-option [value]="null">Not Selected</mat-option>
-              <mat-option *ngFor="let e of employees" [value]="e.id">{{e.callingname}}</mat-option>
-            </mat-select>
-          </mat-form-field>
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Assigned Officer</mat-label>-->
+<!--            <mat-select formControlName="ssemployee">-->
+<!--              <mat-option [value]="null">Not Selected</mat-option>-->
+<!--              <mat-option *ngFor="let e of employees" [value]="e.id">{{e.callingname}}</mat-option>-->
+<!--            </mat-select>-->
+<!--          </mat-form-field>-->
 
           <div>
             <button mat-raised-button (click)="btnSearchMc()">

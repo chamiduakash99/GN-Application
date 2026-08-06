@@ -165,18 +165,18 @@ export class BuildingComponent implements OnInit {
     });
 
     this.form = this.fb.group({
-      street: new FormControl('', []),
-      citizen: new FormControl('', []),
-      usage: new FormControl('', []),
-      floorType: new FormControl('', []),
-      ownershipType: new FormControl('', []),
+      street: new FormControl(null, []),
+      citizen: new FormControl(null, []),
+      usage: new FormControl(null, [Validators.required]),
+      floorType: new FormControl(null, [Validators.required]),
+      ownershipType: new FormControl(null, [Validators.required]),
       image: new FormControl('', []),
       remarks: new FormControl('', []),
-      walltype: new FormControl('', []),
-      buildingType: new FormControl('', []),
-      roofType: new FormControl('', []),
-      no: new FormControl('', []),
-      landDetail: new FormControl('', []),
+      walltype: new FormControl(null, [Validators.required]),
+      buildingType: new FormControl(null, [Validators.required]),
+      roofType: new FormControl(null, [Validators.required]),
+      no: new FormControl('', [Validators.required, Validators.pattern(/^B\d{3,4}$/)]),
+      landDetail: new FormControl(null, [Validators.required]),
     });
 
     // this.innerform = this.fb.group({
@@ -232,12 +232,12 @@ export class BuildingComponent implements OnInit {
       const control = this.form.controls[controlName];
 
       control.valueChanges.subscribe(value => {
-        if (['no'].includes(controlName)) {
+        if (['no'].includes((controlName ?? '').toLowerCase())) {
           value = parseFloat(value);
         }
 
         // control.valueChanges.subscribe(value => {
-        //   if (['latitude', 'longitude', 'size'].includes(controlName)) {
+        //   if (['latitude', 'longitude', 'size'].includes((controlName ?? '').toLowerCase())) {
         //     value = parseFloat(value);
         //   }
 
@@ -345,10 +345,10 @@ export class BuildingComponent implements OnInit {
     // );
     //
     // // Find exact objects for dropdowns
-    // const tempgnd = this.gnds.find(g => g.id === gnd?.id);
-    // const tempdiv = this.divisions.find(dv => dv.id === division?.id);
-    // const tempdit = this.districts.find(dt => dt.id === district?.id);
-    // const temppv = this.provinces.find(p => p.id === province?.id);
+    // const tempgnd = (this.gnds ?? []).find(g => g.id === gnd?.id);
+    // const tempdiv = (this.divisions ?? []).find(dv => dv.id === division?.id);
+    // const tempdit = (this.districts ?? []).find(dt => dt.id === district?.id);
+    // const temppv = (this.provinces ?? []).find(p => p.id === province?.id);
     //
     // // Patch inner form
     // this.innerform.patchValue({
@@ -362,46 +362,37 @@ export class BuildingComponent implements OnInit {
     // ===== LINK DROPDOWNS =====
 
     // @ts-ignore
-    this.building.usage = this.usages.find(u => u.id === this.building.usage?.id);
-
+    this.building.usage = (this.usages ?? []).find(u => u.id === this.building.usage?.id) ?? null;
     // @ts-ignore
-    this.building.floortype = this.floortypes.find(f => f.id === this.building.floortype?.id);
-
+    this.building.floortype = (this.floortypes ?? []).find(f => f.id === this.building.floortype?.id) ?? null;
     // @ts-ignore
-    this.building.ownershiptype = this.ownershiptypes.find(o => o.id === this.building.ownershiptype?.id);
-
+    this.building.ownershiptype = (this.ownershiptypes ?? []).find(o => o.id === this.building.ownershiptype?.id) ?? null;
     // @ts-ignore
-    this.building.street = this.streets.find(s => s.id === this.building.street?.id);
-
+    this.building.street = (this.streets ?? []).find(s => s.id === this.building.street?.id) ?? null;
     // @ts-ignore
-    this.building.citizen = this.citizens.find(c => c.id === this.building.citizen?.id);
-
+    this.building.citizen = (this.citizens ?? []).find(c => c.id === this.building.citizen?.id) ?? null;
     //@ts-ignore
-    this.building.buildingtype = this.buildingtypes.find(b => b.id === this.building.buildingtype?.id);
-
+    this.building.buildingtype = (this.buildingtypes ?? []).find(b => b.id === this.building.buildingtype?.id) ?? null;
     //@ts-ignore
-    this.building.rooftype = this.rooftypes.find(r => r.id === this.building.rooftype?.id);
-
+    this.building.rooftype = (this.rooftypes ?? []).find(r => r.id === this.building.rooftype?.id) ?? null;
     //@ts-ignore
-    this.building.walltype = this.walltypes.find(w => w.id === this.building.walltype?.id);
-
+    this.building.walltype = (this.walltypes ?? []).find(w => w.id === this.building.walltype?.id) ?? null;
     //@ts-ignore
-    this.building.landdetail = this.lands.find(l => l.id === this.building.landdetail?.id);
-
+    this.building.landdetail = (this.lands ?? []).find(l => l.id === this.building.landdetail?.id) ?? null;
     // // @ts-ignore
-    // this.building.usage = this.usages.find(u => u.id === this.building.usage.id);
+    // this.building.usage = (this.usages ?? []).find(u => u.id === this.building.usage.id);
     //
     // // @ts-ignore
-    // this.building.floortype = this.floortypes.find(f => f.id === this.building.floortype.id);
+    // this.building.floortype = (this.floortypes ?? []).find(f => f.id === this.building.floortype.id);
     //
     // // @ts-ignore
-    // this.building.ownershiptype = this.ownershiptypes.find(o => o.id === this.building.ownershiptype.id);
+    // this.building.ownershiptype = (this.ownershiptypes ?? []).find(o => o.id === this.building.ownershiptype.id);
     //
     // // @ts-ignore
-    // this.building.street = this.streets.find(s => s.id === this.building.street.id);
+    // this.building.street = (this.streets ?? []).find(s => s.id === this.building.street.id);
     //
     // // @ts-ignore
-    // this.building.citizen = this.citizens.find(c => c.id === this.building.citizen.id);
+    // this.building.citizen = (this.citizens ?? []).find(c => c.id === this.building.citizen.id);
     //
     // //@ts-ignore
     // this.building.buildingtype = findById(this.buildingtypes, this.building.buildingtype);
@@ -582,11 +573,19 @@ export class BuildingComponent implements OnInit {
       const control = this.form.controls[controlName];
 
       if (control.errors) {
-        // if (this.regexes && this.regexes[controlName] != undefined) {
-        //   errors = errors + "<br>" + this.regexes[controlName]['message'];
-        // } else {
-        //   errors = errors + "<br>Invalid " + controlName;
-        // }
+        let label: string;
+        switch (controlName) {
+          case 'no':            label = 'Building No';     break;
+          case 'usage':         label = 'Usage';           break;
+          case 'floorType':     label = 'Floor Type';      break;
+          case 'ownershipType': label = 'Ownership Type';  break;
+          case 'walltype':      label = 'Wall Type';       break;
+          case 'buildingType':  label = 'Building Type';   break;
+          case 'roofType':      label = 'Roof Type';       break;
+          case 'landDetail':    label = 'Land Detail';     break;
+          default:              label = controlName;      break;
+        }
+        errors = errors + '<br>Invalid ' + label;
       }
     }
 
@@ -679,7 +678,13 @@ export class BuildingComponent implements OnInit {
                 updmessage = "Content Not Found";
               }
 
-            }).finally(() => {
+            })
+            .catch((error: any) => {
+              updstatus = false;
+              updmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+              console.error('API error:', error);
+            })
+            .finally(() => {
 
               if (updstatus) {
                 updmessage = "Successfully Updated";
@@ -748,7 +753,13 @@ export class BuildingComponent implements OnInit {
             delmessage = "Content Not Found";
           }
 
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
 
           if (delstatus) {
             delmessage = "Successfully Deleted";
@@ -835,7 +846,9 @@ export class BuildingComponent implements OnInit {
 
   clearImage(): void {
     this.imagebuildingurl = 'assets/default.png';
-    if (this.form.controls['image']) this.form.controls['image'].setErrors({ 'required': true });
+    // there is no image input in this template, so a 'required' error here could never
+    // be cleared and permanently blocked every later Add / Update / Delete
+    if (this.form.controls['image']) this.form.controls['image'].setErrors(null);
   }
 
   selectProvinceChange(event: MatSelectChange) {

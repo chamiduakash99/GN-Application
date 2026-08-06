@@ -33,11 +33,7 @@ import { MatSelectChange } from '@angular/material/select';
 import {map, Observable, of, startWith} from "rxjs";
 import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 import {Userrole} from "../../../entity/userrole";
-import {Landfeaturedetails} from "../../../entity/Landfeaturedetails";
-import {LandfeatureService} from "../../../service/LandfeatureService";
 import {Role} from "../../../entity/role";
-import {Landfeature} from "../../../entity/Landfeature";
-import {MatSelectionList} from "@angular/material/list";
 
 @Component({
   selector: 'app-land',
@@ -60,14 +56,10 @@ export class LandComponent implements OnInit{
   oldland!: Land;
   selectedrow: any;
 
-  @ViewChild('availablelist') availablelist!: MatSelectionList;
-  @ViewChild('selectedlist') selectedlist!: MatSelectionList;
-
   lands: Array<Land> = [];
   landtypes: Array<Landtype> = [];
   fencetypes: Array<Fencetype> = [];
   citizens: Array<Citizen> = [];
-  landfeaturedetailsList: Array<Landfeaturedetails> = [];
 
   streets: Array<Street> = [];
 
@@ -87,10 +79,6 @@ export class LandComponent implements OnInit{
   extlandtypes: Array<Landtype> = [];
   extfencetypes: Array<Fencetype> = [];
   extcitizens: Array<Citizen> = [];
-
-  @Input()landfeatures: Array<Landfeature> = [];
-  oldlandfeatures:Array<Landfeature>=[];
-  @Input()selectedlandfeatures: Array<Landfeature> =[];
 
   data!: MatTableDataSource<Land>;
   imageurl: string = '';
@@ -131,8 +119,7 @@ export class LandComponent implements OnInit{
     private dg: MatDialog,
     private dp: DatePipe,
     public authService: AuthorizationManager,
-    private ls: LandService,
-    private lf: LandfeatureService
+    private ls: LandService
   ) {
     // @ts-ignore
     this.land = new Land(
@@ -150,8 +137,7 @@ export class LandComponent implements OnInit{
       '',                     // deed
       // @ts-ignore
       new Fencetype(),              // fencetype (NOT null)
-      '',                  // remarks
-      new Array<Landfeaturedetails>      // landfeaturedetails
+      ''                   // remarks
     );
 
     // search forms (pattern like street component)
@@ -168,7 +154,6 @@ export class LandComponent implements OnInit{
       "sscitizen": new FormControl(),
       "sslandtype": new FormControl(),
       "ssfencetype": new FormControl(),
-      "sslandfeature": new FormControl(),
       "ssdeedno": new FormControl()
     });
 
@@ -181,9 +166,8 @@ export class LandComponent implements OnInit{
       fencetype: new FormControl('', [Validators.required]),
       latitude: new FormControl('', []),
       longitude: new FormControl('', []),
-      size: new FormControl('', [Validators.required]),
-      remarks: new FormControl('', []),
-      landfeaturedetails: new FormControl([])
+      size: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,3})?$/)]),
+      remarks: new FormControl('', [])
     });
 
     // inner form cascade: province -> district -> division -> gnd
@@ -227,12 +211,6 @@ export class LandComponent implements OnInit{
     this.cs.getAllListNameId().then((cs: Citizen[]) => {
       this.citizens = cs;
       // this.extcitizens = this.citizens;
-    });
-
-    this.lf.getAllListNameId().then((lf: Landfeature[]) => {
-      this.landfeatures = lf;
-      this.oldlandfeatures = this.landfeatures;
-      // this.extlandfeatures = this.landfeatures;
     });
 
     // provinces/districts/divisions/gnds
@@ -298,7 +276,6 @@ export class LandComponent implements OnInit{
       });
     }
 
-    this.leftAll()
     // Enable Add button, disable update/delete by default
     this.enableButtons(true, false, false);
   }
@@ -377,10 +354,10 @@ export class LandComponent implements OnInit{
     this.districts = this.districts.filter((di: District) => di.province?.id === province?.id);
 
 
-    const tempgnd = this.gnds.find(g => g.id === gnd?.id);
-    const tempdiv = this.divisions.find(dv => dv.id === division?.id);
-    const tempdit = this.districts.find(dt => dt.id === district?.id);
-    const temppv = this.provinces.find(p => p.id === province?.id);
+    const tempgnd = (this.gnds ?? []).find(g => g.id === gnd?.id);
+    const tempdiv = (this.divisions ?? []).find(dv => dv.id === division?.id);
+    const tempdit = (this.districts ?? []).find(dt => dt.id === district?.id);
+    const temppv = (this.provinces ?? []).find(p => p.id === province?.id);
 
     this.innerform.patchValue({
       province: temppv,
@@ -399,20 +376,13 @@ export class LandComponent implements OnInit{
     // });
     // Link select dropdowns for other refs
     // @ts-ignore
-    this.land.landtype = this.landtypes.find(s => s.id === this.land.landtype.id);
+    this.land.landtype = (this.landtypes ?? []).find(s => s.id === this.land.landtype.id) ?? null;
     // @ts-ignore
-    this.land.fencetype = this.fencetypes.find(s => s.id === this.land.fencetype.id);
+    this.land.fencetype = (this.fencetypes ?? []).find(s => s.id === this.land.fencetype.id) ?? null;
     // @ts-ignore
-    this.land.citizen = this.citizens.find(s => s.id === this.land.citizen.id);
+    this.land.citizen = (this.citizens ?? []).find(s => s.id === this.land.citizen.id) ?? null;
     // @ts-ignore
-    this.land.street = this.streets.find(s => s.id === this.land.street.id);
-
-    this.landfeatures = this.oldlandfeatures;
-    this.landfeaturedetailsList = this.land.landfeaturedetails;
-    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
-    this.land.landfeaturedetails.forEach((lfd:Landfeaturedetails)=> this.landfeatures = this.landfeatures.filter((lf)=> lf.id != lfd.landfeature.id));
-
-
+    this.land.street = (this.streets ?? []).find(s => s.id === this.land.street.id) ?? null;
     // // If images exist on land, set previews
     // if (this.land.image) {
     //   try {
@@ -465,7 +435,6 @@ export class LandComponent implements OnInit{
     let citizenid = ssearchdata.sscitizen;
     let landtypeid = ssearchdata.sslandtype;
     let fencetypeid = ssearchdata.ssfencetype;
-    let landfeature = ssearchdata.sslandfeature;
     let deedno = ssearchdata.ssdeedno;
 
     let query = "";
@@ -473,7 +442,6 @@ export class LandComponent implements OnInit{
     if (citizenid != null && citizenid !== "") query = query + "&citizen=" + citizenid;
     if (landtypeid != null && landtypeid !== "") query = query + "&landtype=" + landtypeid;
     if (fencetypeid != null && fencetypeid !== "") query = query + "&fencetype=" + fencetypeid;
-    if (landfeature != null && landfeature !== "") query = query + "&landfeature=" + encodeURIComponent(landfeature);
     if (deedno != null && deedno !== "") query = query + "&deedno=" + deedno;
 
     if (query != "") query = query.replace(/^./, "?");
@@ -543,6 +511,7 @@ export class LandComponent implements OnInit{
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
+          this.slimRefs();
           this.ls.add(this.land).then((response: [] | undefined) => {
 
             if (response != undefined) {
@@ -556,7 +525,13 @@ export class LandComponent implements OnInit{
               addmessage = "Content Not Found";
             }
 
-          }).finally(() => {
+          })
+          .catch((error: any) => {
+            addstatus = false;
+            addmessage = error?.error?.message || error?.error?.errors || error?.message || ('Request failed with status ' + error?.status);
+            console.error('API error:', error);
+          })
+          .finally(() => {
 
             if (addstatus) {
               addmessage = "Successfully Saved";
@@ -585,6 +560,24 @@ export class LandComponent implements OnInit{
   }
 
 
+  /**
+   * Reduce a related entity to a bare {id} reference before sending it to the server.
+   * The full objects that come back from /citizens/list carry their whole object graph
+   * (guardians -> parent citizen -> household -> members -> aid programs), which Jackson
+   * chokes on when it is posted back. The server only needs the foreign key.
+   */
+  private ref(o: any): any {
+    return (o && o.id != null) ? {id: o.id} : null;
+  }
+
+  private slimRefs(): void {
+    const l: any = this.land;
+    l.citizen   = this.ref(l.citizen);
+    l.street    = this.ref(l.street);
+    l.landtype  = this.ref(l.landtype);
+    l.fencetype = this.ref(l.fencetype);
+  }
+
   getErrors(): string {
 
     let errors: string = "";
@@ -599,24 +592,6 @@ export class LandComponent implements OnInit{
 
     return errors;
   }
-  // getErrors(): string {
-  //
-  //   let errors: string = "";
-  //
-  //   for (const controlName in this.form.controls) {
-  //     const control = this.form.controls[controlName];
-  //
-  //     if (control.errors) {
-  //       // if (this.regexes && this.regexes[controlName] != undefined) {
-  //       //   errors = errors + "<br>" + this.regexes[controlName]['message'];
-  //       // } else {
-  //       //   errors = errors + "<br>Invalid " + controlName;
-  //       // }
-  //     }
-  //   }
-  //
-  //   return errors;
-  // }
 
   getUpdates(): string {
 
@@ -679,6 +654,8 @@ export class LandComponent implements OnInit{
 
             this.land.id = this.oldland.id;
 
+            this.slimRefs();
+
             this.ls.update(this.land).then((response: [] | undefined) => {
 
               if (response != undefined) { // @ts-ignore
@@ -691,7 +668,13 @@ export class LandComponent implements OnInit{
                 updmessage = "Content Not Found";
               }
 
-            }).finally(() => {
+            })
+            .catch((error: any) => {
+              updstatus = false;
+              updmessage = error?.error?.message || error?.error?.errors || error?.message || ('Request failed with status ' + error?.status);
+              console.error('API error:', error);
+            })
+            .finally(() => {
 
               if (updstatus) {
                 updmessage = "Successfully Updated";
@@ -731,7 +714,7 @@ export class LandComponent implements OnInit{
       width: '500px',
       data: {
         heading: "Confirmation - Land Delete",
-        message: "Are you sure to delete the following Land? <br> <br>" + (this.land && this.land.street ? this.land.street.fullname : '')
+        message: "Are you sure to delete the following Land? <br> <br>Deed No : " + (this.land?.deedno ?? '')
       }
     });
 
@@ -752,7 +735,13 @@ export class LandComponent implements OnInit{
             delmessage = "Content Not Found";
           }
 
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
 
           if (delstatus) {
             delmessage = "Successfully Deleted";
@@ -873,103 +862,6 @@ export class LandComponent implements OnInit{
   //   return this.streets.filter(s => s.fullname.toLowerCase().includes(filterValue));
   // }
 
-  rightSelected(): void {
-    this.availablelist.selectedOptions.selected.forEach(option => {
-      const landfeaturedetails = new Landfeaturedetails(option.value);
-      this.landfeatures = this.landfeatures.filter(lf => lf !== option.value);
-      this.landfeaturedetailsList.push(landfeaturedetails);
-    });
-
-    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
-    this.form.controls['landfeaturedetails'].clearValidators();
-    this.form.controls['landfeaturedetails'].updateValueAndValidity();
-  }
-
-  leftSelected(): void {
-    const selectedOptions = this.selectedlist.selectedOptions.selected;
-    selectedOptions.forEach(option => {
-      const ext = option.value;
-      this.landfeaturedetailsList = this.landfeaturedetailsList.filter(lf => lf !== ext);
-      if (!this.landfeatures.includes(ext.landfeature)) {
-        this.landfeatures.push(ext.landfeature);
-      }
-    });
-
-    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
-    if (this.landfeaturedetailsList.length === 0) {
-      this.form.controls['landfeaturedetails'].setValidators(Validators.required);
-    }
-    this.form.controls['landfeaturedetails'].updateValueAndValidity();
-  }
-
-  rightAll(): void {
-    this.availablelist.selectAll().forEach(option => {
-      const landfeaturedetails = new Landfeaturedetails(option.value);
-      this.landfeatures = this.landfeatures.filter(lf => lf !== option.value);
-      this.landfeaturedetailsList.push(landfeaturedetails);
-    });
-
-    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
-    this.form.controls['landfeaturedetails'].clearValidators();
-    this.form.controls['landfeaturedetails'].updateValueAndValidity();
-  }
-
-  leftAll(): void {
-    for (const lfd of this.landfeaturedetailsList) this.landfeatures.push(lfd.landfeature);
-    this.landfeaturedetailsList = [];
-
-    this.form.controls['landfeaturedetails'].setValue(this.landfeaturedetailsList);
-    this.form.controls['landfeaturedetails'].setValidators(Validators.required);
-    this.form.controls['landfeaturedetails'].updateValueAndValidity();
-  }
-  // rightSelected(): void {
-  //
-  //   this.land.landfeaturedetails = this.availablelist.selectedOptions.selected.map(option => {
-  //     const landfeaturedetails = new Landfeaturedetails(option.value);
-  //     this.landfeatures = this.landfeatures.filter(landfeature => landfeature !== option.value); //Remove Selected
-  //     this.landfeaturedetailsList.push(landfeaturedetails); // Add selected to Right Side
-  //     return landfeaturedetails;
-  //   });
-  //
-  //   this.form.controls["landfeaturedetails"].clearValidators();
-  //   this.form.controls["landfeaturedetails"].updateValueAndValidity(); // Update status
-  // }
-  //
-  // leftSelected(): void {
-  //   const selectedOptions = this.selectedlist.selectedOptions.selected;
-  //   selectedOptions.forEach(option => {
-  //     const extlandfeaturedetails = option.value;
-  //     this.landfeaturedetailsList = this.landfeaturedetailsList.filter(landfeature => landfeature !== extlandfeaturedetails);
-  //     if (!this.landfeatures.includes(extlandfeaturedetails.landfeature)) {
-  //       this.landfeatures.push(extlandfeaturedetails.landfeature);
-  //     }
-  //   });
-  //
-  //   this.form.controls["landfeaturedetails"].setValidators(Validators.required);
-  // }
-  //
-  // rightAll(): void {
-  //   this.land.landfeaturedetails = this.availablelist.selectAll().map(option => {
-  //     const landfeaturedetails1 = new Landfeaturedetails(option.value);
-  //     this.landfeatures = this.landfeatures.filter(landfeature => landfeature !== option.value);
-  //     this.landfeaturedetailsList.push(landfeaturedetails1);
-  //     return landfeaturedetails1;
-  //   });
-  //
-  //   this.form.controls["landfeaturedetails"].clearValidators();
-  //   this.form.controls["landfeaturedetails"].updateValueAndValidity();
-  // }
-  //
-  //
-  // leftAll():void{
-  //   for(let landfeaturedetails of this.landfeaturedetailsList) this.landfeatures.push(landfeaturedetails.landfeature);
-  //   this.landfeaturedetailsList = [];
-  //   this.form.controls["landfeaturedetails"].setValidators(Validators.required);
-  //
-  // }
-
-
-
   selectStreetChnage(event:MatSelectChange){
     const selctdvalue = event.value as Street;
     console.log(selctdvalue);
@@ -1011,7 +903,7 @@ export class LandComponent implements OnInit{
   onStreetChnage(event: MatAutocompleteSelectedEvent) {
     const selectedValue = event.option.value ;
     console.log(selectedValue)
-    const street = this.extstreets.find(s => s.fullname === selectedValue) as Street;
+    const street = (this.extstreets ?? []).find(s => s.fullname === selectedValue) as Street;
     this.form.controls['street'].setValue(street);
     console.log(street)
   }

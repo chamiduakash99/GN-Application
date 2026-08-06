@@ -393,14 +393,14 @@ export class PrivilageComponent {
 
     // Find and set role
     //@ts-ignore
-    this.privilage.role = this.roles.find(r => r.id === this.privilage.role.id);
+    this.privilage.role = (this.roles ?? []).find(r => r.id === this.privilage.role.id);
 
     // Find and set module
     //@ts-ignore
-    this.privilage.module = this.modules.find(m => m.id === this.privilage.module.id);
+    this.privilage.module = (this.modules ?? []).find(m => m.id === this.privilage.module.id);
 
     // //@ts-ignore
-    // this.privilage.operation = this.operations.find(o => o.id === this.privilage.module.id)
+    // this.privilage.operation = (this.operations ?? []).find(o => o.id === this.privilage.module.id)
 
     console.log(this.privilage.operation.name);
 

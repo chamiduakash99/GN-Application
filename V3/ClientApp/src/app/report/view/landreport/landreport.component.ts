@@ -27,12 +27,6 @@ export class LandreportComponent implements OnInit, AfterViewInit{
   fenceTotal: number[] = [];
 
   // ---- Land Feature (new) ----
-  landfeaturereports: countreport[] = [];
-  landfeatureData!: MatTableDataSource<countreport>;
-  landfeatureColumns: string[] = ['name', 'percentage', 'count'];
-  landfeatureHeaders: string[] = ['Land Feature', 'Percentage', 'Count'];
-  landfeatureBinders: string[] = ['name', 'percentage', 'count'];
-  landfeatureTotal: number[] = [];
 
 
 
@@ -43,15 +37,12 @@ export class LandreportComponent implements OnInit, AfterViewInit{
   @ViewChild('piechart', { static: false }) piechart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('fencecolumnchart', { static: false }) fencecolumnchart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('fencepiechart', { static: false }) fencepiechart!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('landfeaturecolumnchart', { static: false }) landfeaturecolumnchart!: ElementRef<HTMLCanvasElement>;
-  @ViewChild('landfeaturepiechart', { static: false }) landfeaturepiechart!: ElementRef<HTMLCanvasElement>;
 
   constructor(private rs: ReportService) { }
 
   ngOnInit(): void {
     this.loadData();
     this.loadFenceData();
-    this.loadLandFeatureData();
   }
 
   ngAfterViewInit(): void {
@@ -61,9 +52,6 @@ export class LandreportComponent implements OnInit, AfterViewInit{
     }
     if (this.fencereports.length) {
       this.drawFenceCharts();
-    }
-    if (this.landfeaturereports.length) {
-      this.drawLandFeatureCharts();
     }
   }
 
@@ -179,60 +167,4 @@ export class LandreportComponent implements OnInit, AfterViewInit{
     });
   }
 
-  // Land feature
-  async loadLandFeatureData(): Promise<void> {
-    const result = await this.rs.getCountReport('landfeaturereport');
-    this.landfeaturereports = result;
-    this.landfeatureTotal = [result.reduce((sum, item) => sum + item.count, 0)];
-    this.loadLandFeatureTable();
-    if (this.viewReady) {
-      this.drawLandFeatureCharts();
-    }
-  }
-
-  loadLandFeatureTable(): void {
-    this.landfeatureData = new MatTableDataSource(this.landfeaturereports);
-  }
-
-  drawLandFeatureCharts(): void {
-    const labels = this.landfeaturereports.map(sm => sm.name);
-    const counts = this.landfeaturereports.map(sm => sm.count);
-    const percentages = this.landfeaturereports.map(sm => sm.percentage);
-
-    new Chart(this.landfeaturecolumnchart.nativeElement, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          { label: 'Count', data: counts },
-          { label: 'Percentage', data: percentages }
-        ]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: { display: true, text: 'Land Feature Report (Bar Chart)' },
-          legend: { position: 'top' }
-        },
-        scales: {
-          x: { title: { display: true, text: 'Land Features' } },
-          y: { title: { display: true, text: 'Values' }, beginAtZero: true }
-        }
-      }
-    });
-
-    new Chart(this.landfeaturepiechart.nativeElement, {
-      type: 'pie',
-      data: {
-        labels,
-        datasets: [{ label: 'Count', data: counts }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: { display: true, text: 'Land Feature Report (Pie Chart)' }
-        }
-      }
-    });
-  }
 }

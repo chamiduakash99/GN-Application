@@ -18,11 +18,11 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Username</mat-label>
-            <input matInput  formControlName="username">
+            <input matInput  formControlName="username" placeholder="Letters, digits and . _ - only, e.g. ashan.d">
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
-            <input matInput [type]="pwdhide ? 'password' : 'text'" formControlName="password">
+            <input matInput [type]="pwdhide ? 'password' : 'text'" formControlName="password" placeholder="At least one lowercase, one uppercase and one digit">
             <button mat-icon-button matSuffix (click)="pwdhide = !pwdhide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="pwdhide">
               <mat-icon>{{pwdhide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
@@ -30,7 +30,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Confirm Password</mat-label>
-            <input matInput [type]="pwdconfhide ? 'password' : 'text'" formControlName="confirmpassword">
+            <input matInput [type]="pwdconfhide ? 'password' : 'text'" formControlName="confirmpassword" placeholder="Re-type the same password">
             <button mat-icon-button matSuffix (click)="pwdconfhide = !pwdconfhide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="pwdconfhide">
               <mat-icon>{{pwdconfhide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
@@ -47,7 +47,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Description</mat-label>
-            <textarea matInput formControlName="description"></textarea>
+            <textarea matInput formControlName="description" placeholder="Optional notes"></textarea>
           </mat-form-field>
 
           <div id="listtrnasfer">
@@ -168,7 +168,12 @@
               <mat-form [formGroup]="csearch" class="csearch">
                 <mat-form-field appearance="outline">
                   <mat-label>{{csprompts[i]}}</mat-label>
-                  <input matInput [formControlName]="cscolumn"
+                  <mat-select *ngIf="cscolumn === 'csrole'" [formControlName]="cscolumn"
+                              (selectionChange)="filterTable()">
+                    <mat-option [value]="null">All Roles</mat-option>
+                    <mat-option *ngFor="let r of roles" [value]="r.name">{{r.name}}</mat-option>
+                  </mat-select>
+                  <input matInput *ngIf="cscolumn !== 'csrole'" [formControlName]="cscolumn"
                          (keyup)="filterTable()">
                 </mat-form-field>
               </mat-form>

@@ -30,14 +30,14 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Published At</mat-label>
-            <input matInput [matDatepicker]="pubdate" formControlName="publishedat">
+            <input matInput [matDatepicker]="pubdate" [min]="today" formControlName="publishedat">
             <mat-datepicker-toggle matSuffix [for]="pubdate"></mat-datepicker-toggle>
             <mat-datepicker #pubdate></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Expired At</mat-label>
-            <input matInput [matDatepicker]="expdate" formControlName="expiredat">
+            <input matInput [matDatepicker]="expdate" [min]="today" formControlName="expiredat">
             <mat-datepicker-toggle matSuffix [for]="expdate"></mat-datepicker-toggle>
             <mat-datepicker #expdate></mat-datepicker>
           </mat-form-field>

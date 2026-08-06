@@ -1,3 +1,36 @@
+<div style="padding: 16px 16px 0 16px; display: flex; align-items: center; flex-wrap: wrap;">
+
+  <mat-form-field appearance="outline" style="margin-right: 16px; width: 140px;">
+    <mat-label>Min Age</mat-label>
+    <input matInput type="number" min="0" [(ngModel)]="minAge" placeholder="e.g. 18">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin-right: 16px; width: 140px;">
+    <mat-label>Max Age</mat-label>
+    <input matInput type="number" min="0" [(ngModel)]="maxAge" placeholder="e.g. 60">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin-right: 16px; width: 180px;">
+    <mat-label>Gender</mat-label>
+    <mat-select [(ngModel)]="genderId">
+      <mat-option [value]="null">All Genders</mat-option>
+      <mat-option *ngFor="let g of genders" [value]="g.id">{{g.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin-right: 16px; width: 200px;">
+    <mat-label>Citizen Status</mat-label>
+    <mat-select [(ngModel)]="citizenstatusId">
+      <mat-option [value]="null">All Statuses</mat-option>
+      <mat-option *ngFor="let s of citizenstatuses" [value]="s.id">{{s.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
+  <button mat-raised-button (click)="clearFilter()">Clear</button>
+
+</div>
+
 <mat-grid-list [cols]="1" rowHeight="13rem">
 
   <!-- Gender -->

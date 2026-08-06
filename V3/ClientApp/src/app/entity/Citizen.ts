@@ -20,6 +20,7 @@ export class Citizen {
   public educationlevel!: any;
   public ethnicity!: any;
   public gender!: any;
+  public citizenstatus!: any;
 
   public citizenaidprograms!:Array<Citizenaidprogram>;
   public citizenguardians!:Array<Citizenguardian>;

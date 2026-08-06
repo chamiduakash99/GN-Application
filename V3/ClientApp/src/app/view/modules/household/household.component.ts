@@ -34,8 +34,8 @@ export class HouseholdComponent implements OnInit {
   cshhprompts: string[] = ['Search No', 'Search Address'];
 
   // ── Members table ──────────────────────────────────────────────────────────
-  memcolumns: string[] = ['name', 'nic', 'dateofbirth', 'mobileno', 'citizenstatus'];
-  memheaders: string[] = ['Name', 'NIC', 'Date of Birth', 'Mobile', 'Status'];
+  memcolumns: string[] = ['name', 'nic', 'dateofbirth', 'mobileno', 'citizenstatus', 'memremove'];
+  memheaders: string[] = ['Name', 'NIC', 'Date of Birth', 'Mobile', 'Status', 'Remove'];
   membinders: string[] = ['name', 'nic', 'dateofbirth', 'mobileno', 'citizenstatus.name'];
 
   // ── Forms ──────────────────────────────────────────────────────────────────
@@ -53,6 +53,9 @@ export class HouseholdComponent implements OnInit {
   hhdata!: MatTableDataSource<Household>;
 
   members: Citizen[] = [];
+  /** citizens with no household yet - the Add Member picker feeds off this */
+  unassigned: Citizen[] = [];
+  membertoadd: any = null;
   memdata!: MatTableDataSource<Citizen>;
 
   citizens: Citizen[] = [];
@@ -102,7 +105,7 @@ export class HouseholdComponent implements OnInit {
     this.hhform = this.fb.group({
       'householdno': new FormControl('', [Validators.required, Validators.pattern(/^HH\d{3}$/), Validators.maxLength(55)]),
       'address': new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9.,'\s-]{2,255}$/), Validators.maxLength(255)]),
-      'registrationdate': new FormControl('', [Validators.required]),
+      'registrationdate': new FormControl(new Date(), [Validators.required]),
       'headcitizenId': new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
   }
@@ -118,6 +121,7 @@ export class HouseholdComponent implements OnInit {
     this.memdata = new MatTableDataSource(this.members);
     this.cits.getAllListNameId().then(res => this.citizens = res);
     this.css2.getAllListNameId().then(res => this.citizenstatuses = res);
+    this.loadUnassigned();
 
     const authoritiesArray = this.authService.getAuthorities();
     if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
@@ -161,7 +165,7 @@ export class HouseholdComponent implements OnInit {
   }
 
   getHeadCitizenName(headcitizenId: number): string {
-    const c = this.citizens.find(x => x.id === headcitizenId);
+    const c = (this.citizens ?? []).find(x => x.id === headcitizenId);
     return c ? c.name : 'ID: ' + headcitizenId;
   }
 
@@ -175,8 +179,8 @@ export class HouseholdComponent implements OnInit {
   filterTable(): void {
     const cs = this.cssearch.getRawValue();
     this.hhdata.filterPredicate = (h: Household) => {
-      return (cs.cshhno == null || h.householdno?.toLowerCase().includes(cs.cshhno)) &&
-        (cs.csaddr == null || h.address?.toLowerCase().includes(cs.csaddr));
+      return (cs.cshhno == null || h.householdno?.toLowerCase().includes((cs.cshhno ?? '').toLowerCase())) &&
+        (cs.csaddr == null || h.address?.toLowerCase().includes((cs.csaddr ?? '').toLowerCase()));
     };
     this.hhdata.filter = 'xx';
   }
@@ -290,7 +294,13 @@ export class HouseholdComponent implements OnInit {
             // @ts-ignore
             if (!addstatus) addmessage = response['errors'];
           } else { addstatus = false; addmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          addstatus = false;
+          addmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (addstatus) { addmessage = 'Household Added Successfully'; this.hhform.reset(); this.loadHouseholdTable(''); }
           this.dg.open(MessageComponent, { width: '500px', data: {heading: 'Status - Add Household', message: addmessage} });
         });
@@ -327,7 +337,13 @@ export class HouseholdComponent implements OnInit {
             // @ts-ignore
             if (!updstatus) updmessage = response['errors'];
           } else { updstatus = false; updmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          updstatus = false;
+          updmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (updstatus) {
             updmessage = 'Household Updated Successfully';
             this.hhform.reset();
@@ -365,7 +381,13 @@ export class HouseholdComponent implements OnInit {
             // @ts-ignore
             if (!delstatus) delmessage = response['errors'];
           } else { delstatus = false; delmessage = 'Content Not Found'; }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (delstatus) {
             delmessage = 'Household Deleted Successfully';
             this.hhform.reset();
@@ -377,6 +399,97 @@ export class HouseholdComponent implements OnInit {
           this.dg.open(MessageComponent, { width: '500px', data: {heading: 'Status - Delete Household', message: delmessage} });
         });
       }
+    });
+  }
+
+  // ── Membership ─────────────────────────────────────────────────────────────
+
+  loadUnassigned(): void {
+    this.hhs.unassignedCitizens()
+      .then(res => this.unassigned = res ?? [])
+      .catch(() => this.unassigned = []);
+  }
+
+  /** refresh the selected household so the members table and counts stay truthful */
+  private reloadSelectedHousehold(): void {
+    const id = this.household?.id;
+    this.hhs.getAll("").then((items: Household[]) => {
+      this.households = items;
+      this.hhdata = new MatTableDataSource(this.households);
+      this.hhdata.paginator = this.hhpaginator;
+      const fresh = (this.households ?? []).find(h => h.id === id);
+      if (fresh) {
+        this.household = fresh;
+        this.selectedrow = fresh;
+        this.loadMembersTable(fresh);
+      }
+      this.loadUnassigned();
+    });
+  }
+
+  addMember(): void {
+    if (!this.household?.id) {
+      this.dg.open(MessageComponent, {width: "500px",
+        data: {heading: "Add Member", message: "Select a household first."}});
+      return;
+    }
+    if (!this.membertoadd?.id) {
+      this.dg.open(MessageComponent, {width: "500px",
+        data: {heading: "Add Member", message: "Choose a citizen to add."}});
+      return;
+    }
+
+    const confirm = this.dg.open(ConfirmComponent, {width: "500px",
+      data: {heading: "Confirmation - Add Member",
+             message: "Add " + this.membertoadd.name + " to household " + this.household.householdno + "?"}});
+
+    confirm.afterClosed().subscribe(result => {
+      if (!result) { return; }
+      this.hhs.addMember(this.household.id, this.membertoadd.id)
+        .then((response: any) => {
+          const errors = response ? response["errors"] : "Server Not Found";
+          if (errors) {
+            this.dg.open(MessageComponent, {width: "500px",
+              data: {heading: "Add Member", message: errors}});
+            return;
+          }
+          this.membertoadd = null;
+          this.reloadSelectedHousehold();
+          this.dg.open(MessageComponent, {width: "500px",
+            data: {heading: "Add Member", message: "Member added successfully."}});
+        })
+        .catch((error: any) => {
+          this.dg.open(MessageComponent, {width: "500px",
+            data: {heading: "Add Member",
+                   message: error?.error?.errors || error?.error?.message || error?.message || "Could not add the member."}});
+        });
+    });
+  }
+
+  removeMember(citizen: Citizen): void {
+    if (!this.household?.id || !citizen?.id) { return; }
+
+    const confirm = this.dg.open(ConfirmComponent, {width: "500px",
+      data: {heading: "Confirmation - Remove Member",
+             message: "Remove " + citizen.name + " from household " + this.household.householdno + "?"}});
+
+    confirm.afterClosed().subscribe(result => {
+      if (!result) { return; }
+      this.hhs.removeMember(this.household.id, citizen.id)
+        .then((response: any) => {
+          const errors = response ? response["errors"] : "Server Not Found";
+          if (errors) {
+            this.dg.open(MessageComponent, {width: "500px",
+              data: {heading: "Remove Member", message: errors}});
+            return;
+          }
+          this.reloadSelectedHousehold();
+        })
+        .catch((error: any) => {
+          this.dg.open(MessageComponent, {width: "500px",
+            data: {heading: "Remove Member",
+                   message: error?.error?.errors || error?.error?.message || error?.message || "Could not remove the member."}});
+        });
     });
   }
 }

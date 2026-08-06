@@ -40,4 +40,18 @@ export class HouseholdService {
   delete(id: number): Promise<[] | undefined> {
     return this.http.delete<[]>(`${this.url}/${id}`).toPromise();
   }
+
+  // ── Membership ─────────────────────────────────────────────────────────────
+  addMember(householdId: number, citizenId: number): Promise<any> {
+    return this.http.put<any>(`${this.url}/${householdId}/members/${citizenId}`, {}).toPromise();
+  }
+
+  removeMember(householdId: number, citizenId: number): Promise<any> {
+    return this.http.delete<any>(`${this.url}/${householdId}/members/${citizenId}`).toPromise();
+  }
+
+  /** citizens not yet attached to any household */
+  unassignedCitizens(): Promise<any[]> {
+    return this.http.get<any[]>(`${this.url}/unassignedcitizens`).toPromise().then(r => r ?? []);
+  }
 }

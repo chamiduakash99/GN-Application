@@ -334,9 +334,9 @@ export class OperationComponent {
     this.oldoperation = JSON.parse(JSON.stringify(operation));
 
     //@ts-ignore
-    this.operation.opetype = this.opetypes.find(o => o.id === this.operation.opetype.id);
+    this.operation.opetype = (this.opetypes ?? []).find(o => o.id === this.operation.opetype.id);
     //@ts-ignore
-    this.operation.module = this.modules.find(m => m.id === this.operation.module.id);
+    this.operation.module = (this.modules ?? []).find(m => m.id === this.operation.module?.id) ?? null as any;
 
     this.form.patchValue(this.operation);
     this.form.markAsPristine();

@@ -181,11 +181,11 @@ export class CertificaterequestComponent implements OnInit {
   filterRequestTable(): void {
     const cs = this.csreqsearch.getRawValue();
     this.reqdata.filterPredicate = (req: Certificaterequest, filter: string) => {
-      return (cs.cscitizen == null || req.citizen?.name.toLowerCase().includes(cs.cscitizen)) &&
-        (cs.cstype == null || req.certificatetype?.name.toLowerCase().includes(cs.cstype)) &&
-        (cs.csstatus == null || req.requeststatus?.name.toLowerCase().includes(cs.csstatus)) &&
-        (cs.csdate == null || req.requesteddate?.includes(cs.csdate)) &&
-        (cs.cspurpose == null || req.purpose?.toLowerCase().includes(cs.cspurpose));
+      return (cs.cscitizen == null || req.citizen?.name.toLowerCase().includes((cs.cscitizen ?? '').toLowerCase())) &&
+        (cs.cstype == null || req.certificatetype?.name.toLowerCase().includes((cs.cstype ?? '').toLowerCase())) &&
+        (cs.csstatus == null || req.requeststatus?.name.toLowerCase().includes((cs.csstatus ?? '').toLowerCase())) &&
+        (cs.csdate == null || req.requesteddate?.includes((cs.csdate ?? '').toLowerCase())) &&
+        (cs.cspurpose == null || req.purpose?.toLowerCase().includes((cs.cspurpose ?? '').toLowerCase()));
     };
     this.reqdata.filter = 'xx';
   }
@@ -222,11 +222,11 @@ export class CertificaterequestComponent implements OnInit {
     this.certificaterequest = JSON.parse(JSON.stringify(req));
     this.oldcertificaterequest = JSON.parse(JSON.stringify(req));
     // @ts-ignore
-    this.certificaterequest.citizen = this.citizens.find(c => c.id === this.certificaterequest.citizen.id);
+    this.certificaterequest.citizen = (this.citizens ?? []).find(c => c.id === this.certificaterequest.citizen.id);
     // @ts-ignore
-    this.certificaterequest.certificatetype = this.certificatetypes.find(t => t.id === this.certificaterequest.certificatetype.id);
+    this.certificaterequest.certificatetype = (this.certificatetypes ?? []).find(t => t.id === this.certificaterequest.certificatetype.id);
     // @ts-ignore
-    this.certificaterequest.requeststatus = this.requeststatuses.find(s => s.id === this.certificaterequest.requeststatus.id);
+    this.certificaterequest.requeststatus = (this.requeststatuses ?? []).find(s => s.id === this.certificaterequest.requeststatus.id);
     this.reqform.patchValue(this.certificaterequest);
     this.reqform.markAsPristine();
   }
@@ -294,7 +294,13 @@ export class CertificaterequestComponent implements OnInit {
             appstatus = false;
             appmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          appstatus = false;
+          appmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (appstatus) {
             appmessage = 'Request Approved Successfully';
             this.loadRequestTable('');
@@ -349,7 +355,13 @@ export class CertificaterequestComponent implements OnInit {
             rejstatus = false;
             rejmessage = 'Content Not Found';
           }
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          rejstatus = false;
+          rejmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
           if (rejstatus) {
             rejmessage = 'Request Rejected Successfully';
             this.loadRequestTable('');

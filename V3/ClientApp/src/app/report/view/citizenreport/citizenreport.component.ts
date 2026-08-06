@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
+import {HttpClient} from '@angular/common/http';
 import {ReportService} from "../../reportservice";
 import {Chart} from "chart.js/auto";
 import {countreport} from "../../entity/countreport";
@@ -85,9 +86,10 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
   @ViewChild('aidprogramcolumnchart', { static: false }) aidprogramcolumnchart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('aidprogrampiechart', { static: false }) aidprogrampiechart!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private rs: ReportService) { }
+  constructor(private rs: ReportService, private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.loadLookups();
     this.loadReligionData();
     this.loadMatiralstatusData();
     this.loadEducationlevelData();
@@ -110,7 +112,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
 
   // ---- Religion ----
   async loadReligionData(): Promise<void> {
-    const result = await this.rs.getCountReport('religionreport');
+    const result = await this.rs.getCountReport('religionreport' + this.query());
     this.religionreports = result;
     this.religionTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.religionData = new MatTableDataSource(this.religionreports);
@@ -122,7 +124,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.religionreports.map(sm => sm.count);
     const percentages = this.religionreports.map(sm => sm.percentage);
 
-    new Chart(this.religioncolumnchart.nativeElement, {
+    this.track(new Chart(this.religioncolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -130,18 +132,18 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Religion Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Religion' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.religionpiechart.nativeElement, {
+    this.track(new Chart(this.religionpiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Religion Report (Pie Chart)' } } }
-    });
+    }));
   }
 
   // ---- Marital Status ----
   async loadMatiralstatusData(): Promise<void> {
-    const result = await this.rs.getCountReport('matiralstatusreport');
+    const result = await this.rs.getCountReport('matiralstatusreport' + this.query());
     this.matiralstatusreports = result;
     this.matiralstatusTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.matiralstatusData = new MatTableDataSource(this.matiralstatusreports);
@@ -153,7 +155,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.matiralstatusreports.map(sm => sm.count);
     const percentages = this.matiralstatusreports.map(sm => sm.percentage);
 
-    new Chart(this.matiralstatuscolumnchart.nativeElement, {
+    this.track(new Chart(this.matiralstatuscolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -161,18 +163,18 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Marital Status Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Marital Status' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.matiralstatuspiechart.nativeElement, {
+    this.track(new Chart(this.matiralstatuspiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Marital Status Report (Pie Chart)' } } }
-    });
+    }));
   }
 
   // ---- Education Level ----
   async loadEducationlevelData(): Promise<void> {
-    const result = await this.rs.getCountReport('educationlevelreport');
+    const result = await this.rs.getCountReport('educationlevelreport' + this.query());
     this.educationlevelreports = result;
     this.educationlevelTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.educationlevelData = new MatTableDataSource(this.educationlevelreports);
@@ -184,7 +186,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.educationlevelreports.map(sm => sm.count);
     const percentages = this.educationlevelreports.map(sm => sm.percentage);
 
-    new Chart(this.educationlevelcolumnchart.nativeElement, {
+    this.track(new Chart(this.educationlevelcolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -192,18 +194,18 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Education Level Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Education Level' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.educationlevelpiechart.nativeElement, {
+    this.track(new Chart(this.educationlevelpiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Education Level Report (Pie Chart)' } } }
-    });
+    }));
   }
 
   // ---- Ethnicity ----
   async loadEthnicityData(): Promise<void> {
-    const result = await this.rs.getCountReport('ethnicityreport');
+    const result = await this.rs.getCountReport('ethnicityreport' + this.query());
     this.ethnicityreports = result;
     this.ethnicityTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.ethnicityData = new MatTableDataSource(this.ethnicityreports);
@@ -215,7 +217,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.ethnicityreports.map(sm => sm.count);
     const percentages = this.ethnicityreports.map(sm => sm.percentage);
 
-    new Chart(this.ethnicitycolumnchart.nativeElement, {
+    this.track(new Chart(this.ethnicitycolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -223,18 +225,18 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Ethnicity Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Ethnicity' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.ethnicitypiechart.nativeElement, {
+    this.track(new Chart(this.ethnicitypiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Ethnicity Report (Pie Chart)' } } }
-    });
+    }));
   }
 
   // ---- Gender ----
   async loadGenderData(): Promise<void> {
-    const result = await this.rs.getCountReport('genderreport');
+    const result = await this.rs.getCountReport('genderreport' + this.query());
     this.genderreports = result;
     this.genderTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.genderData = new MatTableDataSource(this.genderreports);
@@ -246,7 +248,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.genderreports.map(sm => sm.count);
     const percentages = this.genderreports.map(sm => sm.percentage);
 
-    new Chart(this.gendercolumnchart.nativeElement, {
+    this.track(new Chart(this.gendercolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -254,18 +256,18 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Gender Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Gender' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.genderpiechart.nativeElement, {
+    this.track(new Chart(this.genderpiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Gender Report (Pie Chart)' } } }
-    });
+    }));
   }
 
   // ---- Citizen Status ----
   async loadCitizenstatusData(): Promise<void> {
-    const result = await this.rs.getCountReport('citizenstatusreport');
+    const result = await this.rs.getCountReport('citizenstatusreport' + this.query());
     this.citizenstatusreports = result;
     this.citizenstatusTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.citizenstatusData = new MatTableDataSource(this.citizenstatusreports);
@@ -277,7 +279,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.citizenstatusreports.map(sm => sm.count);
     const percentages = this.citizenstatusreports.map(sm => sm.percentage);
 
-    new Chart(this.citizenstatuscolumnchart.nativeElement, {
+    this.track(new Chart(this.citizenstatuscolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -285,18 +287,18 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Citizen Status Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Citizen Status' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.citizenstatuspiechart.nativeElement, {
+    this.track(new Chart(this.citizenstatuspiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Citizen Status Report (Pie Chart)' } } }
-    });
+    }));
   }
 
   // ---- Aid Program ----
   async loadAidprogramData(): Promise<void> {
-    const result = await this.rs.getCountReport('aidprogramreport');
+    const result = await this.rs.getCountReport('aidprogramreport' + this.query());
     this.aidprogramreports = result;
     this.aidprogramTotal = [result.reduce((sum, item) => sum + item.count, 0)];
     this.aidprogramData = new MatTableDataSource(this.aidprogramreports);
@@ -308,7 +310,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     const counts = this.aidprogramreports.map(sm => sm.count);
     const percentages = this.aidprogramreports.map(sm => sm.percentage);
 
-    new Chart(this.aidprogramcolumnchart.nativeElement, {
+    this.track(new Chart(this.aidprogramcolumnchart.nativeElement, {
       type: 'bar',
       data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
       options: {
@@ -316,12 +318,66 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
         plugins: { title: { display: true, text: 'Aid Program Report (Bar Chart)' }, legend: { position: 'top' } },
         scales: { x: { title: { display: true, text: 'Aid Program' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
       }
-    });
+    }));
 
-    new Chart(this.aidprogrampiechart.nativeElement, {
+    this.track(new Chart(this.aidprogrampiechart.nativeElement, {
       type: 'pie',
       data: { labels, datasets: [{ label: 'Count', data: counts }] },
       options: { responsive: true, plugins: { title: { display: true, text: 'Aid Program Report (Pie Chart)' } } }
-    });
+    }));
+  }
+
+  // ── Filter bar ─────────────────────────────────────────────────────────────
+  minAge: number | null = null;
+  maxAge: number | null = null;
+  genderId: number | null = null;
+  citizenstatusId: number | null = null;
+
+  genders: any[] = [];
+  citizenstatuses: any[] = [];
+
+  /** every section is re-queried with the same filter, so all seven charts
+   *  always describe the same population */
+  query(): string {
+    const p: string[] = [];
+    if (this.minAge !== null && String(this.minAge) !== '') p.push('minAge=' + this.minAge);
+    if (this.maxAge !== null && String(this.maxAge) !== '') p.push('maxAge=' + this.maxAge);
+    if (this.genderId !== null && String(this.genderId) !== '') p.push('genderId=' + this.genderId);
+    if (this.citizenstatusId !== null && String(this.citizenstatusId) !== '') p.push('citizenstatusId=' + this.citizenstatusId);
+    return p.length ? '?' + p.join('&') : '';
+  }
+
+  private charts: any[] = [];
+  track(chart: any): any { this.charts.push(chart); return chart; }
+  private destroyCharts(): void {
+    this.charts.forEach(c => { try { c.destroy(); } catch (e) { } });
+    this.charts = [];
+  }
+
+  applyFilter(): void {
+    this.destroyCharts();
+    this.loadReligionData();
+    this.loadMatiralstatusData();
+    this.loadEducationlevelData();
+    this.loadEthnicityData();
+    this.loadGenderData();
+    this.loadCitizenstatusData();
+    this.loadAidprogramData();
+  }
+
+  clearFilter(): void {
+    this.minAge = null;
+    this.maxAge = null;
+    this.genderId = null;
+    this.citizenstatusId = null;
+    this.applyFilter();
+  }
+
+  /** the Gender and Status pickers read the same lookup lists the modules use */
+  private loadLookups(): void {
+    this.http.get<any[]>('http://localhost:8080/genders/list')
+      .toPromise().then(r => this.genders = r ?? []).catch(() => this.genders = []);
+    this.http.get<any[]>('http://localhost:8080/citizenstatuses/list')
+      .toPromise().then(r => this.citizenstatuses = r ?? []).catch(() => this.citizenstatuses = []);
   }
 }

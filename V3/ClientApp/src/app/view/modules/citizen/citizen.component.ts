@@ -207,6 +207,40 @@ export class CitizenComponent implements OnInit {
 
   ngOnInit(): void {
     this.initialize();
+
+    // Under 18 -> Birth Certificate No required, NIC optional.
+    // 18 and over -> NIC required, Birth Certificate No optional.
+    this.form.get('dateofbirth')!.valueChanges.subscribe(() => this.applyIdValidators());
+    this.applyIdValidators();
+  }
+
+  /** true when the date of birth in the form is 18 years ago or earlier */
+  isAdultDob(): boolean {
+    const raw = this.form.get('dateofbirth')!.value;
+    if (!raw) { return false; }
+    const dob = new Date(raw);
+    if (isNaN(dob.getTime())) { return false; }
+    const cutoff = new Date();
+    cutoff.setFullYear(cutoff.getFullYear() - 18);
+    return dob <= cutoff;
+  }
+
+  /** keeps the NIC / Birth Certificate No requirement in step with the age */
+  applyIdValidators(): void {
+    const nic  = this.form.get('nic')!;
+    const bcno = this.form.get('birthcetificateno')!;
+    const nicPattern  = Validators.pattern(/^(([0-9]{9}[vVxX])|([0-9]{12}))$/);
+    const bcnoPattern = Validators.pattern(/^BC\d{4}$/);
+
+    if (this.isAdultDob()) {
+      nic.setValidators([Validators.required, nicPattern]);
+      bcno.setValidators([bcnoPattern]);
+    } else {
+      nic.setValidators([nicPattern]);
+      bcno.setValidators([Validators.required, bcnoPattern]);
+    }
+    nic.updateValueAndValidity({emitEvent: false});
+    bcno.updateValueAndValidity({emitEvent: false});
   }
 
   initialize() {
@@ -287,7 +321,7 @@ export class CitizenComponent implements OnInit {
 
     // For each existing shipmentorder, reconcile against new chips
     this.citizenaidprograms.forEach(citizenaidprogram => {
-      const existingChip = this.chips.find(c => c.data.id === citizenaidprogram.aidprogram.id);
+      const existingChip = (this.chips ?? []).find(c => c.data.id === citizenaidprogram.aidprogram.id);
 
       if (existingChip) {
         // It exists in salesorders → just mark saved
@@ -375,29 +409,23 @@ export class CitizenComponent implements OnInit {
     // ===== LINK DROPDOWNS (IMPORTANT) =====
 
     // @ts-ignore
-    this.citizen.religion = this.religions.find(r => r.id === this.citizen.religion?.id);
-
+    this.citizen.religion = (this.religions ?? []).find(r => r.id === this.citizen.religion?.id) ?? null;
     // @ts-ignore
-    this.citizen.matiralstatus = this.matiralstatuses.find(m => m.id === this.citizen.matiralstatus?.id);
-
+    this.citizen.matiralstatus = (this.matiralstatuses ?? []).find(m => m.id === this.citizen.matiralstatus?.id) ?? null;
     // @ts-ignore
-    this.citizen.educationlevel = this.educationlevels.find(e => e.id === this.citizen.educationlevel?.id);
-
+    this.citizen.educationlevel = (this.educationlevels ?? []).find(e => e.id === this.citizen.educationlevel?.id) ?? null;
     // @ts-ignore
-    this.citizen.ethnicity = this.ethnicities.find(e => e.id === this.citizen.ethnicity?.id);
-
+    this.citizen.ethnicity = (this.ethnicities ?? []).find(e => e.id === this.citizen.ethnicity?.id) ?? null;
     // @ts-ignore
-    this.citizen.gender = this.genders.find(g => g.id === this.citizen.gender?.id);
-
+    this.citizen.gender = (this.genders ?? []).find(g => g.id === this.citizen.gender?.id) ?? null;
     // @ts-ignore
-    this.citizen.citizenstatus = this.citizenstatuses.find(s => s.id === this.citizen.citizenstatus?.id);
-
+    this.citizen.citizenstatus = (this.citizenstatuses ?? []).find(s => s.id === this.citizen.citizenstatus?.id) ?? null;
     // ===== OPTIONAL RELATION LISTS =====
 
     // Aid Programs (if used as multi-select)
     // if (this.citizen.citizenaidprograms) {
     //   this.citizen.citizenaidprograms = this.citizen.citizenaidprograms.map((ap: any) =>
-    //     this.aidprograms.find(a => a.id === ap.aidprogram?.id)
+    //     (this.aidprograms ?? []).find(a => a.id === ap.aidprogram?.id)
     //   );
     // }
 
@@ -407,7 +435,7 @@ export class CitizenComponent implements OnInit {
 
     this.citizen.citizenaidprograms.forEach((citizenaidprogram: Citizenaidprogram) => {
       if (citizenaidprogram.aidprogram) {
-        const fullAidprogram = this.aidprograms.find(ap => ap.id === citizenaidprogram.aidprogram.id);
+        const fullAidprogram = (this.aidprograms ?? []).find(ap => ap.id === citizenaidprogram.aidprogram.id);
         if (fullAidprogram) {
           citizenaidprogram.aidprogram = fullAidprogram;
           this.aidprograms = this.aidprograms.filter(ap => ap.id !== fullAidprogram.id);
@@ -444,7 +472,7 @@ export class CitizenComponent implements OnInit {
     // if (this.citizen.citizenguardians) {
     //   this.citizen.citizenguardians = this.citizen.citizenguardians.map((cg: any) => ({
     //     ...cg,
-    //     relationshiptype: this.relationshiptypes.find(rt => rt.id === cg.relationshiptype?.id)
+    //     relationshiptype: (this.relationshiptypes ?? []).find(rt => rt.id === cg.relationshiptype?.id)
     //   }));
     // }
 
@@ -515,11 +543,19 @@ export class CitizenComponent implements OnInit {
     const csearchdata = this.csearch.getRawValue();
 
     this.data.filterPredicate = (citizen: Citizen, filter: string) => {
+      // the control names are cscitizen / csnic / csreligion / csethnicity / cseducationlevel -
+      // this used to read name / nic / religion / ethnicity, which are undefined, so every
+      // term silently passed and nothing was ever filtered
+      const like = (value: any, term: any) =>
+        term == null || String(term).trim() === '' ||
+        String(value ?? '').toLowerCase().includes(String(term).toLowerCase());
       return (
-        (csearchdata.name == null || (citizen.name && citizen.name.toLowerCase().includes(csearchdata.name.toLowerCase()))) &&
-        (csearchdata.nic == null || (citizen.nic && citizen.nic.toLowerCase().includes(csearchdata.nic.toLowerCase()))) &&
-        (csearchdata.religion == null || (citizen.religion && citizen.religion.name.toLowerCase().includes(csearchdata.religion.toLowerCase()))) &&
-        (csearchdata.ethnicity == null || (citizen.ethnicity && citizen.ethnicity.name.toLowerCase().includes(csearchdata.ethnicity.toLowerCase())))
+        like(citizen.name, csearchdata.cscitizen) &&
+        like(citizen.nic, csearchdata.csnic) &&
+        like(citizen.religion?.name, csearchdata.csreligion) &&
+        like(citizen.ethnicity?.name, csearchdata.csethnicity) &&
+        like(citizen.citizenstatus?.name, csearchdata.cscitizenstatus) &&
+        like(citizen.educationlevel?.name, csearchdata.cseducationlevel)
       );
     };
 
@@ -1011,7 +1047,13 @@ console.log(this.citizenaidprograms)
                 updmessage = "Content Not Found";
               }
 
-            }).finally(() => {
+            })
+            .catch((error: any) => {
+              updstatus = false;
+              updmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+              console.error('API error:', error);
+            })
+            .finally(() => {
 
               if (updstatus) {
 
@@ -1101,7 +1143,13 @@ console.log(this.citizenaidprograms)
             delmessage = "Content Not Found";
           }
 
-        }).finally(() => {
+        })
+        .catch((error: any) => {
+          delstatus = false;
+          delmessage = error?.error?.errors || error?.error?.message || error?.message || ('Request failed with status ' + error?.status);
+          console.error('API error:', error);
+        })
+        .finally(() => {
 
           if (delstatus) {
             delmessage = "Successfully Deleted";
@@ -1372,9 +1420,9 @@ console.log(this.citizenaidprograms)
     this.citizenguardian = JSON.parse(JSON.stringify(row));
 
     //@ts-ignore
-    this.citizenguardian.relationshiptype = this.relationshiptypes.find((p) => p.id ===  this.citizenguardian?.relationshiptype.id);
+    this.citizenguardian.relationshiptype = (this.relationshiptypes ?? []).find((p) => p.id ===  this.citizenguardian?.relationshiptype.id) ?? null;
     //@ts-ignore
-    this.citizenguardian.citizenparent = this.citizens.find((p) => p.id ===  this.citizenguardian?.citizenparent.id)
+    this.citizenguardian.citizenparent = (this.citizens ?? []).find((p) => p.id ===  this.citizenguardian?.citizenparent.id)
     this.innerform.patchValue(this.citizenguardian);
     this.innerform.markAsPristine();
 
