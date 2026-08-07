@@ -13,12 +13,15 @@ public interface HarvestReportDao extends JpaRepository<Harvest, Integer> {
 
     @Query(value = "SELECT DATE_FORMAT(h.harvestdate, '%Y-%m') AS ym, SUM(h.quantity) AS totalQty, COUNT(h.id) AS cnt " +
             "FROM harvest h " +
-            "WHERE (:start IS NULL OR h.harvestdate >= :start) " +
+            "JOIN cultivation cu ON cu.id = h.cultivation_id " +
+            "WHERE (:cropTypeId IS NULL OR cu.croptype_id = :cropTypeId) " +
+            "AND (:start IS NULL OR h.harvestdate >= :start) " +
             "AND (:end IS NULL OR h.harvestdate <= :end) " +
             "AND (:minQty IS NULL OR h.quantity >= :minQty) " +
             "AND (:maxQty IS NULL OR h.quantity <= :maxQty) " +
             "GROUP BY ym ORDER BY ym", nativeQuery = true)
-    List<Object[]> getHarvestSummaryByMonth(@Param("start") Date start,
+    List<Object[]> getHarvestSummaryByMonth(@Param("cropTypeId") Integer cropTypeId,
+                                            @Param("start") Date start,
                                             @Param("end") Date end,
                                             @Param("minQty") BigDecimal minQty,
                                             @Param("maxQty") BigDecimal maxQty);

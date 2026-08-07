@@ -24,4 +24,16 @@ public interface GenderReportDao extends JpaRepository<Citizen, Integer> {
                                           @Param("genderId") Integer genderId,
                                           @Param("statusId") Integer statusId);
 
+
+    /** headcount inside a date-of-birth window, used to build the age-group report */
+    @Query("SELECT COUNT(c.id) FROM Citizen c " +
+            "WHERE (:dobFrom IS NULL OR c.dateofbirth >= :dobFrom) " +
+            "AND (:dobTo IS NULL OR c.dateofbirth <= :dobTo) " +
+            "AND (:genderId IS NULL OR c.gender.id = :genderId) " +
+            "AND (:statusId IS NULL OR c.citizenstatus.id = :statusId)")
+    long countInAgeBand(@Param("dobFrom") Date dobFrom,
+                        @Param("dobTo") Date dobTo,
+                        @Param("genderId") Integer genderId,
+                        @Param("statusId") Integer statusId);
+
 }

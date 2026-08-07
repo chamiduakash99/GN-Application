@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.Objects;
@@ -30,6 +31,8 @@ public class Certificate {
     // actual MySQL column name, no DB schema change is needed for this fix.
     @Basic
     @Column(name = "cetificateno")
+    @Pattern(regexp = "^(INC|RES|CHR)CERT\\d{4}$",
+            message = "Certificate No must be INCCERT / RESCERT / CHRCERT followed by 4 digits, e.g. INCCERT0001")
     private String certificateno;
 
     @Basic

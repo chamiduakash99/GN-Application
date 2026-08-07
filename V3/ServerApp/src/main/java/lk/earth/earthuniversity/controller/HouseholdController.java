@@ -102,18 +102,26 @@ public class HouseholdController {
         if (household == null)
             errors = "<br> Household Does Not Exist";
 
-        // Guard: cannot delete if household still has members
-        if (household != null &&
-                household.getCitizensById() != null &&
-                !household.getCitizensById().isEmpty()) {
-            errors = "<br> Cannot delete household with active members. " +
-                    "Please reassign or remove all citizens first.";
-        }
-
-        if (errors.equals(""))
+        if (errors.equals("")) {
+            // Detach every member first. A citizen belongs to a household through
+            // citizen.household_id, so deleting the household row while members still
+            // point at it would fail the foreign key. Previously this method refused
+            // outright, which made a household whose only member was also its head
+            // impossible to delete: removeMember() would not release the head, and
+            // delete() would not accept a household that still had one.
+            // The citizens themselves are never deleted - they simply become unassigned.
+            if (household.getCitizensById() != null) {
+                for (lk.earth.earthuniversity.entity.Citizen member :
+                        new java.util.ArrayList<>(household.getCitizensById())) {
+                    member.setHousehold(null);
+                    citizendao.save(member);
+                }
+                household.getCitizensById().clear();
+            }
             householddao.delete(household);
-        else
+        } else {
             errors = "Server Validation Errors : <br> " + errors;
+        }
 
         response.put("id",  String.valueOf(id));
         response.put("url", "/households/" + id);
@@ -170,11 +178,15 @@ public class HouseholdController {
         if (household == null) errors += "<br> Household Does Not Exist";
         if (citizen == null)   errors += "<br> Citizen Does Not Exist";
 
-        if (errors.isEmpty() && java.util.Objects.equals(household.getHeadcitizenId(), citizenId)) {
-            errors += "<br> This citizen is the head of the household. Choose a different head first.";
-        }
-
         if (errors.isEmpty()) {
+            // Removing the head is allowed. headcitizen_id is a plain nullable column,
+            // so it is cleared here and the household is left without a head until the
+            // officer picks a new one. Refusing instead used to deadlock a household
+            // whose only member was its head.
+            if (java.util.Objects.equals(household.getHeadcitizenId(), citizenId)) {
+                household.setHeadcitizenId(null);
+                householddao.save(household);
+            }
             citizen.setHousehold(null);
             citizendao.save(citizen);
         } else {

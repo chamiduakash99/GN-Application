@@ -403,6 +403,7 @@ public class ReportController {
 
     @GetMapping(path = "/harvestreport", produces = "application/json")
     public List<CountReport> countHarvests(
+            @RequestParam(value = "cropTypeId", required = false) Integer cropTypeId,
             @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
             @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
             @RequestParam(value = "minQty", required = false) BigDecimal minQty,
@@ -411,7 +412,7 @@ public class ReportController {
         Date startDate = (start != null) ? Date.valueOf(start) : null;
         Date endDate = (end != null) ? Date.valueOf(end) : null;
 
-        List<Object[]> rows = harvestReportDao.getHarvestSummaryByMonth(startDate, endDate, minQty, maxQty);
+        List<Object[]> rows = harvestReportDao.getHarvestSummaryByMonth(cropTypeId, startDate, endDate, minQty, maxQty);
 
         List<CountReport> result = new ArrayList<>();
         for (Object[] row : rows) {
@@ -495,4 +496,36 @@ public class ReportController {
         return java.sql.Date.valueOf(java.time.LocalDate.now().minusYears(maxAge + 1L).plusDays(1));
     }
 
+
+    // ── Citizen age groups ────────────────────────────────────────────────────
+    // Age bands are worked out as date-of-birth windows so the DB does no date maths.
+    @Autowired
+    private GenderReportDao ageGroupDao;   // any Citizen-rooted repository will do
+
+    @GetMapping(path = "/agegroupreport", produces = "application/json")
+    public List<CountReport> countByAgeGroup(
+            @RequestParam(value = "minAge", required = false) Integer minAge,
+            @RequestParam(value = "maxAge", required = false) Integer maxAge,
+            @RequestParam(value = "genderId", required = false) Integer genderId,
+            @RequestParam(value = "citizenstatusId", required = false) Integer citizenstatusId) {
+
+        int[][] bands = {{0, 17}, {18, 35}, {36, 60}, {61, 200}};
+        String[] labels = {"0 - 17", "18 - 35", "36 - 60", "61+"};
+
+        List<CountReport> result = new ArrayList<>();
+        for (int i = 0; i < bands.length; i++) {
+            int lo = bands[i][0];
+            int hi = bands[i][1];
+            // intersect the band with any age filter the user supplied
+            if (minAge != null && hi < minAge) continue;
+            if (maxAge != null && lo > maxAge) continue;
+            int effLo = (minAge != null) ? Math.max(lo, minAge) : lo;
+            int effHi = (maxAge != null) ? Math.min(hi, maxAge) : hi;
+
+            long count = ageGroupDao.countInAgeBand(
+                    dobLowerBound(effHi), dobUpperBound(effLo), genderId, citizenstatusId);
+            result.add(new CountReport(labels[i], Long.valueOf(count)));
+        }
+        return withPercentages(result);
+    }
 }

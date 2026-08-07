@@ -206,7 +206,10 @@ public class CitizenController {
                     existing.getCitizenguardians().add(citizenguardian);
                 });
             }
-            BeanUtils.copyProperties(citizen,existing,"id","citizenaidprograms","citizenguardians");
+            // "household" MUST be ignored: it is @JsonIgnore, so the incoming object always
+            // carries null, and copying that null over the managed entity silently removed
+            // the citizen from their household on every ordinary edit.
+            BeanUtils.copyProperties(citizen, existing, "id", "citizenaidprograms", "citizenguardians", "household");
             citizenDao.save(existing);
         } else {
             errors = "Server Validation Errors:<br>" + errors;

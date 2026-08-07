@@ -103,6 +103,11 @@ public class EmployeeController {
             errors = errors+"<br> Existing Number";
         if(emp2!=null && !java.util.Objects.equals(employee.getId(), emp2.getId()))
             errors = errors+"<br> Existing NIC";
+//        if (employee.getDobirth() != null) {
+//            java.time.LocalDate dob = new java.sql.Date(employee.getDobirth().getTime()).toLocalDate();
+//            if (dob.plusYears(18).isAfter(java.time.LocalDate.now()))
+//                errors += "<br> Employee must be at least 18 years old";
+//        }
 
 
         if(errors=="") employeedao.save(employee);

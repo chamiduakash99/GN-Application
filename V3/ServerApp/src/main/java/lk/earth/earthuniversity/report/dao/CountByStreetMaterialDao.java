@@ -15,7 +15,8 @@ public interface CountByStreetMaterialDao extends JpaRepository<Street, Integer>
             "FROM Street s JOIN s.streetmatierial sm GROUP BY sm.id, sm.name")
     List<CountReport> countByStreetMaterial();
 
-    @Query("SELECT NEW lk.earth.earthuniversity.report.entity.CountReport(sm.name, COUNT(s.id)) " +
+    // the third argument lands in CountReport.value and is shown as Total Length
+    @Query("SELECT NEW lk.earth.earthuniversity.report.entity.CountReport(sm.name, COUNT(s.id), SUM(s.length)) " +
             "FROM Street s JOIN s.streetmatierial sm " +
             "WHERE (:minLength IS NULL OR s.length >= :minLength) " +
             "AND (:maxLength IS NULL OR s.length <= :maxLength) " +
@@ -23,7 +24,7 @@ public interface CountByStreetMaterialDao extends JpaRepository<Street, Integer>
     List<CountReport> countByStreetMaterial(@Param("minLength") BigDecimal minLength,
                                             @Param("maxLength") BigDecimal maxLength);
 
-    @Query("SELECT NEW lk.earth.earthuniversity.report.entity.CountReport(ss.status, COUNT(s.id)) " +
+    @Query("SELECT NEW lk.earth.earthuniversity.report.entity.CountReport(ss.status, COUNT(s.id), SUM(s.length)) " +
             "FROM Street s JOIN s.streetstatus ss " +
             "WHERE (:minLength IS NULL OR s.length >= :minLength) " +
             "AND (:maxLength IS NULL OR s.length <= :maxLength) " +

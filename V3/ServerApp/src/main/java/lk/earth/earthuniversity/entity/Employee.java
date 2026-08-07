@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.earth.earthuniversity.util.RegexPattern;
 
 import javax.persistence.*;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.util.Arrays;
@@ -34,6 +35,11 @@ public class Employee {
     @Column(name = "dobirth")
     @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date Format")
     private Date dobirth;
+
+//    @Basic
+//    @Column(name = "dobirth")
+//    @Past(message = "Date of birth must be in the past")
+//    private Date dobirth;
     @Basic
     @Column(name = "nic")
     @Pattern(regexp = "^(([\\d]{9}[vVxX])|([\\d]{12}))$", message = "NIC must be 9 digits followed by V or X, or 12 digits, e.g. 912345678V")
