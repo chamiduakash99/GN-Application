@@ -28,9 +28,9 @@ export class CertificateRequestComponent implements OnInit {
   // ─────────────────────────────────────────────
   // TABLE
   // ─────────────────────────────────────────────
-  columns: string[] = ['citizen', 'type', 'status', 'date', 'purpose', 'download', 'modi'];
-  headers: string[] = ['Citizen', 'Type', 'Status', 'Requested Date', 'Purpose', 'Download', 'Action'];
-  binders: string[] = ['citizen.name', 'certificatetype.name', 'requeststatus.name', 'requesteddate', 'purpose', 'getModi()'];
+  columns: string[] = ['citizen', 'type', 'status', 'date', 'purpose', 'download'];
+  headers: string[] = ['Citizen', 'Type', 'Status', 'Requested Date', 'Purpose', 'Download'];
+  binders: string[] = ['citizen.name', 'certificatetype.name', 'requeststatus.name', 'requesteddate', 'purpose'];
 
   requests: Certificaterequest[] = [];
   data!: MatTableDataSource<Certificaterequest>;
