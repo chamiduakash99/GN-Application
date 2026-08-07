@@ -46,7 +46,8 @@
         <mat-form [formGroup]="certform">
           <mat-form-field appearance="outline">
             <mat-label>Certificate No</mat-label>
-            <input matInput formControlName="certificateno">
+            <input matInput formControlName="certificateno"
+                   placeholder="e.g. INCCERT0001 / RESCERT0001 / CHRCERT0001">
           </mat-form-field>
 
           <mat-form-field appearance="outline">
@@ -59,11 +60,13 @@
           <!-- Scan upload -->
           <div id="scanpanel">
             <div class="scanstatus">
-              <mat-icon>{{ hasstoredscan ? 'picture_as_pdf' : 'upload_file' }}</mat-icon>
-              <span>{{ hasstoredscan ? 'Scanned copy stored' : 'No scanned copy' }}</span>
+              <mat-icon>{{ (hasstoredscan || scanselected) ? 'picture_as_pdf' : 'upload_file' }}</mat-icon>
+              <span>{{ scanselected
+                         ? 'New file selected \u2014 not yet uploaded'
+                         : (hasstoredscan ? 'Scanned copy stored' : 'No scanned copy') }}</span>
             </div>
             <div id="scanbuttons">
-              <input id="scanImage" hidden="hidden" (change)="selectScan($event)" type="file" formControlName="scannedcopy">
+              <input id="scanImage" hidden="hidden" accept=".pdf,image/*" (change)="selectScan($event)" type="file" formControlName="scannedcopy">
               <label for="scanImage" id="scanselectbutton">Select Scan</label>
               <label id="scanclearbutton" (click)="clearScan()">Clear</label>
             </div>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -47,7 +47,7 @@ export interface Group<T> {
     </mat-form-field>
   `
 })
-export class AppGroupAutocompleteComponent<T extends Record<string, any>> implements OnInit {
+export class AppGroupAutocompleteComponent<T extends Record<string, any>> implements OnInit, OnChanges {
 
   @Input() control!: FormControl<T | string>;
   @Input() options: T[] = [];
@@ -58,6 +58,21 @@ export class AppGroupAutocompleteComponent<T extends Record<string, any>> implem
   filteredGroups!: Observable<Group<T>[]>;
 
   ngOnInit(): void {
+    this.subscribe();
+  }
+
+  /**
+   * The host rebuilds its FormGroup after a successful save, so a brand new FormControl
+   * arrives on this input. Without this the filter list stayed bound to the discarded
+   * control and the drop-down stopped responding after the first add.
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['control'] && !changes['control'].firstChange && this.control) {
+      this.subscribe();
+    }
+  }
+
+  private subscribe(): void {
     this.filteredGroups = this.control.valueChanges.pipe(
       startWith(''),
       map(value => {

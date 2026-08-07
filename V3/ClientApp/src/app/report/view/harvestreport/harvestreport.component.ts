@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {ReportService} from "../../reportservice";
+import {HttpClient} from '@angular/common/http';
 import {Chart} from "chart.js/auto";
 import {countreport} from "../../entity/countreport";
 
@@ -23,15 +24,19 @@ export class HarvestreportComponent implements OnInit, AfterViewInit {
   endDate: Date | null = null;
   minQty: number | null = null;
   maxQty: number | null = null;
+  cropTypeId: number | null = null;
+  croptypes: any[] = [];
 
   private viewReady = false;
 
   @ViewChild('columnchart', { static: false }) columnchart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('piechart', { static: false }) piechart!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private rs: ReportService) { }
+  constructor(private rs: ReportService, private http: HttpClient) { }
 
   ngOnInit(): void {
+    this.http.get<any[]>('http://localhost:8080/croptypes/list')
+      .toPromise().then(r => this.croptypes = r ?? []).catch(() => this.croptypes = []);
     this.loadData();
   }
 
@@ -50,6 +55,9 @@ export class HarvestreportComponent implements OnInit, AfterViewInit {
   async applyFilter(): Promise<void> {
     const params: string[] = [];
 
+    if (this.cropTypeId !== null && this.cropTypeId !== undefined) {
+      params.push(`cropTypeId=${this.cropTypeId}`);
+    }
     if (this.startDate) {
       params.push(`start=${this.formatDate(this.startDate)}`);
     }
@@ -73,6 +81,7 @@ export class HarvestreportComponent implements OnInit, AfterViewInit {
   }
 
   clearFilter(): void {
+    this.cropTypeId = null;
     this.startDate = null;
     this.endDate = null;
     this.minQty = null;
@@ -102,11 +111,13 @@ export class HarvestreportComponent implements OnInit, AfterViewInit {
   }
 
   drawCharts(): void {
+
+    this.destroyCharts();
     const labels = this.harvestreports.map(sm => sm.name);
     const counts = this.harvestreports.map(sm => sm.count);
     const percentages = this.harvestreports.map(sm => sm.percentage);
 
-    new Chart(this.columnchart.nativeElement, {
+    this.track(new Chart(this.columnchart.nativeElement, {
       type: 'bar',
       data: {
         labels,
@@ -126,9 +137,9 @@ export class HarvestreportComponent implements OnInit, AfterViewInit {
           y: { title: { display: true, text: 'Values' }, beginAtZero: true }
         }
       }
-    });
+    }));
 
-    new Chart(this.piechart.nativeElement, {
+    this.track(new Chart(this.piechart.nativeElement, {
       type: 'pie',
       data: {
         labels,
@@ -140,6 +151,15 @@ export class HarvestreportComponent implements OnInit, AfterViewInit {
           title: { display: true, text: 'Harvest Report (Pie Chart)' }
         }
       }
-    });
+    }));
+  }
+
+  // Chart.js refuses to reuse a canvas, so keep the instances and destroy
+  // them before every redraw - otherwise Search/Clear throws and the charts freeze.
+  private charts: any[] = [];
+  track(chart: any): any { this.charts.push(chart); return chart; }
+  private destroyCharts(): void {
+    this.charts.forEach(c => { try { c.destroy(); } catch (e) { } });
+    this.charts = [];
   }
 }

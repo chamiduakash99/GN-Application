@@ -37,8 +37,8 @@ export class VoterregistryComponent implements OnInit {
   voterheaders: string[] = ['Serial No', 'Full Name', 'Name w/ Initials', 'NIC', 'Date of Birth', 'Mobile', 'Action'];
   voterbinders: string[] = ['serialno', 'citizen.name', 'citizen.namewithinitials', 'citizen.nic', 'citizen.dateofbirth', 'citizen.mobileno', ''];
 
-  csvotercolumns: string[] = ['csserial', 'csname', 'csnic', 'csdob'];
-  csvoterprompts: string[] = ['Search Serial', 'Search Name', 'Search NIC', 'Search DOB'];
+  csvotercolumns: string[] = ['csserial', 'csname', 'cspadinit', 'csnic', 'csdob', 'cspadmob', 'cspadact'];
+  csvoterprompts: string[] = ['Search Serial', 'Search Name', '', 'Search NIC', 'Search DOB', '', ''];
 
   voters: Voterregistry[]  = [];
   voterdata!: MatTableDataSource<Voterregistry>;

@@ -1,40 +1,46 @@
-<div style="padding: 16px 16px 0 16px; display: flex; align-items: center; flex-wrap: wrap;">
+<mat-grid-list [cols]="12" rowHeight="13rem">
 
-  <mat-form-field appearance="outline" style="margin-right: 16px; width: 140px;">
-    <mat-label>Min Age</mat-label>
-    <input matInput type="number" min="0" [(ngModel)]="minAge" placeholder="e.g. 18">
-  </mat-form-field>
+  <mat-grid-tile [colspan]="4" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Filter Citizens</mat-card-title></mat-card-header>
+      <mat-card-content>
 
-  <mat-form-field appearance="outline" style="margin-right: 16px; width: 140px;">
-    <mat-label>Max Age</mat-label>
-    <input matInput type="number" min="0" [(ngModel)]="maxAge" placeholder="e.g. 60">
-  </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Min Age</mat-label>
+          <input matInput type="number" min="0" [(ngModel)]="minAge" placeholder="e.g. 18">
+        </mat-form-field>
 
-  <mat-form-field appearance="outline" style="margin-right: 16px; width: 180px;">
-    <mat-label>Gender</mat-label>
-    <mat-select [(ngModel)]="genderId">
-      <mat-option [value]="null">All Genders</mat-option>
-      <mat-option *ngFor="let g of genders" [value]="g.id">{{g.name}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Max Age</mat-label>
+          <input matInput type="number" min="0" [(ngModel)]="maxAge" placeholder="e.g. 60">
+        </mat-form-field>
 
-  <mat-form-field appearance="outline" style="margin-right: 16px; width: 200px;">
-    <mat-label>Citizen Status</mat-label>
-    <mat-select [(ngModel)]="citizenstatusId">
-      <mat-option [value]="null">All Statuses</mat-option>
-      <mat-option *ngFor="let s of citizenstatuses" [value]="s.id">{{s.name}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Gender</mat-label>
+          <mat-select [(ngModel)]="genderId">
+            <mat-option [value]="null">All Genders</mat-option>
+            <mat-option *ngFor="let g of genders" [value]="g.id">{{g.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-  <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
-  <button mat-raised-button (click)="clearFilter()">Clear</button>
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Citizen Status</mat-label>
+          <mat-select [(ngModel)]="citizenstatusId">
+            <mat-option [value]="null">All Statuses</mat-option>
+            <mat-option *ngFor="let st of citizenstatuses" [value]="st.id">{{st.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
 
-</div>
+        <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
+        <button mat-stroked-button class="brand-btn-outline" (click)="clearFilter()">Clear</button>
 
-<mat-grid-list [cols]="1" rowHeight="13rem">
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
 
   <!-- Gender -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="8" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Gender - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -56,7 +62,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Gender - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #gendercolumnchart></canvas></mat-card-content>
@@ -70,7 +76,7 @@
   <mat-divider [inset]="true"></mat-divider>
 
   <!-- Citizen Status -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Citizen Status - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -92,7 +98,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Citizen Status - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #citizenstatuscolumnchart></canvas></mat-card-content>
@@ -106,7 +112,7 @@
   <mat-divider [inset]="true"></mat-divider>
 
   <!-- Religion -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Religion - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -128,7 +134,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Religion - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #religioncolumnchart></canvas></mat-card-content>
@@ -142,7 +148,7 @@
   <mat-divider [inset]="true"></mat-divider>
 
   <!-- Ethnicity -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Ethnicity - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -164,7 +170,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Ethnicity - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #ethnicitycolumnchart></canvas></mat-card-content>
@@ -178,7 +184,7 @@
   <mat-divider [inset]="true"></mat-divider>
 
   <!-- Education Level Type -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Education Level - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -200,7 +206,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Education Level - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #educationlevelcolumnchart></canvas></mat-card-content>
@@ -214,7 +220,7 @@
   <mat-divider [inset]="true"></mat-divider>
 
   <!-- Marital Status  -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Marital Status - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -236,7 +242,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Marital Status - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #matiralstatuscolumnchart></canvas></mat-card-content>
@@ -251,7 +257,7 @@
 
 
   <!-- Aid Program -->
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Aid Program - Table View</mat-card-title></mat-card-header>
       <mat-card-content>
@@ -273,7 +279,7 @@
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="12" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Aid Program - Column Chart</mat-card-title></mat-card-header>
       <mat-card-content><canvas #aidprogramcolumnchart></canvas></mat-card-content>
@@ -281,6 +287,44 @@
     <mat-card>
       <mat-card-header><mat-card-title>Aid Program - Pie Chart View</mat-card-title></mat-card-header>
       <mat-card-content><canvas #aidprogrampiechart></canvas></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <!-- age group -->
+
+  <mat-grid-tile [colspan]="8" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Age Group - Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="agegroupData">
+          <ng-container *ngFor="let column of agegroupColumns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef>{{ agegroupHeaders[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element[agegroupBinders[i]] }}</mat-cell>
+            <ng-container *matFooterCellDef>
+              <mat-footer-cell *ngIf="i === 0">Total</mat-footer-cell>
+              <mat-footer-cell *ngIf="i === 1"></mat-footer-cell>
+              <mat-footer-cell *ngIf="i > 1">{{ agegroupTotal[i-2] }}</mat-footer-cell>
+            </ng-container>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="agegroupColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: agegroupColumns;"></mat-row>
+          <mat-footer-row *matFooterRowDef="agegroupColumns"></mat-footer-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="4" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Age Group - Column Chart</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #agegroupcolumnchart></canvas></mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header><mat-card-title>Age Group - Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><canvas #agegrouppiechart></canvas></mat-card-content>
     </mat-card>
   </mat-grid-tile>
 

@@ -39,7 +39,7 @@
             <mat-select formControlName="headcitizenId">
               <mat-option [value]="null">Not Selected</mat-option>
               <!-- the head must be someone who actually lives in this household -->
-              <mat-option *ngFor="let c of (members.length ? members : citizens)" [value]="c.id">
+              <mat-option *ngFor="let c of headCandidates" [value]="c.id">
                 {{c.name}} (ID: {{c.id}})
               </mat-option>
             </mat-select>
@@ -128,7 +128,8 @@
 
           <ng-container *ngFor="let cscol of cshhcolumns; let i = index" [matColumnDef]="cscol">
             <mat-header-cell *matHeaderCellDef>
-              <mat-form [formGroup]="cssearch" class="csearch">
+              <!-- blank prompt = spacer column so the search row lines up with the data columns -->
+              <mat-form *ngIf="cshhprompts[i]" [formGroup]="cssearch" class="csearch">
                 <mat-form-field appearance="outline">
                   <mat-label>{{cshhprompts[i]}}</mat-label>
                   <input matInput [formControlName]="cscol" (keyup)="filterTable()">
@@ -199,8 +200,7 @@
               </ng-container>
               <ng-template #removeCell>
                 <button mat-icon-button color="warn" (click)="removeMember(element)"
-                        [disabled]="element.id === household?.headcitizenId"
-                        [title]="element.id === household?.headcitizenId ? 'Change the head of household first' : 'Remove from household'">
+                        [title]="element.id === household?.headcitizenId ? 'Remove the head - the household will be left without one' : 'Remove from household'">
                   <mat-icon>person_remove</mat-icon>
                 </button>
               </ng-template>

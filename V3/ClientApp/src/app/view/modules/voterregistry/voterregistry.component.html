@@ -255,6 +255,17 @@
             </mat-header-cell>
           </ng-container>
 
+          <!-- spacers so the search row lines up with the 7 data columns -->
+          <ng-container matColumnDef="cspadinit">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+          <ng-container matColumnDef="cspadmob">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+          <ng-container matColumnDef="cspadact">
+            <mat-header-cell *matHeaderCellDef></mat-header-cell>
+          </ng-container>
+
           <mat-header-row *matHeaderRowDef="votercolumns"></mat-header-row>
           <mat-header-row *matHeaderRowDef="csvotercolumns"></mat-header-row>
           <mat-row *matRowDef="let row; columns: votercolumns;"

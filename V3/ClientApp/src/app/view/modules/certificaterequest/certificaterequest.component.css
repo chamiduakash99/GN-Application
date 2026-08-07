@@ -109,6 +109,19 @@ mat-card-header {
   padding: 10px 0;
 }
 
+/* The global rule `mat-form-field { margin: -5px !important; }` in styles.css pulls
+   every field 5px upwards, which dragged the outlined Reject Reason box (and its
+   floating label) on top of this line. The bottom margin below restores the gap. */
+.status-box {
+  display: block;
+  background-color: #eef2f7;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #3b4e5f;
+  margin-bottom: 26px;
+}
+
 #decisionpanel {
   display: flex;
   gap: 10px;

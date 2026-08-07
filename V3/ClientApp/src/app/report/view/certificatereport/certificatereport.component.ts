@@ -108,11 +108,13 @@ export class CertificatereportComponent implements OnInit, AfterViewInit {
   }
 
   drawCharts(): void {
+
+    this.destroyCharts();
     const labels = this.certificatereports.map(sm => sm.name);
     const counts = this.certificatereports.map(sm => sm.count);
     const percentages = this.certificatereports.map(sm => sm.percentage);
 
-    new Chart(this.columnchart.nativeElement, {
+    this.track(new Chart(this.columnchart.nativeElement, {
       type: 'bar',
       data: {
         labels,
@@ -132,9 +134,9 @@ export class CertificatereportComponent implements OnInit, AfterViewInit {
           y: { title: { display: true, text: 'Values' }, beginAtZero: true }
         }
       }
-    });
+    }));
 
-    new Chart(this.piechart.nativeElement, {
+    this.track(new Chart(this.piechart.nativeElement, {
       type: 'pie',
       data: {
         labels,
@@ -146,6 +148,15 @@ export class CertificatereportComponent implements OnInit, AfterViewInit {
           title: { display: true, text: 'Certificate Report (Pie Chart)' }
         }
       }
-    });
+    }));
+  }
+
+  // Chart.js refuses to reuse a canvas, so keep the instances and destroy
+  // them before every redraw - otherwise Search/Clear throws and the charts freeze.
+  private charts: any[] = [];
+  track(chart: any): any { this.charts.push(chart); return chart; }
+  private destroyCharts(): void {
+    this.charts.forEach(c => { try { c.destroy(); } catch (e) { } });
+    this.charts = [];
   }
 }

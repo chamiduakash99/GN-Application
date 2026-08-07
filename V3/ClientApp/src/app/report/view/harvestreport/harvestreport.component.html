@@ -5,6 +5,14 @@
       <mat-card-header><mat-card-title>Filter Harvest</mat-card-title></mat-card-header>
       <mat-card-content>
         <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Crop Type</mat-label>
+          <mat-select [(ngModel)]="cropTypeId">
+            <mat-option [value]="null">All Crop Types</mat-option>
+            <mat-option *ngFor="let ct of croptypes" [value]="ct.id">{{ct.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
           <mat-label>Start Date</mat-label>
           <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate">
           <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>

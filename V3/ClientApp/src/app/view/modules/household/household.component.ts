@@ -30,8 +30,8 @@ export class HouseholdComponent implements OnInit {
   hhheaders: string[] = ['Household No', 'Address', 'Registered', 'Head Citizen ID', 'Members'];
   hhbinders: string[] = ['householdno', 'address', 'registrationdate', 'headcitizenId', 'getMemberCount()'];
 
-  cshhcolumns: string[] = ['cshhno', 'csaddr'];
-  cshhprompts: string[] = ['Search No', 'Search Address'];
+  cshhcolumns: string[] = ['cshhno', 'csaddr', 'cspad1', 'cspad2', 'cspad3'];
+  cshhprompts: string[] = ['Search No', 'Search Address', '', '', ''];
 
   // ── Members table ──────────────────────────────────────────────────────────
   memcolumns: string[] = ['name', 'nic', 'dateofbirth', 'mobileno', 'citizenstatus', 'memremove'];
@@ -363,7 +363,8 @@ export class HouseholdComponent implements OnInit {
     const memberCount = this.oldhousehold.citizensById?.length ?? 0;
     const warnMsg = memberCount > 0
       ? `This household has <strong>${memberCount} member(s)</strong>. ` +
-      'Deleting will fail if members are still assigned. Are you sure to proceed?'
+      'They will be unassigned from any household - the citizen records themselves are kept. ' +
+      'Are you sure to proceed?'
       : 'Are you sure to Delete this Household?';
 
     const confirm = this.dg.open(ConfirmComponent, {
@@ -471,7 +472,11 @@ export class HouseholdComponent implements OnInit {
 
     const confirm = this.dg.open(ConfirmComponent, {width: "500px",
       data: {heading: "Confirmation - Remove Member",
-             message: "Remove " + citizen.name + " from household " + this.household.householdno + "?"}});
+             message: "Remove " + citizen.name + " from household " + this.household.householdno + "?"
+                        + (citizen.id === this.household.headcitizenId
+                            ? "<br><br><strong>This citizen is the head of the household.</strong> "
+                              + "Removing them leaves the household without a head until you choose a new one."
+                            : "")}});
 
     confirm.afterClosed().subscribe(result => {
       if (!result) { return; }
@@ -491,5 +496,18 @@ export class HouseholdComponent implements OnInit {
                    message: error?.error?.errors || error?.error?.message || error?.message || "Could not remove the member."}});
         });
     });
+  }
+
+  /** Members of this household, plus whoever is currently head even if they are
+   *  not a member yet - otherwise the select renders blank on an existing record. */
+  get headCandidates(): Citizen[] {
+    if (!this.members || this.members.length === 0) { return this.citizens ?? []; }
+    const list = [...this.members];
+    const headId = this.household?.headcitizenId;
+    if (headId && !list.some(c => c.id === headId)) {
+      const head = (this.citizens ?? []).find(c => c.id === headId);
+      if (head) { list.push(head); }
+    }
+    return list;
   }
 }

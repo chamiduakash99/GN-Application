@@ -48,8 +48,8 @@ export class CultivationComponent implements OnInit {
   harheaders: string[] = ['Harvest Date', 'Quantity', 'Quality / Remarks', 'Modification'];
   harbinders: string[] = ['harvestdate', 'quantity', 'qualityremarks', 'getHarModi()'];
 
-  csharcolumns: string[] = ['cshardate', 'csqty', 'csquality'];
-  csharprompts: string[] = ['Search Date', 'Search Qty', 'Search Quality'];
+  csharcolumns: string[] = ['cshardate', 'csqty', 'csquality', 'csharpad'];
+  csharprompts: string[] = ['Search Date', 'Search Qty', 'Search Quality', ''];
 
   // ── Forms ──────────────────────────────────────────────────────────────────
   cssearch!: FormGroup;

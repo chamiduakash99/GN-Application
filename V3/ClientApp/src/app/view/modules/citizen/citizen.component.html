@@ -43,6 +43,13 @@
             <mat-datepicker #dob></mat-datepicker>
           </mat-form-field>
 
+          <!-- Age - calculated from Date of Birth, not stored -->
+<!--          <mat-form-field appearance="outline">-->
+<!--            <mat-label>Age</mat-label>-->
+<!--            <input matInput readonly [value]="citizenAge" placeholder="Select a date of birth">-->
+<!--            <mat-icon matSuffix>cake</mat-icon>-->
+<!--          </mat-form-field>-->
+
           <mat-form-field appearance="outline">
             <mat-label>Citizen Status</mat-label>
             <mat-select formControlName="citizenstatus">

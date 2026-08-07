@@ -1,28 +1,29 @@
-
-
 <mat-grid-list [cols]="12" rowHeight="13rem">
 
-  <mat-grid-tile [colspan]="3" [rowspan]="2">
-  <div style="padding: 16px 16px 0 16px; display: flex; align-items: center; flex-wrap: wrap;">
+  <mat-grid-tile [colspan]="4" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Filter Streets</mat-card-title></mat-card-header>
+      <mat-card-content>
 
-    <mat-form-field appearance="outline" style="margin-right: 16px;">
-      <mat-label>Min Length (km)</mat-label>
-      <input matInput type="number" min="0" [(ngModel)]="minLength" placeholder="e.g. 0.20">
-    </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Min Length (m)</mat-label>
+          <input matInput type="number" min="0" [(ngModel)]="minLength" placeholder="e.g. 100">
+        </mat-form-field>
 
-    <mat-form-field appearance="outline" style="margin-right: 16px;">
-      <mat-label>Max Length (km)</mat-label>
-      <input matInput type="number" min="0" [(ngModel)]="maxLength" placeholder="e.g. 1.25">
-    </mat-form-field>
+        <mat-form-field appearance="outline" style="margin-right: 16px;">
+          <mat-label>Max Length (m)</mat-label>
+          <input matInput type="number" min="0" [(ngModel)]="maxLength" placeholder="e.g. 2000">
+        </mat-form-field>
 
-    <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
-    <button mat-raised-button (click)="clearFilter()">Clear</button>
+        <button mat-raised-button class="brand-btn" (click)="applyFilter()" style="margin-right: 8px;">Search</button>
+        <button mat-stroked-button class="brand-btn-outline" (click)="clearFilter()">Clear</button>
 
-  </div>
+      </mat-card-content>
+    </mat-card>
   </mat-grid-tile>
 
 
-  <mat-grid-tile [colspan]="9" [rowspan]="2">
+  <mat-grid-tile [colspan]="8" [rowspan]="2">
     <mat-card>
       <mat-card-header><mat-card-title>Street Material - Table View</mat-card-title></mat-card-header>
       <mat-card-content>

@@ -214,6 +214,25 @@ export class CitizenComponent implements OnInit {
     this.applyIdValidators();
   }
 
+
+  get citizenAge(): string {
+    const raw = this.form.get('dateofbirth')!.value;
+    if (!raw) { return ''; }
+    const dob = new Date(raw);
+    if (isNaN(dob.getTime())) { return ''; }
+
+    const today = new Date();
+    if (dob > today) { return 'Invalid date'; }
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    // birthday not reached yet this year
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
+
+    if (age < 0) { return 'Invalid date'; }
+    return age + (age === 1 ? ' year' : ' years') + (age < 18 ? '  (minor)' : '');
+  }
+
   /** true when the date of birth in the form is 18 years ago or earlier */
   isAdultDob(): boolean {
     const raw = this.form.get('dateofbirth')!.value;

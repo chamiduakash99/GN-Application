@@ -12,6 +12,14 @@ import {countreport} from "../../entity/countreport";
 })
 export class CitizenreportComponent implements OnInit, AfterViewInit {
 
+  // ---- Age Group ----
+  agegroupreports: countreport[] = [];
+  agegroupData!: MatTableDataSource<countreport>;
+  agegroupColumns: string[] = ['name', 'percentage', 'count'];
+  agegroupHeaders: string[] = ['Age Group', 'Percentage', 'Count'];
+  agegroupBinders: string[] = ['name', 'percentage', 'count'];
+  agegroupTotal: number[] = [];
+
   // ---- Religion ----
   religionreports: countreport[] = [];
   religionData!: MatTableDataSource<countreport>;
@@ -85,6 +93,8 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
   @ViewChild('citizenstatuspiechart', { static: false }) citizenstatuspiechart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('aidprogramcolumnchart', { static: false }) aidprogramcolumnchart!: ElementRef<HTMLCanvasElement>;
   @ViewChild('aidprogrampiechart', { static: false }) aidprogrampiechart!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('agegroupcolumnchart', { static: false }) agegroupcolumnchart!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('agegrouppiechart', { static: false }) agegrouppiechart!: ElementRef<HTMLCanvasElement>;
 
   constructor(private rs: ReportService, private http: HttpClient) { }
 
@@ -97,6 +107,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     this.loadGenderData();
     this.loadCitizenstatusData();
     this.loadAidprogramData();
+    this.loadAgegroupData();
   }
 
   ngAfterViewInit(): void {
@@ -108,6 +119,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     if (this.genderreports.length) this.drawGenderCharts();
     if (this.citizenstatusreports.length) this.drawCitizenstatusCharts();
     if (this.aidprogramreports.length) this.drawAidprogramCharts();
+    if (this.agegroupreports.length) this.drawAgegroupCharts();
   }
 
   // ---- Religion ----
@@ -363,6 +375,7 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
     this.loadGenderData();
     this.loadCitizenstatusData();
     this.loadAidprogramData();
+    this.loadAgegroupData();
   }
 
   clearFilter(): void {
@@ -379,5 +392,36 @@ export class CitizenreportComponent implements OnInit, AfterViewInit {
       .toPromise().then(r => this.genders = r ?? []).catch(() => this.genders = []);
     this.http.get<any[]>('http://localhost:8080/citizenstatuses/list')
       .toPromise().then(r => this.citizenstatuses = r ?? []).catch(() => this.citizenstatuses = []);
+  }
+
+  // ---- Age Group ----
+  async loadAgegroupData(): Promise<void> {
+    const result = await this.rs.getCountReport('agegroupreport' + this.query());
+    this.agegroupreports = result;
+    this.agegroupTotal = [result.reduce((sum, item) => sum + item.count, 0)];
+    this.agegroupData = new MatTableDataSource(this.agegroupreports);
+    if (this.viewReady) this.drawAgegroupCharts();
+  }
+
+  drawAgegroupCharts(): void {
+    const labels = this.agegroupreports.map(sm => sm.name);
+    const counts = this.agegroupreports.map(sm => sm.count);
+    const percentages = this.agegroupreports.map(sm => sm.percentage);
+
+    this.track(new Chart(this.agegroupcolumnchart.nativeElement, {
+      type: 'bar',
+      data: { labels, datasets: [{ label: 'Count', data: counts }, { label: 'Percentage', data: percentages }] },
+      options: {
+        responsive: true,
+        plugins: { title: { display: true, text: 'Age Group Report (Bar Chart)' }, legend: { position: 'top' } },
+        scales: { x: { title: { display: true, text: 'Age Group' } }, y: { title: { display: true, text: 'Values' }, beginAtZero: true } }
+      }
+    }));
+
+    this.track(new Chart(this.agegrouppiechart.nativeElement, {
+      type: 'pie',
+      data: { labels, datasets: [{ label: 'Count', data: counts }] },
+      options: { responsive: true, plugins: { title: { display: true, text: 'Age Group Report (Pie Chart)' } } }
+    }));
   }
 }

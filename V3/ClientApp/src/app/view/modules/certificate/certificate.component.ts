@@ -21,9 +21,9 @@ import {AuthorizationManager} from "../../../service/authorizationmanager";
 })
 export class CertificateComponent implements OnInit {
   // ── Approved Requests table (select which request to issue a certificate for) ──
-  reqcolumns: string[] = ['citizen', 'certificateType', 'requestedDate', 'purpose', 'modi'];
-  reqheaders: string[] = ['Citizen', 'Type', 'Requested Date', 'Purpose', 'Modification'];
-  reqbinders: string[] = ['citizen.name', 'certificatetype.name', 'requesteddate', 'purpose', 'getReqModi()'];
+  reqcolumns: string[] = ['citizen', 'certificateType', 'requestedDate', 'purpose'];
+  reqheaders: string[] = ['Citizen', 'Type', 'Requested Date', 'Purpose'];
+  reqbinders: string[] = ['citizen.name', 'certificatetype.name', 'requesteddate', 'purpose'];
   reqrequests: Array<Certificaterequest> = [];
   reqdata!: MatTableDataSource<Certificaterequest>;
   selectedreqrow: any;
@@ -55,6 +55,8 @@ export class CertificateComponent implements OnInit {
   scannedimageurl: string = 'assets/default.png';
   today: Date = new Date();   // datepickers use this as their minimum
   hasstoredscan: boolean = false;
+  /** true once the officer picks a file but before Upload Scan succeeds */
+  scanselected: boolean = false;
   @ViewChild('certpaginator') certpaginator!: MatPaginator;
 
   // ── Button states ─────────────────────────────────────────────────────────
@@ -97,7 +99,7 @@ export class CertificateComponent implements OnInit {
     // NOTE: 'employee' control removed on purpose — the officer is never picked
 
     this.certform = this.fb.group({
-      'certificateno': new FormControl('', [Validators.required]),
+      certificateno: new FormControl('', [Validators.required, Validators.pattern(/^(INC|RES|CHR)CERT\d{4}$/)]),
       'issueddate': new FormControl(''),
       'expirydate': new FormControl('', [Validators.required]),
       'scannedcopy': new FormControl(''),
@@ -182,6 +184,7 @@ export class CertificateComponent implements OnInit {
     this.selectedcertrow = null;
     this.certform.reset();
     this.scannedimageurl = 'assets/default.png';
+    this.scanselected = false;
     this.hasstoredscan = false;
   }
 
@@ -282,6 +285,7 @@ export class CertificateComponent implements OnInit {
     this.oldcertificate = JSON.parse(JSON.stringify(cert));
     this.hasstoredscan = !!cert.hasscannedcopy;
     this.scannedimageurl = 'assets/default.png';
+    this.scanselected = false;
     if (this.hasstoredscan) {
       this.certform.controls['scannedcopy'].clearValidators();
       this.certform.controls['scannedcopy'].updateValueAndValidity();
@@ -298,13 +302,16 @@ export class CertificateComponent implements OnInit {
       reader.readAsDataURL(e.target.files[0]);
       reader.onload = (event: any) => {
         this.scannedimageurl = event.target.result;
+        this.scanselected = true;
         this.certform.controls['scannedcopy'].clearValidators();
+        this.certform.controls['scannedcopy'].updateValueAndValidity();
       };
     }
   }
 
   clearScan(): void {
     this.scannedimageurl = 'assets/default.png';
+    this.scanselected = false;
     this.hasstoredscan = false;
     this.certform.controls['scannedcopy'].setErrors({'required': true});
   }
@@ -470,6 +477,7 @@ export class CertificateComponent implements OnInit {
             uplmessage = 'Scanned Copy Uploaded — Status changed to Certificate Ready';
             // the panel still said 'No scanned copy' until the row was re-selected
             this.hasstoredscan = true;
+            this.scanselected = false;
             if (this.certificate) { (this.certificate as any).hasscannedcopy = true; }
             this.loadCertificateTable('');
             this.enableCertButtons(false, true);

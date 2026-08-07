@@ -236,7 +236,8 @@
 
           <ng-container *ngFor="let cscol of csculcolumns; let i = index" [matColumnDef]="cscol">
             <mat-header-cell *matHeaderCellDef>
-              <mat-form [formGroup]="cssearch" class="csearch">
+              <!-- blank prompt = spacer column so the search row lines up with the data columns -->
+              <mat-form *ngIf="csharprompts[i]" [formGroup]="cssearch" class="csearch">
 
                 <ng-container *ngIf="cscol === 'csstatus'; else defaultSearchCell">
                   <mat-form-field appearance="outline">

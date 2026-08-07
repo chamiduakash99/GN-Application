@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -160,7 +160,7 @@ export class LandComponent implements OnInit{
     // main form fields (pattern same as street)
     this.form = this.fb.group({
       deedno: new FormControl('', [Validators.required, Validators.pattern(/^D\d{3}$/)]),
-      street: new FormControl('', [Validators.required]),
+      street: new FormControl('', [Validators.required, LandComponent.mustBeSelected]),
       citizen: new FormControl('', [Validators.required]),
       landtype: new FormControl('', [Validators.required]),
       fencetype: new FormControl('', [Validators.required]),
@@ -470,6 +470,7 @@ export class LandComponent implements OnInit{
 
   add() {
 
+    this.resolveStreet();
     let errors = this.getErrors();
 
     if (errors != "") {
@@ -570,6 +571,33 @@ export class LandComponent implements OnInit{
     return (o && o.id != null) ? {id: o.id} : null;
   }
 
+  /**
+   * The Street field is a free-text autocomplete. Typing a name without picking a row
+   * from the drop-down leaves a plain STRING in the control, which passes
+   * Validators.required but has no id - slimRefs() then sends street: null and MySQL
+   * rejects the insert on the NOT NULL street_id column, which surfaced as the generic
+   * "A required field was left empty" dialog. This validator rejects a value that is
+   * not a real object with an id, so the problem is caught in the form instead.
+   */
+  static mustBeSelected(control: AbstractControl): ValidationErrors | null {
+    const v = control.value;
+    if (v === null || v === undefined || v === '') { return null; }   // required() handles empty
+    return (typeof v === 'object' && v.id != null) ? null : {notselected: true};
+  }
+
+  /**
+   * Last line of defence: if the control still holds a typed string that happens to
+   * match a street name exactly, turn it back into the real Street object.
+   */
+  private resolveStreet(): void {
+    const v: any = this.form.controls['street'].value;
+    if (typeof v === 'string' && v.trim() !== '') {
+      const match = (this.extstreets ?? []).find(
+        st => (st.fullname ?? '').toLowerCase() === v.trim().toLowerCase());
+      if (match) { this.form.controls['street'].setValue(match); }
+    }
+  }
+
   private slimRefs(): void {
     const l: any = this.land;
     l.citizen   = this.ref(l.citizen);
@@ -582,11 +610,25 @@ export class LandComponent implements OnInit{
 
     let errors: string = "";
 
+    const labels: any = {
+      deedno: 'Deed No', street: 'Street', citizen: 'Citizen', landtype: 'Land Type',
+      fencetype: 'Fence Type', latitude: 'Latitude', longitude: 'Longitude',
+      size: 'Size (sq.m)', remarks: 'Remarks'
+    };
+
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
+      const label = labels[controlName] ?? controlName;
 
       if (control.errors) {
-        errors = errors + "<br>Invalid " + controlName;
+        if (control.errors['notselected']) {
+          errors = errors + "<br>" + label + " - please pick a value from the drop-down list "
+                 + "instead of typing it";
+        } else if (control.errors['required']) {
+          errors = errors + "<br>" + label + " is required";
+        } else {
+          errors = errors + "<br>Invalid " + label;
+        }
       }
     }
 
@@ -610,6 +652,7 @@ export class LandComponent implements OnInit{
 
   update() {
 
+    this.resolveStreet();
     let errors = this.getErrors();
 
     if (errors != "") {
@@ -882,7 +925,9 @@ export class LandComponent implements OnInit{
       const result = reader.result as string;
       this.imagelandurl = result.indexOf('base64,') >= 0 ? atob(result.split('base64,')[1]) : result;
       // mark control dirty
-      this.form.controls['image'].markAsDirty();
+      // there is no 'image' control on this form - guard so the reader callback
+      // does not die with "cannot read markAsDirty of undefined"
+      this.form.controls['image']?.markAsDirty();
     };
     reader.readAsDataURL(file);
   }
@@ -895,7 +940,7 @@ export class LandComponent implements OnInit{
     reader.onload = () => {
       const result = reader.result as string;
       this.imagedeedurl = result.indexOf('base64,') >= 0 ? atob(result.split('base64,')[1]) : result;
-      this.form.controls['deed'].markAsDirty();
+      this.form.controls['deed']?.markAsDirty();
     };
     reader.readAsDataURL(file);
   }

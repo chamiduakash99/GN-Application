@@ -3,7 +3,7 @@ import {Employee} from "../../../entity/employee";
 import {EmployeeService} from "../../../service/employeeservice";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {UiAssist} from "../../../util/ui/ui.assist";
 import {Gender} from "../../../entity/gender";
 import {Designation} from "../../../entity/designation";
@@ -133,6 +133,8 @@ export class EmployeeComponent {
 
   }
 
+  // dobirth: new FormControl('', [Validators.required, EmployeeComponent.minimumAge18]),
+
   ngOnInit() {
     this.initialize();
   }
@@ -228,6 +230,31 @@ export class EmployeeComponent {
     this.enaupd = upd;
     this.enadel = del;
   }
+
+  // get employeeAge(): string {
+  //   const raw = this.form.get('dobirth')!.value;
+  //   if (!raw) { return ''; }
+  //   const dob = new Date(raw);
+  //   if (isNaN(dob.getTime())) { return ''; }
+  //   const today = new Date();
+  //   if (dob > today) { return 'Invalid date'; }
+  //   let age = today.getFullYear() - dob.getFullYear();
+  //   const m = today.getMonth() - dob.getMonth();
+  //   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
+  //   if (age < 0) { return 'Invalid date'; }
+  //   return age + (age === 1 ? ' year' : ' years');
+  // }
+
+  // static minimumAge18(control: AbstractControl): ValidationErrors | null {
+  //   if (!control.value) { return null; }          // let required() handle empty
+  //   const dob = new Date(control.value);
+  //   if (isNaN(dob.getTime())) { return null; }
+  //   const today = new Date();
+  //   let age = today.getFullYear() - dob.getFullYear();
+  //   const m = today.getMonth() - dob.getMonth();
+  //   if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) { age--; }
+  //   return age >= 18 ? null : {underage: {actual: age, required: 18}};
+  // }
 
   buttonStates(authorities: { module: string; operation: string }[]): void {
     this.hasInsertAuthority = authorities.some(authority => authority.module === 'employee' && authority.operation === 'insert');

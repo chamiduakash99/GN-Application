@@ -14,17 +14,17 @@ export class CountByStreetMaterialComponent implements OnInit, AfterViewInit {
   // ── Street Material ────────────────────────────────────────────────────────
   countByStreetMaterials: countreport[] = [];
   data!: MatTableDataSource<countreport>;
-  columns: string[] = ['name', 'percentage', 'count'];
-  headers: string[] = ['Street Material', 'Percentage', 'Count'];
-  binders: string[] = ['name', 'percentage', 'count'];
+  columns: string[] = ['name', 'percentage', 'count', 'value'];
+  headers: string[] = ['Street Material', 'Percentage', 'Count', 'Total Length (m)'];
+  binders: string[] = ['name', 'percentage', 'count', 'value'];
   total: number[] = [];
 
   // ── Street Status ──────────────────────────────────────────────────────────
   streetStatusReports: countreport[] = [];
   statusData!: MatTableDataSource<countreport>;
-  statusColumns: string[] = ['name', 'percentage', 'count'];
-  statusHeaders: string[] = ['Street Status', 'Percentage', 'Count'];
-  statusBinders: string[] = ['name', 'percentage', 'count'];
+  statusColumns: string[] = ['name', 'percentage', 'count', 'value'];
+  statusHeaders: string[] = ['Street Status', 'Percentage', 'Count', 'Total Length (m)'];
+  statusBinders: string[] = ['name', 'percentage', 'count', 'value'];
   statusTotal: number[] = [];
 
   ftext = 'Total';
