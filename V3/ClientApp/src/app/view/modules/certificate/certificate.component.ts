@@ -316,11 +316,24 @@ export class CertificateComponent implements OnInit {
     this.certform.controls['scannedcopy'].setErrors({'required': true});
   }
 
+  /**
+   * Reads the file's magic number so a scan that was uploaded as a PNG or JPEG
+   * still opens. Forcing 'application/pdf' on an image made Chrome's PDF viewer
+   * show "Failed to load PDF document" for a file that was perfectly fine.
+   */
+  private sniffType(buffer: ArrayBuffer): string {
+    const b = new Uint8Array(buffer);
+    if (b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46) { return 'application/pdf'; }
+    if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) { return 'image/png'; }
+    if (b[0] === 0xFF && b[1] === 0xD8) { return 'image/jpeg'; }
+    return 'application/pdf';
+  }
+
   // ── View the stored scanned copy (PDF) ────────────────────────────────────
   downloadScan(): void {
     this.cs.downloadScannedCopy(this.certificate.id).then(buffer => {
       if (!buffer) { this.noScanMessage(); return; }
-      const url = URL.createObjectURL(new Blob([buffer], {type: 'application/pdf'}));
+      const url = URL.createObjectURL(new Blob([buffer], {type: this.sniffType(buffer)}));
       window.open(url, '_blank');
       setTimeout(() => URL.revokeObjectURL(url), 30000);
     }).catch(() => this.noScanMessage());

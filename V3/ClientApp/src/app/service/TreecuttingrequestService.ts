@@ -48,14 +48,14 @@ export class TreecuttingrequestService {
 
   uploadPermit(id: number, pdfBytes: Uint8Array): Promise<[] | undefined> {
     return this.http.put<[]>(
-      `${this.url}/${id}/uploadpermit`, pdfBytes,
+      `${this.url}/${id}/uploadpermit`, pdfBytes.buffer,
       {headers: {'Content-Type': 'application/octet-stream'}}
     ).toPromise();
   }
 
   uploadTransport(id: number, pdfBytes: Uint8Array): Promise<[] | undefined> {
     return this.http.put<[]>(
-      `${this.url}/${id}/uploadtransport`, pdfBytes,
+      `${this.url}/${id}/uploadtransport`, pdfBytes.buffer,
       {headers: {'Content-Type': 'application/octet-stream'}}
     ).toPromise();
   }

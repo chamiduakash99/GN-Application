@@ -112,7 +112,7 @@ export class StreetComponent implements OnInit{
 
 
     this.form = this.fb.group({
-      codename: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9\-]{2,20}$/)]),
+      codename: new FormControl('', [Validators.required, Validators.pattern(/^ST\d{3,4}$/)]),
       fullname: new FormControl('', [Validators.required, Validators.pattern(/^[A-Za-z0-9\s]{2,100}$/)]),
       length: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
       gnd: new FormControl('', [Validators.required]),

@@ -511,7 +511,13 @@ export class TreecuttingrequestComponent implements OnInit {
       });
       return;
     }
-    const url = URL.createObjectURL(new Blob([buffer], {type: 'application/pdf'}));
+    const b = new Uint8Array(buffer);
+    // sniff the magic number so a PNG/JPEG scan opens as an image instead of
+    // being forced into Chrome's PDF viewer, which then reports a load failure
+    const mime = (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) ? 'image/png'
+               : (b[0] === 0xFF && b[1] === 0xD8) ? 'image/jpeg'
+               : 'application/pdf';
+    const url = URL.createObjectURL(new Blob([buffer], {type: mime}));
     window.open(url, '_blank');
     setTimeout(() => URL.revokeObjectURL(url), 30000);
   }
