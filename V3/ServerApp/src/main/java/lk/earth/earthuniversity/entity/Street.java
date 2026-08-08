@@ -19,7 +19,7 @@ public class Street {
     private int id;
     @Basic
     @Column(name = "codename")
-    @Pattern(regexp = "^[A-Za-z0-9\\-]{2,20}$", message = "Invalid codename format")
+    @Pattern(regexp = "^ST\\d{3,4}$", message = "Invalid codename format")
     private String codename;
     @Basic
     @Column(name = "fullname")
