@@ -39,6 +39,22 @@ export class ComplaintComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('stepper') stepper?: MatStepper;
 
+  /** which step of the Complaint Status bar is highlighted */
+  stepIndex = 0;
+
+  /**
+   * Matched loosely on purpose: the officer app stores whatever name is in the
+   * complaintstatus table, and an exact === comparison silently fell through to 0
+   * whenever the wording differed at all.
+   */
+  private stepFor(name?: string): number {
+    const n = (name ?? '').toLowerCase();
+    if (n.includes('investigat')) { return 1; }
+    if (n.includes('pass') || n.includes('referred') || n.includes('authority')) { return 2; }
+    if (n.includes('resolve') || n.includes('complete') || n.includes('closed')) { return 3; }
+    return 0;
+  }
+
   // ── Forms ──────────────────────────────────────────────────────────────────
   form!: FormGroup;
 
@@ -112,7 +128,15 @@ export class ComplaintComponent implements OnInit {
     this.selectedRow = c;
     this.complaint    = JSON.parse(JSON.stringify(c));
     this.oldcomplaint = JSON.parse(JSON.stringify(c));
-    this.stepper?.reset();
+
+    // stepper.reset() forced the bar back to step 0 on every row click, and the
+    // bound expression never changed afterwards, so it stayed there. Drive the
+    // index from the status instead, and push it onto the stepper once the view
+    // has caught up (the stepper does not exist yet on the very first click).
+    this.stepIndex = this.stepFor(this.complaint.complaintstatus?.name);
+    setTimeout(() => {
+      if (this.stepper) { this.stepper.selectedIndex = this.stepIndex; }
+    });
 
     const selectedCitizen = (this.citizens ?? []).find(x => x.id === this.complaint.citizen?.id);
     const selectedEmployee = (this.employees ?? []).find(x => x.id === this.complaint.employee?.id);
@@ -247,5 +271,6 @@ export class ComplaintComponent implements OnInit {
   clear() {
     this.form.reset();
     this.selectedRow = null;
+    this.stepIndex = 0;
   }
 }

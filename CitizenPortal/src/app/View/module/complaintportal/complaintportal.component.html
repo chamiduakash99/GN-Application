@@ -97,12 +97,7 @@
 
         <!-- Status stepper (shown when a row is selected) -->
         <div *ngIf="selectedRow; else noSelection">
-          <mat-horizontal-stepper #stepper
-            [selectedIndex]="
-              complaint?.complaintstatus?.name === 'Pending'       ? 0 :
-              complaint?.complaintstatus?.name === 'Investigating' ? 1 :
-              complaint?.complaintstatus?.name === 'Passed'        ? 2 :
-              complaint?.complaintstatus?.name === 'Resolved'      ? 3 : 0">
+          <mat-horizontal-stepper #stepper [selectedIndex]="stepIndex">
 
             <mat-step label="Submitted"></mat-step>
             <mat-step label="Investigating"></mat-step>
